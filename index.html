@@ -114,6 +114,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 .drawer.full:hover{box-shadow:0 7px 0 var(--ok),0 12px 16px var(--shadow)}
 .drawer.full:active{box-shadow:0 1px 0 var(--ok),0 2px 4px var(--shadow)}
 @media (prefers-reduced-motion:reduce){.drawer{transition:none}}
+.survey{display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap;justify-content:space-between;background:var(--warm-soft);border-radius:12px;padding:12px 16px;font-size:14px;line-height:1.6}.survey p{margin:0}.sv-b{display:flex;gap:8px;flex-wrap:wrap}.sv-b a.btn{text-decoration:none;display:inline-block}
 .rsbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;font-size:12px;color:var(--muted)}
 .rsbar .btn{padding:4px 12px;font-size:12px;min-height:0}
 .slide{border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow:hidden;margin:4px 0 10px}
@@ -249,7 +250,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   </div>
   <div class="legend" hidden>手がかりの根拠：<span class="chip label">添付文書</span><span class="chip general">一般的な使用目標</span><span class="chip report">臨床報告</span></div>
   <main id="app"></main>
-  <footer>医学生・研修医向けの学習用教材です。手がかりと解説には根拠の種類を付けています。「添付文書」はツムラ医療用漢方製剤の添付文書「効能又は効果」（PMDA掲載、2026年10月確認。病名の列挙は一部省略）、「一般的な使用目標」は腹証や古典に基づく慣用的な使い分け（一部はTraditional &amp; Kampo Medicine誌の総説シリーズ「A review of frequently used Kampo prescriptions」を参照）、「臨床報告」はPubMed、Traditional &amp; Kampo Medicine誌、J-STAGEに掲載された臨床研究・症例報告です。実際の処方は四診と全体像から判断してください。採点：一段目 正解1つにつき1点（誤選択は減点なし）、二段目 1つにつき1点、三段目 正解で2点。1症例9点満点（確認の問い 正解で1点）。最後まで「×」がなければ合格で、その症例は「経験したい症状・症候」に記録され、合格した数でランク（ビギナー・ルーキー・エース・エキスパート・レジェンド）が上がります。記録はこのブラウザにだけ保存されます。症候を選ぶとその症候の全症例、「おまかせ」では全症例から5症例を出題します。29症候は厚生労働省「臨床研修の到達目標、方略及び評価」の「経験すべき症候」によります。</footer>
+  <footer>医学生・研修医向けの学習用教材です。手がかりと解説には根拠の種類を付けています。「添付文書」はツムラ医療用漢方製剤の添付文書「効能又は効果」（PMDA掲載、2026年10月確認。病名の列挙は一部省略）、「一般的な使用目標」は腹証や古典に基づく慣用的な使い分け（一部はTraditional &amp; Kampo Medicine誌の総説シリーズ「A review of frequently used Kampo prescriptions」を参照）、「臨床報告」はPubMed、Traditional &amp; Kampo Medicine誌、J-STAGEに掲載された臨床研究・症例報告です。実際の処方は四診と全体像から判断してください。採点：一段目 正解1つにつき1点（誤選択は減点なし）、二段目 1つにつき1点、三段目 正解で2点。1症例9点満点（確認の問い 正解で1点）。最後まで「×」がなければ合格で、その症例は「経験したい症状・症候」に記録され、合格した数でランク（ビギナー・ルーキー・エース・エキスパート・レジェンド）が上がります。記録はこのブラウザにだけ保存されます。症候を選ぶとその症候の全症例、「おまかせ」では全症例から5症例を出題します。29症候は厚生労働省「臨床研修の到達目標、方略及び評価」の「経験すべき症候」によります。<br><a href="https://forms.gle/hCkafTpvLXkA5kV46" target="_blank" rel="noopener">ご意見・アンケート（1分・匿名）</a></footer>
 </div>
 
 <script>
@@ -852,10 +853,18 @@ function tansuHTML(){
    <p class="note2">最後まで「×」がなければ合格で、ゲットできます（△と次点は×ではないので合格に数えます）。記録はこのブラウザにだけ保存されます。</p>${resetHTML()}
   </section>`;
 }
+const FORM_URL='https://forms.gle/hCkafTpvLXkA5kV46';
+const SKEY='kampo3step.survey.v1';
+const surveyClosed=()=>{try{return localStorage.getItem(SKEY)==='closed'}catch(_){return false}};
+function surveyHTML(){
+  if(doneCount()<3||surveyClosed()) return '';
+  return `<aside class="survey"><p><b>ここまで使ってみていかがでしたか？</b><br>1分・匿名のアンケートです。ご意見は教材の改善に使います。</p><div class="sv-b"><a class="btn" href="${FORM_URL}" target="_blank" rel="noopener" id="sv-go">アンケートに答える</a><button class="btn ghost" id="sv-x">今は閉じる</button></div></aside>`;
+}
 function homeHTML(){
   const total=CASES.length;
   return `<section class="home">
    ${tansuHTML()}
+   ${surveyHTML()}
    <section class="pick" aria-labelledby="pick-h"><header class="pickhd"><h2 id="pick-h">症候を選んで始める</h2></header>
    <p class="lead2">臨床研修 指導ガイドライン（2024年度版）の「経験すべき29症候」から選びます。症候を選ぶと、その症候の症例で3段階の選択を行います。</p>
    <div class="sxkey"><span class="sx has mini">症例あり</span><span class="sx has tried mini">挑戦済み</span><span class="sx has done mini">合格</span><span class="sx urg mini">西洋医学的な対応が最優先</span><span class="sx out mini">この教材の対象外</span></div>
@@ -950,6 +959,9 @@ function render(){
     app.querySelectorAll('.sx[data-k]').forEach(b=>b.onclick=()=>{const k=isNaN(+b.dataset.k)?b.dataset.k:+b.dataset.k;const list=casesFor(k);list.length?startDeck(list,sxLabel(k),k):showUrgent(k)});
     app.querySelectorAll('.drawer').forEach(b=>b.onclick=()=>{const c=CASES.find(x=>x.t===b.dataset.t);startDeck([c],c.t,'case:'+c.t)});
     $('#mix').onclick=newGame;
+    const svc=()=>{try{localStorage.setItem(SKEY,'closed')}catch(_){}};
+    const sx=$('#sv-x');if(sx)sx.onclick=()=>{svc();render()};
+    const sg=$('#sv-go');if(sg)sg.onclick=()=>{svc()};
     const rq=(id,fn)=>{const e=$(id);if(e)e.onclick=fn};
     rq('#rs-ask',()=>{RC=true;render()});rq('#rs-no',()=>{RC=false;render()});
     rq('#rs-yes',()=>{PROG={};try{localStorage.removeItem(PKEY)}catch(_){}RC=false;render()});return;
