@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="症例動画をもとに、四診から証を立て漢方処方を選ぶ。医学生・研修医・薬学生・看護学生のための症例チュートリアル。">
+<meta http-equiv="Cache-Control" content="no-cache">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>症例で学ぶ漢方</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -69,7 +70,14 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   padding-block: 12px 12px;
 }
 .top-row { display: flex; align-items: center; gap: 8px; }
-.brand { font-weight: 800; font-size: 15px; color: var(--ink); margin-right: auto; letter-spacing: .02em; }
+.brand { font-weight: 800; font-size: 15px; color: var(--ink); letter-spacing: .02em; }
+.reload { margin-right: auto; flex: none; font: inherit; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 3px; cursor: pointer; border: 2px solid var(--line); background: var(--surface); color: var(--pop); border-radius: 999px; padding: 2px 8px 2px 6px; white-space: nowrap; }
+.reload svg { width: 13px; height: 13px; }
+.reload:active { transform: translateY(1px); }
+.reload:focus-visible { outline: 3px solid var(--pop); outline-offset: 2px; }
+.reload.spin svg { animation: spin .8s linear infinite; }
+.brand { flex: none; }
+@media (max-width: 420px) { #rolePill { display: none; } #voiceLbl { display: none; } .voice { padding: 4px 8px; } }
 .brand { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .role-pill, .xp { font-size: 12px; font-weight: 800; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
 .role-pill { background: var(--pop-soft); color: var(--pop); }
@@ -298,6 +306,7 @@ p { margin: 0; }
   <header class="top">
     <div class="top-row">
       <span class="brand">症例で学ぶ漢方</span>
+      <button type="button" class="reload" id="reload" aria-label="最新版に更新"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>更新</button>
       <span class="role-pill" id="rolePill" hidden></span>
       <span class="xp" id="xp"></span>
       <button type="button" class="voice" id="voice" aria-pressed="true"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span id="voiceLbl">音声ON</span></button>
@@ -1340,6 +1349,14 @@ main.addEventListener("change", (e) => {
   jaVoice = jaVoices.find((v) => v.name === e.target.value) || jaVoice;
   try { localStorage.setItem("kampo-voice", jaVoice ? jaVoice.name : ""); } catch (er) {}
   speak("この声で読み上げます。");
+});
+// 最新版に更新：公開版はURLに時刻を付けてキャッシュを避けて読み直す。進み具合と記録は残る
+$("#reload").addEventListener("click", (e) => {
+  e.currentTarget.classList.add("spin");
+  try { stopAll(); } catch (er) {}
+  save();
+  if (/github\.io$/.test(location.hostname)) location.replace(location.pathname + "?v=" + Date.now() + location.hash);
+  else location.reload();
 });
 $("#voice").addEventListener("click", () => {
   state.voice = state.voice === false; renderVoice(); save();
