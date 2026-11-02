@@ -663,6 +663,10 @@ h1 em{display:inline-block;color:#fff;background:linear-gradient(180deg,#ff8a3d,
 .survey.shake{animation:gshake .4s ease}
 @keyframes gshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){.survey.shake{animation:none}}
+
+.q .replay{font-size:18px;line-height:1;border:2px solid var(--ol);border-radius:999px;background:var(--paper);padding:4px 10px;cursor:pointer;box-shadow:0 3px 0 var(--ol);vertical-align:middle;margin-left:auto}
+.q .replay:active{transform:translateY(3px);box-shadow:none}
+.speaking .q .replay{background:var(--ai);border-color:var(--ai)}
 </style>
 
 <div class="wrap">
@@ -1519,6 +1523,13 @@ render();
   function speak(){}
   let vAudio=null,pendingVoice=null;
   function stopVoice(){pendingVoice=null;try{if(vAudio){vAudio.pause();vAudio=null}}catch(e){}document.body.classList.remove('speaking')}
+  function mountReplay(){
+    const q=document.querySelector('#app .q');if(!q||q.querySelector('.replay'))return;
+    const f=voiceFile();if(!f)return;
+    const b=document.createElement('button');b.type='button';b.className='replay';b.title='問いをもう一度聞く';b.setAttribute('aria-label','問いをもう一度聞く');b.textContent='🔊';
+    b.onclick=e=>{e.stopPropagation();pref.voice=true;save();const sw=document.querySelector('#sw-vo');if(sw)sw.setAttribute('aria-pressed','true');playVoice(f)};
+    q.appendChild(b);
+  }
   function voiceFile(){
     try{if(typeof S!=='undefined'&&S.view==='urgent')return (typeof OUT!=='undefined'&&OUT.includes(S.key))?'x_out.mp3':'x_urgent.mp3';
       if(typeof S==='undefined'||S.view!=='play'||!S.deck||!S.deck[S.idx])return null;
@@ -1575,6 +1586,7 @@ render();
     const ch=app.querySelector('.row.chief .val');
     const lead=adds.length?'追加情報。'+txt(adds[adds.length-1]):ch?'主訴。'+txt(ch):'';
     const key=lead+'|'+qt;
+    mountReplay();
     if(key!==lastQ){lastQ=key;const vf=voiceFile();if(vf)playVoice(vf);else stopVoice();prefetchVoice()}
   }
   const orig=window.render;
