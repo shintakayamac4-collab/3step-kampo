@@ -1298,13 +1298,17 @@ function surveyHTML(){
    <div class="sv-b"><a class="btn" href="${FORM_URL}" target="_blank" rel="noopener" id="sv-go">アンケートに答える</a><button class="btn ghost" id="sv-ok" disabled>回答しました → 続ける</button></div>
    <p class="note2">「回答しました」は、アンケートを開いたあとに押せるようになります。</p></aside>`;
 }
+let svOpened=false;
 function bindSurvey(){
   const go=$('#sv-go'),ok=$('#sv-ok');if(!go||!ok)return;
-  let opened=false;try{opened=sessionStorage.getItem(SKEY+'.opened')==='1'}catch(_){}
-  ok.disabled=!opened;
-  go.onclick=()=>{try{sessionStorage.setItem(SKEY+'.opened','1')}catch(_){}setTimeout(()=>{ok.disabled=false},1500)};
+  try{if(sessionStorage.getItem(SKEY+'.opened')==='1')svOpened=true}catch(_){}
+  ok.disabled=!svOpened;
+  const mark=()=>{svOpened=true;try{sessionStorage.setItem(SKEY+'.opened','1')}catch(_){}ok.disabled=false};
+  go.addEventListener('click',mark);go.addEventListener('auxclick',mark);go.addEventListener('touchend',()=>setTimeout(mark,0),{passive:true});
   ok.onclick=()=>{try{localStorage.setItem(SKEY,'answered')}catch(_){}render();window.scrollTo(0,0)};
 }
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){const ok=$('#sv-ok');if(ok&&svOpened)ok.disabled=false}});
+window.addEventListener('pageshow',()=>{const ok=$('#sv-ok');if(ok){try{if(sessionStorage.getItem(SKEY+'.opened')==='1')svOpened=true}catch(_){}if(svOpened)ok.disabled=false}});
 function gateStop(){const g=$('#gate');if(g){g.scrollIntoView({behavior:'smooth',block:'center'});g.classList.remove('shake');void g.offsetWidth;g.classList.add('shake')}}
 function homeHTML(){
   const total=CASES.length;
