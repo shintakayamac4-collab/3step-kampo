@@ -688,6 +688,10 @@ footer .ver{display:inline-block;margin-left:10px;font-variant-numeric:tabular-n
 .upd .btn{padding:8px 16px;font-size:14px}
 @keyframes updIn{from{transform:translate(-50%,30px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
 @media (prefers-reduced-motion:reduce){.upd{animation:none}}
+
+.verbox{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;background:var(--paper);border:2px dashed var(--ol-soft);border-radius:18px;padding:14px 16px;font-size:13px;line-height:1.6;color:var(--muted)}
+.verbox b{color:var(--ink);font-variant-numeric:tabular-nums}
+.verbox .btn{padding:10px 22px;font-size:14px}
 </style>
 
 <div class="wrap">
@@ -1548,9 +1552,14 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2159';
+const APP_VER='2026.11.02-2204';
 (()=>{
-  const f=document.querySelector('footer');if(f){const sp=document.createElement('span');sp.className='ver';sp.textContent='版 '+APP_VER;f.appendChild(sp)}
+  const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
+  window.__hardReload=hardReload;
+  const f=document.querySelector('footer');
+  if(f){const box=document.createElement('div');box.className='verbox';
+    box.innerHTML='<div class="vertext"><b>いま表示している版：'+APP_VER+'</b><br>このアプリは定期的に更新しています。表示や音声が古いと感じたら、下のボタンで最新版に入れ替えてください。記録は消えません。</div><button type="button" class="btn ghost" id="ver-reload">最新版に更新する</button>';
+    f.parentNode.insertBefore(box,f);box.querySelector('#ver-reload').onclick=hardReload}
   let shown=false;
   async function check(){
     if(shown)return;
@@ -1559,7 +1568,7 @@ const APP_VER='2026.11.02-2159';
         const b=document.createElement('div');b.className='upd';b.setAttribute('role','status');
         b.innerHTML='<span>新しい版（'+j.v+'）があります。</span><button type="button" class="btn" id="upd-go">再読み込み</button><button type="button" class="btn ghost" id="upd-x">あとで</button>';
         document.body.appendChild(b);
-        b.querySelector('#upd-go').onclick=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}location.reload()};
+        b.querySelector('#upd-go').onclick=hardReload;
         b.querySelector('#upd-x').onclick=()=>b.remove();
       }
     }catch(e){}
