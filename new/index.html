@@ -653,6 +653,16 @@ h1::after{-webkit-text-stroke:0;color:#f5a800;text-shadow:0 1px 0 #fff}
 
 /* 3-Step を札にして目立たせる */
 h1 em{display:inline-block;color:#fff;background:linear-gradient(180deg,#ff8a3d,#e35d00);border:2.5px solid #143a8f;border-radius:14px;padding:.02em .28em .08em;margin-right:.18em;font-size:.82em;letter-spacing:.02em;text-shadow:0 2px 0 rgba(120,40,0,.45);box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 4px 0 #143a8f,0 8px 14px rgba(20,58,143,.3);transform:rotate(-4deg) translateY(-3px);vertical-align:.08em}
+
+/* アンケートの区切り */
+.survey.gate{flex-direction:column;align-items:stretch;gap:8px;border:2px solid var(--warm)}
+.gate-steps{margin:0;padding-left:1.4em;font-size:14px;line-height:1.7}
+.survey.gate .sv-b{justify-content:center}
+.survey.gate .btn{text-align:center}
+.survey.gate .btn:disabled{opacity:.45;cursor:default;box-shadow:none;transform:none}
+.survey.shake{animation:gshake .4s ease}
+@keyframes gshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){.survey.shake{animation:none}}
 </style>
 
 <div class="wrap">
@@ -1277,11 +1287,25 @@ function tansuHTML(){
 }
 const FORM_URL='https://forms.gle/hCkafTpvLXkA5kV46';
 const SKEY='kampo3step.survey.v1';
-const surveyClosed=()=>{try{return localStorage.getItem(SKEY)==='closed'}catch(_){return false}};
+const SURVEY_AFTER=3;
+const playedCount=()=>Object.values(PROG).reduce((a,p)=>a+(p.tries||0),0);
+const surveyAnswered=()=>{try{return localStorage.getItem(SKEY)==='answered'}catch(_){return false}};
+const surveyLocked=()=>playedCount()>=SURVEY_AFTER&&!surveyAnswered();
 function surveyHTML(){
-  if(doneCount()<3||surveyClosed()) return '';
-  return `<aside class="survey"><p><b>ここまで使ってみていかがでしたか？</b><br>1分・匿名のアンケートです。ご意見は教材の改善に使います。</p><div class="sv-b"><a class="btn" href="${FORM_URL}" target="_blank" rel="noopener" id="sv-go">アンケートに答える</a><button class="btn ghost" id="sv-x">今は閉じる</button></div></aside>`;
+  if(!surveyLocked()) return '';
+  return `<aside class="survey gate" id="gate"><p><b>${SURVEY_AFTER}症例おつかれさまでした！</b><br>続きに進む前に、1分・匿名のアンケートにご協力ください。ご意見は教材の改善に使います。</p>
+   <ol class="gate-steps"><li>「アンケートに答える」を押して回答する（別タブが開きます）</li><li>戻ってきたら「回答しました」を押す</li></ol>
+   <div class="sv-b"><a class="btn" href="${FORM_URL}" target="_blank" rel="noopener" id="sv-go">アンケートに答える</a><button class="btn ghost" id="sv-ok" disabled>回答しました → 続ける</button></div>
+   <p class="note2">「回答しました」は、アンケートを開いたあとに押せるようになります。</p></aside>`;
 }
+function bindSurvey(){
+  const go=$('#sv-go'),ok=$('#sv-ok');if(!go||!ok)return;
+  let opened=false;try{opened=sessionStorage.getItem(SKEY+'.opened')==='1'}catch(_){}
+  ok.disabled=!opened;
+  go.onclick=()=>{try{sessionStorage.setItem(SKEY+'.opened','1')}catch(_){}setTimeout(()=>{ok.disabled=false},1500)};
+  ok.onclick=()=>{try{localStorage.setItem(SKEY,'answered')}catch(_){}render();window.scrollTo(0,0)};
+}
+function gateStop(){const g=$('#gate');if(g){g.scrollIntoView({behavior:'smooth',block:'center'});g.classList.remove('shake');void g.offsetWidth;g.classList.add('shake')}}
 function homeHTML(){
   const total=CASES.length;
   return `<section class="home">
@@ -1378,12 +1402,10 @@ function render(){
   const app=$('#app');
   if(S.view==='home'){
     app.innerHTML=homeHTML();
-    app.querySelectorAll('.sx[data-k]').forEach(b=>b.onclick=()=>{const k=isNaN(+b.dataset.k)?b.dataset.k:+b.dataset.k;const list=casesFor(k);list.length?startDeck(list,sxLabel(k),k):showUrgent(k)});
-    app.querySelectorAll('.drawer').forEach(b=>b.onclick=()=>{const c=CASES.find(x=>x.t===b.dataset.t);startDeck([c],c.t,'case:'+c.t)});
-    $('#mix').onclick=newGame;
-    const svc=()=>{try{localStorage.setItem(SKEY,'closed')}catch(_){}};
-    const sx=$('#sv-x');if(sx)sx.onclick=()=>{svc();render()};
-    const sg=$('#sv-go');if(sg)sg.onclick=()=>{svc()};
+    app.querySelectorAll('.sx[data-k]').forEach(b=>b.onclick=()=>{if(surveyLocked())return gateStop();const k=isNaN(+b.dataset.k)?b.dataset.k:+b.dataset.k;const list=casesFor(k);list.length?startDeck(list,sxLabel(k),k):showUrgent(k)});
+    app.querySelectorAll('.drawer').forEach(b=>b.onclick=()=>{if(surveyLocked())return gateStop();const c=CASES.find(x=>x.t===b.dataset.t);startDeck([c],c.t,'case:'+c.t)});
+    $('#mix').onclick=()=>surveyLocked()?gateStop():newGame();
+    bindSurvey();
     const rq=(id,fn)=>{const e=$(id);if(e)e.onclick=fn};
     rq('#rs-ask',()=>{RC=true;render()});rq('#rs-no',()=>{RC=false;render()});
     rq('#rs-yes',()=>{PROG={};try{localStorage.removeItem(PKEY)}catch(_){}RC=false;render()});return;
@@ -1402,8 +1424,8 @@ function render(){
     const award=fresh.length?`<div class="award"><b>${fresh.length}つゲット！</b><span>${fresh.join('・')}</span>${up?(()=>{const [nu,nn]=avaOf(dn),[ou,on]=avaOf(before),chg=nu!==ou;return `<div class="rkup"><div class="rkimgs">${chg?`<img class="ava big dim" src="${ou}" alt="${on}"><span class="arw" aria-hidden="true">→</span>`:''}<img class="ava big pop" src="${nu}" alt="${nn}"></div><span class="rankup">ランクアップ！ 「${rankOf(dn)}」になりました</span><span class="note2">${chg?`${on} から ${nn} に成長しました`:nn}</span></div>`})():''}<span class="note2">経験したい症状・症候 ${dn} / ${CASES.length}${dn>=CASES.length?'・コンプリート！':''}</span>${before<CASES.length&&dn>=CASES.length?'<span class="rankup">全症例に合格しました。おめでとうございます！</span>':''}</div>`:'';
     const pct=Math.round(S.pts/R8*100);
     const msg=pct>=85?'鑑別の筋道がよく通っています。':pct>=60?'主要方剤は押さえています。三段目の決め手を見直すと伸びます。':'一段目の想起から復習しましょう。各症例の解説が手がかりです。';
-    app.innerHTML=`<section class="karte end"><div class="case">結果<span>${S.label}</span></div><div class="big">${S.pts}<span style="font-size:22px"> / ${R8}</span></div><p style="margin:0">${msg}</p>${award}<table>${rows}</table><div class="bar" style="justify-content:center"><button class="btn ghost" id="home">症候一覧へ</button><button class="btn" id="again">もう一度</button></div></section>`;
-    $('#again').onclick=replay;$('#home').onclick=goHome;$('#again').focus();
+    app.innerHTML=`<section class="karte end"><div class="case">結果<span>${S.label}</span></div><div class="big">${S.pts}<span style="font-size:22px"> / ${R8}</span></div><p style="margin:0">${msg}</p>${award}<table>${rows}</table>${surveyHTML()}<div class="bar" style="justify-content:center"><button class="btn ghost" id="home">症候一覧へ</button>${surveyLocked()?'':'<button class="btn" id="again">もう一度</button>'}</div></section>`;
+    const ag=$('#again');if(ag){ag.onclick=replay;ag.focus()}$('#home').onclick=goHome;bindSurvey();
     return;
   }
   const {c,ans}=cur();
