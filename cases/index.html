@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="症例動画をもとに、四診から証を立て漢方処方を選ぶ。医学生・研修医・薬学生・看護学生のための症例チュートリアル。">
+<meta name="description" content="6-Step 漢方 みんなの漢方カンファ。症例動画をもとに、四診から証を立て漢方処方を選ぶ。医学生・研修医・薬学生・看護学生のための症例チュートリアル。">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>症例で学ぶ漢方</title>
+<title>6-Step 漢方 みんなの漢方カンファ</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -305,7 +305,7 @@ p { margin: 0; }
 <div class="app">
   <header class="top">
     <div class="top-row">
-      <span class="brand">症例で学ぶ漢方</span>
+      <span class="brand">6-Step 漢方</span>
       <button type="button" class="reload" id="reload" aria-label="最新版に更新"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>更新</button>
       <span class="role-pill" id="rolePill" hidden></span>
       <span class="xp" id="xp"></span>
@@ -951,7 +951,7 @@ const BASE = [
   { step: 0, start: true, html: () => `
     <div class="hero-grid">${Object.values(CASES).map((c) => `<img src="${c.img}" alt="${c.imgAlt}">`).join("")}</div>
     <div class="eyebrow">症例チュートリアル　全${Object.keys(CASES).length}症例</div>
-    <h1>症例で学ぶ<br><em>漢方</em></h1>
+    <h1>6-Step 漢方<br><em>みんなの漢方カンファ</em></h1>
     <p class="lead">症例を選んで、四診の所見から証を立て、処方を選ぶ。立場に合わせた問いに答えながら6ステップで進みます（1症例約10分）。</p>
     <div class="panel" style="display:grid;gap:10px">
       <p style="font-weight:700">症例を選んでください</p>
@@ -1152,7 +1152,7 @@ function endHTML() {
     <div class="stamps">${stepLabels().map((st, i) => `<div class="stamp" style="animation-delay:${0.5 + i * 0.12}s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${st}</span></div>`).join("")}</div>
     <div class="cert">
       <div class="cert-k">修了カード</div>
-      <div class="cert-t">症例で学ぶ漢方　${CS().label}</div>
+      <div class="cert-t">6-Step 漢方　${CS().label}</div>
       <div class="cert-s">${CS().certSub}</div>
       <div class="cert-skills">${(CS().skills[state.role] || CS().skills.med).map((x) => `<span>${x}</span>`).join("")}</div>
       <div class="cert-f"><span>${state.role ? ROLES[state.role].name : "学習者"}</span><span>${date}</span><span>ランク：${r.title}</span></div>
