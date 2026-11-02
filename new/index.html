@@ -722,6 +722,26 @@ footer .ver{display:block;margin:6px 0 0}
 .fxbox .fx{background:var(--paper)}
 .noscroll{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.fxbox{animation:none}}
+
+/* ホーム（入口） */
+.hub{display:flex;flex-direction:column;gap:12px}
+.tile{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;text-align:left;width:100%;font-family:var(--f-body);color:var(--ink);background:var(--paper);background-image:linear-gradient(180deg,var(--paper),var(--paper2));border:2px solid var(--ol);border-radius:22px;padding:16px 14px 16px 16px;cursor:pointer;box-shadow:inset 0 2px 0 var(--hi),0 6px 0 var(--keyedge),0 10px 18px var(--drop);transition:transform .12s,box-shadow .12s}
+.tile:hover{transform:translateY(-2px)}
+.tile:active{transform:translateY(4px);box-shadow:inset 0 2px 0 var(--hi),0 1px 0 var(--keyedge)}
+.tile:focus-visible{outline:3px solid var(--ai);outline-offset:3px}
+.tileic{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--ai);color:#fff;font-size:20px;border:2px solid var(--ol);box-shadow:0 3px 0 #1a4fb8}
+#t-rec .tileic{background:var(--warm);box-shadow:0 3px 0 #b5452c}
+#t-met .tileic{background:var(--ok);box-shadow:0 3px 0 #1f6b3f}
+.tilebody{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tilebody b{font-family:var(--f-pop);font-weight:400;font-size:19px;line-height:1.3}
+.tilebody small{font-size:12.5px;color:var(--muted);line-height:1.5}
+.tbar{display:block;height:8px;border-radius:999px;background:var(--well);box-shadow:inset 0 2px 4px var(--well-sh);overflow:hidden;margin-top:2px}
+.tbar i{display:block;height:100%;background:linear-gradient(90deg,var(--warm),var(--kihada));border-radius:999px}
+.tilesx{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.tilesx em{font-style:normal;font-size:11px;font-weight:700;color:var(--ai);background:var(--ai-soft);border:1px solid var(--ol-soft);border-radius:999px;padding:1px 8px}
+.chev{font-size:28px;color:var(--ai);font-weight:900;line-height:1}
+.backbar{display:flex;justify-content:flex-start}
+.backbar .link{font-size:14px;padding:8px 16px}
 </style>
 
 <div class="wrap">
@@ -1302,7 +1322,7 @@ function startDeck(list,label,key){
 }
 function newGame(){startDeck(sh(CASES).slice(0,MIX),'おまかせ','mix')}
 function replay(){if(S.key==='mix')return newGame();if(String(S.key).startsWith('case:')){const c=CASES.find(x=>'case:'+x.t===S.key);return startDeck([c],c.t,S.key)}startDeck(casesFor(S.key),S.label,S.key)}
-function goHome(){S={view:'home',pts:0,deck:[],stage:0};render();window.scrollTo(0,0)}
+function goHome(sub){HOME=typeof sub==='string'?sub:'hub';S={view:'home',pts:0,deck:[],stage:0};render();window.scrollTo(0,0)}
 function showUrgent(k){S={view:'urgent',key:k,pts:0,deck:[],stage:0};render();window.scrollTo(0,0)}
 function sxBtn(k){
   const n=casesFor(k).length, urg=typeof k==='number'&&URGENT.includes(k), out=typeof k==='number'&&OUT.includes(k);
@@ -1372,11 +1392,26 @@ function bindSurvey(){
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){const ok=$('#sv-ok');if(ok&&svOpened)ok.disabled=false}});
 window.addEventListener('pageshow',()=>{const ok=$('#sv-ok');if(ok){try{if(sessionStorage.getItem(SKEY+'.opened')==='1')svOpened=true}catch(_){}if(svOpened)ok.disabled=false}});
 function gateStop(){const g=$('#gate');if(g){g.scrollIntoView({behavior:'smooth',block:'center'});g.classList.remove('shake');void g.offsetWidth;g.classList.add('shake')}}
+let HOME='hub';
+function goSub(k){HOME=k;render();window.scrollTo(0,0)}
+function backBar(){return `<div class="backbar"><button class="link" id="hub-back">← ホームへ</button></div>`}
+function hubHTML(){
+  const n=doneCount(),nx=nextRank(n),met=metList().length,tried=playedDistinct();
+  const total=CASES.length;
+  return `<section class="hub">
+   ${surveyHTML()}
+   <button class="tile" id="t-rec"><span class="tileic">★</span><span class="tilebody"><b>経験したい症状・症候</b><small>${n} / ${total} ゲット${n>=total?'・コンプリート！':nx&&nx[0]<=total?`・あと${nx[0]-n}つで${nx[1]}`:''}</small><span class="tbar"><i style="width:${Math.round(n/total*100)}%"></i></span></span><span class="chev">›</span></button>
+   <button class="tile" id="t-pick"><span class="tileic">▶</span><span class="tilebody"><b>症候を選んで始める</b><small>29症候から選ぶ、または おまかせ${MIX}症例</small><span class="tilesx">${['頭痛','咳嗽','不眠','めまい','便秘','感冒初期'].map(t=>`<em>${t}</em>`).join('')}<em>…</em></span></span><span class="chev">›</span></button>
+   <button class="tile" id="t-met"><span class="tileic">✦</span><span class="tilebody"><b>出会った方剤</b><small>${met?`${met}方剤の解説を見られます`:'症例を解くと、正解の方剤がここに集まります'}</small></span><span class="chev">›</span></button>
+   <div class="bar" style="justify-content:center"><button class="btn" id="mix">おまかせ${MIX}症例</button></div>
+   <p class="note2" style="text-align:center">これまでに解いた症例：${tried} / ${total}</p>
+  </section>`;
+}
 function homeHTML(){
   const total=CASES.length;
-  return `<section class="home">
-   ${tansuHTML()}
-   ${surveyHTML()}
+  if(HOME==='rec') return `<section class="home">${backBar()}${tansuHTML()}</section>`;
+  if(HOME==='met') return `<section class="home">${backBar()}${metHTML()}</section>`;
+  if(HOME==='pick') return `<section class="home">${backBar()}${surveyHTML()}
    <section class="pick" aria-labelledby="pick-h"><header class="pickhd"><h2 id="pick-h">症候を選んで始める</h2></header>
    <p class="lead2">臨床研修 指導ガイドライン（2024年度版）の「経験すべき29症候」から選びます。症候を選ぶと、その症候の症例で3段階の選択を行います。</p>
    <div class="sxkey"><span class="sx has mini">症例あり</span><span class="sx has tried mini">挑戦済み</span><span class="sx has done mini">合格</span><span class="sx urg mini">西洋医学的な対応が最優先</span><span class="sx out mini">この教材の対象外</span></div>
@@ -1384,9 +1419,8 @@ function homeHTML(){
    <h2 class="h2">29症候以外のよくある症状</h2>
    <div class="sxgrid">${EXTRA.map(sxBtn).join('')}</div>
    <div class="bar"><span class="note2">全${total}症例から${MIX}症例を出題</span><button class="btn" id="mix">おまかせ${MIX}症例</button></div>
-   </section>
-   ${metHTML()}
-  </section>`;
+   </section></section>`;
+  return hubHTML();
 }
 
 /* これまでに正解として出会った方剤の一覧 */
@@ -1529,7 +1563,8 @@ function render(){
     app.innerHTML=homeHTML();
     app.querySelectorAll('.sx[data-k]').forEach(b=>b.onclick=()=>{if(surveyLocked())return gateStop();const k=isNaN(+b.dataset.k)?b.dataset.k:+b.dataset.k;const list=casesFor(k);list.length?startDeck(list,sxLabel(k),k):showUrgent(k)});
     app.querySelectorAll('.drawer').forEach(b=>b.onclick=()=>{if(surveyLocked())return gateStop();const c=CASES.find(x=>x.t===b.dataset.t);startDeck([c],c.t,'case:'+c.t)});
-    $('#mix').onclick=()=>surveyLocked()?gateStop():newGame();
+    {const m=$('#mix');if(m)m.onclick=()=>surveyLocked()?gateStop():newGame()}
+    const rq0=(id,fn)=>{const e=$(id);if(e)e.onclick=fn};rq0('#hub-back',()=>goSub('hub'));rq0('#t-rec',()=>goSub('rec'));rq0('#t-pick',()=>goSub('pick'));rq0('#t-met',()=>goSub('met'));
     app.querySelectorAll('.metbtn').forEach(b=>b.onclick=()=>showFormula(b.dataset.n));
     bindSurvey();
     const rq=(id,fn)=>{const e=$(id);if(e)e.onclick=fn};
@@ -1542,7 +1577,7 @@ function render(){
      <p style="margin:0">小児の成長・発達の障害は、小児科での専門的な評価と支援が中心で、方剤を3段階で選ぶ題材にはしていません。</p>`:`<p class="q" style="margin:0">まず西洋医学的な評価と対応を優先します</p>
      <p style="margin:0">この症候では、原因の評価と救急対応が最優先です。漢方を使うかどうかを考えるのは、緊急性が否定され、原因の評価が済んだ後です。漢方を「使わない」と判断できることも、大切な学びの一つです。</p>`}
      <div class="bar"><button class="btn" id="home">症候一覧へ</button></div></section>`;
-    $('#home').onclick=goHome;$('#home').focus();return;
+    $('#home').onclick=()=>goHome('pick');$('#home').focus();return;
   }
   if(S.stage===5){
     const rows=S.log.map(l=>`<tr><td>${l.t}</td><td>${l.ans}</td><td class="n">${l.s} / ${PER}${l.pass?' <span class="okc">合格</span>':''}</td></tr>`).join('');
@@ -1551,7 +1586,7 @@ function render(){
     const pct=Math.round(S.pts/R8*100);
     const msg=pct>=85?'鑑別の筋道がよく通っています。':pct>=60?'主要方剤は押さえています。三段目の決め手を見直すと伸びます。':'一段目の想起から復習しましょう。各症例の解説が手がかりです。';
     app.innerHTML=`<section class="karte end"><div class="case">結果<span>${S.label}</span></div><div class="big">${S.pts}<span style="font-size:22px"> / ${R8}</span></div><p style="margin:0">${msg}</p>${award}<table>${rows}</table>${surveyHTML()}<div class="bar" style="justify-content:center"><button class="btn ghost" id="home">症候一覧へ</button>${surveyLocked()?'':'<button class="btn" id="again">もう一度</button>'}</div></section>`;
-    const ag=$('#again');if(ag){ag.onclick=replay;ag.focus()}$('#home').onclick=goHome;bindSurvey();
+    const ag=$('#again');if(ag){ag.onclick=replay;ag.focus()}$('#home').onclick=()=>goHome('pick');bindSurvey();
     {const aw=app.querySelector('.award')||app.querySelector('.karte.end');if(aw)requestAnimationFrame(()=>{try{aw.scrollIntoView({block:'center',behavior:'instant'})}catch(e){aw.scrollIntoView()}})}
     if(S.complete){S.complete=false;showComplete()}
     return;
@@ -1603,14 +1638,14 @@ function render(){
   app.querySelectorAll('.fuda').forEach(b=>b.onclick=()=>toggle(b.dataset.n));
   $('#go').onclick=S.judged?next:judge;
   bindSlides(app);
-  $('#back').onclick=goHome;
+  $('#back').onclick=()=>goHome('pick');
   if(S.judged&&(S.stage<3||S.stage===4)) $('#go').focus();
 }
 render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2230';
+const APP_VER='2026.11.02-2234';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
