@@ -1336,9 +1336,11 @@ const casesFor=k=>CASES.filter(c=>SXMAP[c.t]===k);
 function startDeck(list,label,key){
   const deck=sh(list).map(c=>({c,ans:c.pair[Math.random()<.5?0:1]}));
   S={view:'play',deck,label,key,idx:0,stage:1,pts:0,log:[],picked:[],judged:false,opts:[],caseScore:0,caseBad:false};
-  startCase();
+  startCase();requestAnimationFrame(scrollToKarte);
 }
 function newGame(){startDeck(sh(CASES).slice(0,MIX),'おまかせ','mix')}
+/* 画面が切り替わったら、主訴のカルテが画面の上に来るように合わせる（上に固定したステップ表示の分だけ下げる） */
+function scrollToKarte(){const k=document.querySelector('#app .karte');if(!k){window.scrollTo(0,0);return}const st=document.getElementById('steps');const off=(st&&!st.hidden?st.getBoundingClientRect().height+20:0)+8;const y=k.getBoundingClientRect().top+window.pageYOffset-off;window.scrollTo({top:Math.max(0,y),behavior:'instant' in window?'instant':'auto'})}
 function replay(){if(S.key==='mix')return newGame();if(String(S.key).startsWith('case:')){const c=CASES.find(x=>'case:'+x.t===S.key);return startDeck([c],c.t,S.key)}startDeck(casesFor(S.key),S.label,S.key)}
 function goHome(sub){HOME=typeof sub==='string'?sub:'hub';S={view:'home',pts:0,deck:[],stage:0};render();window.scrollTo(0,0)}
 function showUrgent(k){S={view:'urgent',key:k,pts:0,deck:[],stage:0};render();window.scrollTo(0,0)}
@@ -1502,14 +1504,14 @@ function next(){
   if(S.stage<4){
     S.stage++;S.picked=[];S.judged=false;
     S.opts=S.stage===2?sh(c.top):S.stage===3?sh(c.pair):sh(c.safe.o);
-    render();window.scrollTo&&window.scrollTo(0,0);
+    render();requestAnimationFrame(scrollToKarte);
   }else{
     const pb=playedDistinct();
     const fresh=record(c,cur().ans,S.caseScore,!S.caseBad);
     if(pb<CASES.length&&playedDistinct()>=CASES.length)S.complete=true;
     S.log.push({t:c.t,ans:cur().ans,s:S.caseScore,pass:!S.caseBad,fresh});
     S.idx++;
-    if(S.idx>=S.deck.length){S.stage=5;render()}else{startCase();window.scrollTo&&window.scrollTo(0,0)}
+    if(S.idx>=S.deck.length){S.stage=5;render()}else{startCase();requestAnimationFrame(scrollToKarte)}
   }
 }
 const SLIDES={'葛根湯':'slides/s01.webp','加味逍遙散':'slides/s02.webp','桂枝湯':'slides/s03.webp','桂枝茯苓丸':'slides/s04.webp','五苓散':'slides/s05.webp','柴胡加竜骨牡蛎湯':'slides/s06.webp','小柴胡湯':'slides/s07.webp','真武湯':'slides/s08.webp','大建中湯':'slides/s09.webp','大柴胡湯':'slides/s10.webp','当帰芍薬散':'slides/s11.webp','八味地黄丸':'slides/s12.webp','半夏厚朴湯':'slides/s13.webp','防已黄耆湯':'slides/s14.webp','補中益気湯':'slides/s15.webp','抑肝散':'slides/s16.webp','六君子湯':'slides/s17.webp'};
@@ -1673,7 +1675,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2243';
+const APP_VER='2026.11.02-2245';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
