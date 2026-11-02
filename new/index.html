@@ -1497,8 +1497,11 @@ render();
   const save=()=>{try{localStorage.setItem(LS,JSON.stringify(pref))}catch(e){}};
   let ac=null;
   const ctx=()=>{try{if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ac=new A()}if(ac.state==='suspended')ac.resume();return ac}catch(e){return null}};
+  /* 最初のタッチで音の経路を開いておく（iOS対策）。以後の音はすべて同じタイミングで鳴る */
+  const unlock=()=>{const a=ctx();if(!a)return;try{const b=a.createBuffer(1,1,22050),src=a.createBufferSource();src.buffer=b;src.connect(a.destination);src.start(0)}catch(e){}};
+  ['pointerdown','touchstart','keydown'].forEach(ev=>document.addEventListener(ev,unlock,{capture:true,passive:true}));
   function tone(f,t0,dur,{type='sine',vol=.18,slide=0}={}){
-    const a=ctx();if(!a)return;const t=a.currentTime+t0;
+    const a=ctx();if(!a)return;const t=a.currentTime+.03+t0;
     const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);
     if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,f*slide),t+dur);
     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0008,t+dur);
@@ -1522,7 +1525,9 @@ render();
   const txt=el=>{if(!el)return'';const c=el.cloneNode(true);c.querySelectorAll('small,.chip,cite,i,em').forEach(x=>x.remove());return c.textContent.replace(/\s+/g,' ').trim()};
   function speak(){}
   let vAudio=null,pendingVoice=null;
-  function stopVoice(){pendingVoice=null;try{if(vAudio){vAudio.pause();vAudio=null}}catch(e){}document.body.classList.remove('speaking')}
+  const VBUF={};let vSrc=null,vSeq=0;
+
+  function stopVoice(){pendingVoice=null;vSeq++;try{if(vSrc){const x=vSrc;vSrc=null;x.onended=null;x.stop()}}catch(e){}try{if(vAudio){vAudio.pause();vAudio=null}}catch(e){}document.body.classList.remove('speaking')}
   function mountReplay(){
     const q=document.querySelector('#app .q');if(!q||q.querySelector('.replay'))return;
     const f=voiceFile();if(!f)return;
@@ -1538,18 +1543,26 @@ render();
       if(S.stage===1)return id+'_s1.mp3';if(S.stage===2)return id+'_s2.mp3';
       if(S.stage===3)return id+'_s3_'+c.pair.indexOf(ans)+'.mp3';if(S.stage===4)return id+'_s4.mp3';
     }catch(e){}return null}
+  function fetchVoice(f){if(!VBUF[f])VBUF[f]=fetch('audio/'+f).then(r=>{if(!r.ok)throw new Error(r.status);return r.arrayBuffer()}).then(ab=>new Promise((ok,ng)=>{const a=ctx();if(!a)return ng(new Error('noctx'));a.decodeAudioData(ab,ok,ng)})).catch(e=>{delete VBUF[f];throw e});return VBUF[f]}
   function playVoice(f){
     if(!pref.voice)return;stopVoice();
-    try{const a=new Audio('audio/'+f);a.preload='auto';vAudio=a;
-      a.onplay=()=>document.body.classList.add('speaking');a.onended=()=>document.body.classList.remove('speaking');
-      a.onerror=()=>{if(vAudio===a)vAudio=null};
-      const p=a.play();
-      if(p&&p.catch)p.catch(()=>{if(vAudio===a){pendingVoice=f}});  /* 自動再生が止められたら、次の操作のときに再生 */
-    }catch(e){}}
-  const retryVoice=()=>{if(pendingVoice&&pref.voice){const f=pendingVoice;pendingVoice=null;playVoice(f)}};
+    const a=ctx();
+    if(!a){ /* Web Audio が使えない環境だけ <audio> で再生 */
+      try{const el=new Audio('audio/'+f);vAudio=el;el.onplay=()=>document.body.classList.add('speaking');el.onended=()=>document.body.classList.remove('speaking');const p=el.play();if(p&&p.catch)p.catch(()=>{if(vAudio===el)pendingVoice=f})}catch(e){}
+      return}
+    const seq=++vSeq;
+    fetchVoice(f).then(buf=>{
+      if(seq!==vSeq||!pref.voice)return;
+      const src=a.createBufferSource();src.buffer=buf;src.connect(a.destination);
+      src.onended=()=>{if(vSrc===src){vSrc=null;document.body.classList.remove('speaking')}};
+      vSrc=src;document.body.classList.add('speaking');src.start(a.currentTime+.03);
+      if(a.state!=='running'){pendingVoice=f;try{a.resume()}catch(e){}}
+    }).catch(()=>{});
+  }
+  const retryVoice=()=>{if(pendingVoice&&pref.voice){const f=pendingVoice;pendingVoice=null;const a=ctx();if(a&&vSrc&&a.state==='running'){return}playVoice(f)}};
   document.addEventListener('pointerdown',retryVoice,true);document.addEventListener('keydown',retryVoice,true);
   /* 次に流す音声を先読みして、切り替わりを速くする */
-  function prefetchVoice(){try{if(typeof S==='undefined'||S.view!=='play'||!S.deck||!S.deck[S.idx])return;const {c,ans}=S.deck[S.idx];const id='c'+String(CASES.indexOf(c)+1).padStart(2,'0');const nx=S.stage===1?id+'_s2.mp3':S.stage===2?id+'_s3_'+c.pair.indexOf(ans)+'.mp3':S.stage===3?id+'_s4.mp3':null;if(nx){const a=new Audio('audio/'+nx);a.preload='auto';a.load()}}catch(e){}}
+  function prefetchVoice(){try{if(typeof S==='undefined'||S.view!=='play'||!S.deck||!S.deck[S.idx])return;const {c,ans}=S.deck[S.idx];const id='c'+String(CASES.indexOf(c)+1).padStart(2,'0');const nx=S.stage===1?id+'_s2.mp3':S.stage===2?id+'_s3_'+c.pair.indexOf(ans)+'.mp3':S.stage===3?id+'_s4.mp3':null;if(nx)fetchVoice(nx).catch(()=>{})}catch(e){}}
 
   /* スイッチ */
   function mountSwitch(){
