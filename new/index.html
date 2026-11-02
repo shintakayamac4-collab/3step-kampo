@@ -644,6 +644,12 @@ header .sub,header .sub::before{border-color:var(--ol)}
 
 /* 画面幅に関係なく、スマホと同じ見た目にそろえる */
 .wrap{max-width:480px}
+
+/* ===== 扉タイトルの視認性 ===== */
+header::before{opacity:.35}
+h1{color:#143a8f;-webkit-text-stroke:0;paint-order:normal;text-shadow:0 2px 0 rgba(255,255,255,.95),0 4px 0 #9cbff3,0 8px 16px rgba(20,58,143,.25);font-size:clamp(38px,11vw,52px);letter-spacing:.06em}
+h1 em{color:#e35d00;-webkit-text-stroke:0;text-shadow:0 2px 0 rgba(255,255,255,.95),0 4px 0 #ffd08a,0 8px 16px rgba(180,80,0,.25)}
+h1::after{-webkit-text-stroke:0;color:#f5a800;text-shadow:0 1px 0 #fff}
 </style>
 
 <div class="wrap">
@@ -1485,6 +1491,7 @@ render();
   function speak(s){
     if(!pref.voice||!synth||!s)return;
     try{if(vAudio){vAudio.pause();vAudio=null}}catch(e){}
+    s=s.replace(/主訴/g,'しゅそ').replace(/悪心/g,'おしん');
     try{synth.cancel();const u=new SpeechSynthesisUtterance(s);u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;u.rate=1.05;u.pitch=1.15;
       u.onstart=()=>document.body.classList.add('speaking');u.onend=u.onerror=()=>document.body.classList.remove('speaking');synth.speak(u)}catch(e){}
   }
@@ -1533,9 +1540,9 @@ render();
     mountSwitch();
     const app=document.getElementById('app');if(!app)return;
     const fb=app.querySelector('.fb'),end=app.querySelector('.karte.end');
-    if(end){const k=end.textContent.slice(0,80);if(k!==lastEnd){lastEnd=k;play('fan');if(end.querySelector('.award'))play('kira');speak(txt(end.querySelector('.case'))+'。'+txt(end.querySelector('.big')).replace('/','点、満点')+'点')}lastQ='';return}
+    if(end){const k=end.textContent.slice(0,80);if(k!==lastEnd){lastEnd=k;play('fan');if(end.querySelector('.award'))play('kira');stopVoice()}lastQ='';return}
     lastEnd='';
-    if(fb){const k=fb.textContent.slice(0,120);if(k!==lastFb){lastFb=k;play(fb.classList.contains('good')?'good':fb.classList.contains('part')?'part':'bad');speak(txt(fb.querySelector('.head')))}return}
+    if(fb){const k=fb.textContent.slice(0,120);if(k!==lastFb){lastFb=k;play(fb.classList.contains('good')?'good':fb.classList.contains('part')?'part':'bad');stopVoice()}return}
     lastFb='';
     const q=app.querySelector('.q');if(!q){lastQ='';stopVoice();return}
     const qt=txt(q);
