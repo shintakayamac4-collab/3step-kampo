@@ -701,6 +701,27 @@ header.pickhd h2::before{content:"✦";color:var(--ai);margin-right:6px}
 
 .snd #sw-up{color:#1f4fb8;background:rgba(255,255,255,.9)}
 footer .ver{display:block;margin:6px 0 0}
+
+/* 出会った方剤 */
+.met{background:var(--paper);border:2px solid var(--ol);border-radius:var(--r-l);padding:16px 14px;display:flex;flex-direction:column;gap:10px;box-shadow:5px 5px 0 var(--hard)}
+.met .h2{margin:0}
+.metgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metbtn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;font-family:var(--f-body);background:var(--paper);color:var(--ink);border:2px solid var(--ol);border-radius:16px;padding:10px 12px;cursor:pointer;box-shadow:0 4px 0 var(--keyedge),0 8px 14px var(--drop2);transition:transform .12s,box-shadow .12s}
+.metbtn b{font-size:16px;font-weight:900;line-height:1.3}
+.metbtn small{font-size:11px;color:var(--muted);line-height:1.4}
+.metbtn.ok{border-color:var(--ok);background:linear-gradient(180deg,var(--paper),var(--ok-soft))}
+.metbtn.ok small{color:var(--ok)}
+.metbtn:hover{transform:translateY(-2px)}
+.metbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--keyedge)}
+.metbtn:focus-visible{outline:3px solid var(--ai);outline-offset:2px}
+.fxov{position:fixed;inset:0;z-index:70;background:rgba(20,40,90,.55);backdrop-filter:blur(2px);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.fxbox{width:100%;max-width:520px;max-height:88vh;overflow:auto;background:var(--bg);border:2px solid var(--ol);border-bottom:0;border-radius:24px 24px 0 0;padding:12px 14px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;box-shadow:0 -10px 40px rgba(0,0,0,.3);animation:sheetIn .35s cubic-bezier(.2,1.2,.4,1) both}
+@keyframes sheetIn{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.fxbar{display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg);padding:4px 0 6px;z-index:1}
+.fxbox>*{flex:none}
+.fxbox .fx{background:var(--paper)}
+.noscroll{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.fxbox{animation:none}}
 </style>
 
 <div class="wrap">
@@ -1305,6 +1326,7 @@ function record(c,ans,score,pass){
   const p=PROG[c.t]||(PROG[c.t]={tries:0,best:0,perfect:[]});
   p.tries++; p.best=Math.max(p.best,score);
   const first=!p.perfect.length;
+  p.seen=p.seen||[];if(!p.seen.includes(ans))p.seen.push(ans);
   if(pass&&!p.perfect.includes(ans)) p.perfect.push(ans);
   saveProg();
   return pass&&first;
@@ -1363,7 +1385,31 @@ function homeHTML(){
    <div class="sxgrid">${EXTRA.map(sxBtn).join('')}</div>
    <div class="bar"><span class="note2">全${total}症例から${MIX}症例を出題</span><button class="btn" id="mix">おまかせ${MIX}症例</button></div>
    </section>
+   ${metHTML()}
   </section>`;
+}
+
+/* これまでに正解として出会った方剤の一覧 */
+function metList(){
+  const seen=new Map();
+  CASES.forEach(c=>{const p=PROG[c.t];if(!p)return;const names=[...(p.seen||[]),...(p.perfect||[])];names.forEach(n=>{if(!F[n])return;const e=seen.get(n)||{n,cases:[],ok:false};if(!e.cases.includes(c.t))e.cases.push(c.t);if((p.perfect||[]).includes(n))e.ok=true;seen.set(n,e)})});
+  return [...seen.values()];
+}
+function metHTML(){
+  const list=metList();
+  return `<section class="met" aria-labelledby="met-h"><h2 class="h2" id="met-h">出会った方剤</h2>
+   <p class="lead2">${list.length?'これまでの症例で正解になった方剤です。押すと、添付文書・使用目標・臨床報告・処方解説を見られます。':'症例を解くと、正解になった方剤がここに並びます。押すと解説を見られます。'}</p>
+   ${list.length?`<div class="metgrid">${list.map(e=>`<button class="metbtn${e.ok?' ok':''}" data-n="${e.n}" title="${e.cases.join('・')}"><b>${e.n}</b><small>${e.cases.join('・')}${e.ok?' ✓':''}</small></button>`).join('')}</div>`:''}
+  </section>`;
+}
+function showFormula(name){
+  const ov=document.createElement('div');ov.className='fxov';ov.setAttribute('role','dialog');ov.setAttribute('aria-label',name+'の解説');
+  ov.innerHTML=`<div class="fxbox"><div class="fxbar"><span class="k">方剤解説</span><button class="link" id="fx-x">閉じる</button></div>${slideHTML(name)}${fx(name,true,false)}</div>`;
+  document.body.appendChild(ov);
+  const close=()=>{ov.remove();document.removeEventListener('keydown',kd);document.body.classList.remove('noscroll')};
+  const kd=e=>{if(e.key==='Escape')close()};
+  ov.querySelector('#fx-x').onclick=close;ov.addEventListener('click',e=>{if(e.target===ov)close()});document.addEventListener('keydown',kd);
+  document.body.classList.add('noscroll');bindSlides(ov);ov.querySelector('#fx-x').focus();
 }
 function startCase(){
   const {c}=S.deck[S.idx];
@@ -1484,6 +1530,7 @@ function render(){
     app.querySelectorAll('.sx[data-k]').forEach(b=>b.onclick=()=>{if(surveyLocked())return gateStop();const k=isNaN(+b.dataset.k)?b.dataset.k:+b.dataset.k;const list=casesFor(k);list.length?startDeck(list,sxLabel(k),k):showUrgent(k)});
     app.querySelectorAll('.drawer').forEach(b=>b.onclick=()=>{if(surveyLocked())return gateStop();const c=CASES.find(x=>x.t===b.dataset.t);startDeck([c],c.t,'case:'+c.t)});
     $('#mix').onclick=()=>surveyLocked()?gateStop():newGame();
+    app.querySelectorAll('.metbtn').forEach(b=>b.onclick=()=>showFormula(b.dataset.n));
     bindSurvey();
     const rq=(id,fn)=>{const e=$(id);if(e)e.onclick=fn};
     rq('#rs-ask',()=>{RC=true;render()});rq('#rs-no',()=>{RC=false;render()});
@@ -1563,7 +1610,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2227';
+const APP_VER='2026.11.02-2230';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
