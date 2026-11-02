@@ -650,6 +650,9 @@ header::before{opacity:.35}
 h1{color:#143a8f;-webkit-text-stroke:0;paint-order:normal;text-shadow:0 2px 0 rgba(255,255,255,.95),0 4px 0 #9cbff3,0 8px 16px rgba(20,58,143,.25);font-size:clamp(38px,11vw,52px);letter-spacing:.06em}
 h1 em{color:#e35d00;-webkit-text-stroke:0;text-shadow:0 2px 0 rgba(255,255,255,.95),0 4px 0 #ffd08a,0 8px 16px rgba(180,80,0,.25)}
 h1::after{-webkit-text-stroke:0;color:#f5a800;text-shadow:0 1px 0 #fff}
+
+/* 3-Step を札にして目立たせる */
+h1 em{display:inline-block;color:#fff;background:linear-gradient(180deg,#ff8a3d,#e35d00);border:2.5px solid #143a8f;border-radius:14px;padding:.02em .28em .08em;margin-right:.18em;font-size:.82em;letter-spacing:.02em;text-shadow:0 2px 0 rgba(120,40,0,.45);box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 4px 0 #143a8f,0 8px 14px rgba(20,58,143,.3);transform:rotate(-4deg) translateY(-3px);vertical-align:.08em}
 </style>
 
 <div class="wrap">
@@ -1500,7 +1503,8 @@ render();
   let vAudio=null;
   function stopVoice(){try{if(vAudio){vAudio.pause();vAudio=null}}catch(e){}try{synth&&synth.cancel()}catch(e){}document.body.classList.remove('speaking')}
   function voiceFile(){
-    try{if(typeof S==='undefined'||S.view!=='play'||!S.deck||!S.deck[S.idx])return null;
+    try{if(typeof S!=='undefined'&&S.view==='urgent')return (typeof OUT!=='undefined'&&OUT.includes(S.key))?'x_out.mp3':'x_urgent.mp3';
+      if(typeof S==='undefined'||S.view!=='play'||!S.deck||!S.deck[S.idx])return null;
       const {c,ans}=S.deck[S.idx];const ci=CASES.indexOf(c)+1;if(ci<1)return null;
       const id='c'+String(ci).padStart(2,'0');
       if(S.stage===1)return id+'_s1.mp3';if(S.stage===2)return id+'_s2.mp3';
@@ -1547,9 +1551,10 @@ render();
     const q=app.querySelector('.q');if(!q){lastQ='';stopVoice();return}
     const qt=txt(q);
     const adds=app.querySelectorAll('.row.add .val');
-    const lead=adds.length?'追加情報。'+txt(adds[adds.length-1]):'主訴。'+txt(app.querySelector('.row.chief .val'));
+    const ch=app.querySelector('.row.chief .val');
+    const lead=adds.length?'追加情報。'+txt(adds[adds.length-1]):ch?'主訴。'+txt(ch):'';
     const key=lead+'|'+qt;
-    if(key!==lastQ){lastQ=key;const vf=voiceFile();if(vf)playVoice(vf,lead+'。'+qt);else speak(lead+'。'+qt)}
+    if(key!==lastQ){lastQ=key;const say=(lead?lead+'。':'')+qt;const vf=voiceFile();if(vf)playVoice(vf,say);else speak(say)}
   }
   const orig=window.render;
   if(typeof orig==='function'){window.render=function(){const r=orig.apply(this,arguments);try{after()}catch(e){}return r};}
