@@ -1298,7 +1298,7 @@ function record(c,ans,score,pass){
 let RC=false;
 function resetHTML(){
   if(!Object.keys(PROG).length) return '';
-  return RC?`<div class="rsbar"><span>これまでの記録をすべて消します。元に戻せません。</span><button class="btn" id="rs-yes">消す</button><button class="btn ghost" id="rs-no">やめる</button></div>`:`<div class="rsbar"><button class="btn ghost" id="rs-ask">記録をリセット</button></div>`;
+  return RC?`<div class="rsbar"><span>これまでの記録とアンケート回答済みの印をすべて消します。元に戻せません。</span><button class="btn" id="rs-yes">消す</button><button class="btn ghost" id="rs-no">やめる</button></div>`:`<div class="rsbar"><button class="btn ghost" id="rs-ask">記録をリセット</button></div>`;
 }
 function tansuHTML(){
   const n=doneCount(), nx=nextRank(n);
@@ -1473,7 +1473,7 @@ function render(){
     bindSurvey();
     const rq=(id,fn)=>{const e=$(id);if(e)e.onclick=fn};
     rq('#rs-ask',()=>{RC=true;render()});rq('#rs-no',()=>{RC=false;render()});
-    rq('#rs-yes',()=>{PROG={};try{localStorage.removeItem(PKEY)}catch(_){}RC=false;render()});return;
+    rq('#rs-yes',()=>{PROG={};try{localStorage.removeItem(PKEY);localStorage.removeItem(SKEY);sessionStorage.removeItem(SKEY+'.opened')}catch(_){}svOpened=false;RC=false;render()});return;
   }
   if(S.view==='urgent'){
     app.innerHTML=`<section class="karte"><div class="case">症候<span>${sxLabel(S.key)}</span></div>
@@ -1548,7 +1548,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2157';
+const APP_VER='2026.11.02-2159';
 (()=>{
   const f=document.querySelector('footer');if(f){const sp=document.createElement('span');sp.className='ver';sp.textContent='版 '+APP_VER;f.appendChild(sp)}
   let shown=false;
