@@ -698,6 +698,9 @@ header.pickhd{padding:0;margin:0;background:transparent;border:0;border-radius:0
 header.pickhd::before,header.pickhd::after{content:none;display:none}
 header.pickhd h2{margin:0;font-family:var(--f-pop);font-weight:400;font-size:20px;color:var(--ink);line-height:1.3}
 header.pickhd h2::before{content:"✦";color:var(--ai);margin-right:6px}
+
+.snd #sw-up{color:#1f4fb8;background:rgba(255,255,255,.9)}
+footer .ver{display:block;margin:6px 0 0}
 </style>
 
 <div class="wrap">
@@ -1502,6 +1505,7 @@ function render(){
     const msg=pct>=85?'鑑別の筋道がよく通っています。':pct>=60?'主要方剤は押さえています。三段目の決め手を見直すと伸びます。':'一段目の想起から復習しましょう。各症例の解説が手がかりです。';
     app.innerHTML=`<section class="karte end"><div class="case">結果<span>${S.label}</span></div><div class="big">${S.pts}<span style="font-size:22px"> / ${R8}</span></div><p style="margin:0">${msg}</p>${award}<table>${rows}</table>${surveyHTML()}<div class="bar" style="justify-content:center"><button class="btn ghost" id="home">症候一覧へ</button>${surveyLocked()?'':'<button class="btn" id="again">もう一度</button>'}</div></section>`;
     const ag=$('#again');if(ag){ag.onclick=replay;ag.focus()}$('#home').onclick=goHome;bindSurvey();
+    {const aw=app.querySelector('.award')||app.querySelector('.karte.end');if(aw)requestAnimationFrame(()=>{try{aw.scrollIntoView({block:'center',behavior:'instant'})}catch(e){aw.scrollIntoView()}})}
     if(S.complete){S.complete=false;showComplete()}
     return;
   }
@@ -1559,14 +1563,12 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2215';
+const APP_VER='2026.11.02-2219';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
   const f=document.querySelector('footer');
-  if(f){const box=document.createElement('div');box.className='verbox';
-    box.innerHTML='<div class="vertext"><b>いま表示している版：'+APP_VER+'</b><br>このアプリは定期的に更新しています。表示や音声が古いと感じたら、下のボタンで最新版に入れ替えてください。記録は消えません。</div><button type="button" class="btn ghost" id="ver-reload">最新版に更新する</button>';
-    f.parentNode.appendChild(box);box.querySelector('#ver-reload').onclick=hardReload}
+  if(f){const sp=document.createElement('span');sp.className='ver';sp.textContent='版 '+APP_VER+'。表示や音声が古いと感じたら、タイトル右上の「更新」を押してください（記録は消えません）。';f.appendChild(sp)}
   let shown=false;
   async function check(){
     if(shown)return;
@@ -1669,9 +1671,10 @@ const APP_VER='2026.11.02-2215';
   function mountSwitch(){
     const h=document.querySelector('header');if(!h||h.querySelector('.snd'))return;
     const d=document.createElement('div');d.className='snd';
-    d.innerHTML='<button type="button" id="sw-se">効果音</button><button type="button" id="sw-vo">読み上げ</button>';
+    d.innerHTML='<button type="button" id="sw-up" title="最新版に更新する（記録は消えません）" aria-label="最新版に更新する">↻ 更新</button><button type="button" id="sw-se">効果音</button><button type="button" id="sw-vo">読み上げ</button>';
     h.prepend(d);
     const sync=()=>{d.querySelector('#sw-se').setAttribute('aria-pressed',pref.se);d.querySelector('#sw-vo').setAttribute('aria-pressed',pref.voice)};sync();
+    d.querySelector('#sw-up').onclick=e=>{e.stopPropagation();if(window.__hardReload)window.__hardReload();else location.reload()};
     d.querySelector('#sw-se').onclick=e=>{e.stopPropagation();pref.se=!pref.se;save();sync();play('tap')};
     d.querySelector('#sw-vo').onclick=e=>{e.stopPropagation();pref.voice=!pref.voice;save();sync();if(!pref.voice)stopVoice();else{lastQ='';after()}};
   }
