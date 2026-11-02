@@ -1563,7 +1563,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2219';
+const APP_VER='2026.11.02-2227';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
