@@ -752,10 +752,14 @@ footer .ver{display:block;margin:6px 0 0}
 /* スイッチはランク札の右わきに */
 header{padding-top:16px}
 .hrow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex:0 0 100%}
-.hrow .score{justify-items:start;text-align:left}
-.snd{position:static;flex-direction:column;align-items:flex-end;gap:5px;margin-top:4px}
-.snd button{font-size:11px;padding:4px 10px;min-width:84px}
+.hrow .score{justify-items:start;text-align:left;flex:none}
+.hrow .score .of{white-space:nowrap}
+.hrow .snd{flex:1 1 auto;max-width:none}
+.snd{position:static;flex-direction:row;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:5px;margin-top:4px;max-width:200px}
+.snd button{font-size:11px;padding:4px 9px;min-width:0;white-space:nowrap}
 @media (min-width:0px){header{padding-top:16px}.snd{position:static;order:0;flex:none;justify-content:flex-end}}
+
+.note2.gl{margin:0;line-height:1.6}
 </style>
 
 <div class="wrap">
@@ -1374,6 +1378,7 @@ function tansuHTML(){
   const n=doneCount(), nx=nextRank(n);
   return `<section class="tansu-wrap">
    <div class="tansu-head"><div><span class="k rec">記録</span><b>経験したい症状・症候</b></div><span class="note2">${n} / ${CASES.length} ゲット${n>=CASES.length?'・コンプリート！':nx&&nx[0]<=CASES.length?`・あと${nx[0]-n}つで${nx[1]}にランクアップ`:''}</span></div>
+   <p class="note2 gl">臨床研修 指導ガイドライン（2024年度版）の「経験すべき症候」を参考に、研修中に出会いたい症状・症候を並べています。症例に合格すると、その症候を「ゲット」できます。</p>
    <div class="tansu-bar"><i style="width:${Math.round(n/CASES.length*100)}%"></i></div>
    <div class="tansu">${CASES.map(c=>{const p=PROG[c.t],d=isDone(c.t);
      return `<button class="drawer${d?' full':p?' tried':''}" data-t="${c.t}" title="${c.t}${d?'：ゲット済み':p?'：挑戦済み（最高'+p.best+'点）':''}"><span>${c.t}</span><small>${d?'合格':p?'挑戦済み':''}</small></button>`}).join('')}</div>
@@ -1414,7 +1419,7 @@ function hubHTML(){
   const total=CASES.length;
   return `<section class="hub">
    ${surveyHTML()}
-   <button class="tile" id="t-rec"><span class="tileic">★</span><span class="tilebody"><b>経験したい症状・症候</b><small>${n} / ${total} ゲット${n>=total?'・コンプリート！':nx&&nx[0]<=total?`・あと${nx[0]-n}つで${nx[1]}`:''}</small><span class="tbar"><i style="width:${Math.round(n/total*100)}%"></i></span></span><span class="chev">›</span></button>
+   <button class="tile" id="t-rec"><span class="tileic">★</span><span class="tilebody"><b>経験したい症状・症候</b><small>臨床研修 指導ガイドライン（2024年度版）参考</small><small>${n} / ${total} ゲット${n>=total?'・コンプリート！':nx&&nx[0]<=total?`・あと${nx[0]-n}つで${nx[1]}`:''}</small><span class="tbar"><i style="width:${Math.round(n/total*100)}%"></i></span></span><span class="chev">›</span></button>
    <button class="tile" id="t-pick"><span class="tileic">▶</span><span class="tilebody"><b>症候を選んで始める</b><small>29症候から選ぶ、または おまかせ${MIX}症例</small><span class="tilesx">${['頭痛','咳嗽','不眠','めまい','便秘','感冒初期'].map(t=>`<em>${t}</em>`).join('')}<em>…</em></span></span><span class="chev">›</span></button>
    <button class="tile" id="t-met"><span class="tileic">✦</span><span class="tilebody"><b>漢方薬を学ぶ</b><small>${Object.keys(F).length}方剤の解説${met?`・出会った方剤 ${met}`:''}</small></span><span class="chev">›</span></button>
    <div class="bar" style="justify-content:center"><button class="btn" id="mix">おまかせ${MIX}症例</button></div>
@@ -1668,7 +1673,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2236';
+const APP_VER='2026.11.02-2243';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
