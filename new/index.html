@@ -1559,14 +1559,14 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2211';
+const APP_VER='2026.11.02-2215';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
   const f=document.querySelector('footer');
   if(f){const box=document.createElement('div');box.className='verbox';
     box.innerHTML='<div class="vertext"><b>いま表示している版：'+APP_VER+'</b><br>このアプリは定期的に更新しています。表示や音声が古いと感じたら、下のボタンで最新版に入れ替えてください。記録は消えません。</div><button type="button" class="btn ghost" id="ver-reload">最新版に更新する</button>';
-    f.parentNode.insertBefore(box,f);box.querySelector('#ver-reload').onclick=hardReload}
+    f.parentNode.appendChild(box);box.querySelector('#ver-reload').onclick=hardReload}
   let shown=false;
   async function check(){
     if(shown)return;
