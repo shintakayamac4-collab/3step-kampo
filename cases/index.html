@@ -1,0 +1,1374 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="症例動画をもとに、四診から証を立て漢方処方を選ぶ。医学生・研修医・薬学生・看護学生のための症例チュートリアル。">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>症例で学ぶ漢方 人参湯編</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
+<style>
+/* Layout: chunky mobile study app — rounded type, big pill buttons with a pressed edge, one question per screen, sticky XP header */
+:root {
+  --bg: #F3F2FA;
+  --surface: #FFFFFF;
+  --ink: #1C1A2E;
+  --muted: #6B6889;
+  --line: #E2E0F0;
+  --brand: #19B37A;
+  --brand-deep: #0E8A5D;
+  --brand-soft: #DDF6EA;
+  --pop: #7B5CFF;
+  --pop-deep: #5A3DE0;
+  --pop-soft: #ECE7FF;
+  --sun: #FFC93C;
+  --sun-soft: #FFF4D2;
+  --ok: #19B37A;
+  --ok-deep: #0E8A5D;
+  --ok-soft: #DDF6EA;
+  --ng: #FF5A6E;
+  --ng-deep: #D93A4F;
+  --ng-soft: #FFE3E7;
+  --on: #FFFFFF;
+  --f: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12111B; --surface: #1D1B2B; --ink: #F1EFFA; --muted: #A6A2C4; --line: #2E2B44;
+    --brand: #2FD394; --brand-deep: #179E6B; --brand-soft: #173428;
+    --pop: #9A82FF; --pop-deep: #6F52F0; --pop-soft: #27213F;
+    --sun: #FFD25C; --sun-soft: #3A3220;
+    --ok: #2FD394; --ok-deep: #179E6B; --ok-soft: #173428;
+    --ng: #FF7385; --ng-deep: #D94A5E; --ng-soft: #3B1F26; --on: #FFFFFF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12111B; --surface: #1D1B2B; --ink: #F1EFFA; --muted: #A6A2C4; --line: #2E2B44;
+  --brand: #2FD394; --brand-deep: #179E6B; --brand-soft: #173428;
+  --pop: #9A82FF; --pop-deep: #6F52F0; --pop-soft: #27213F;
+  --sun: #FFD25C; --sun-soft: #3A3220;
+  --ok: #2FD394; --ok-deep: #179E6B; --ok-soft: #173428;
+  --ng: #FF7385; --ng-deep: #D94A5E; --ng-soft: #3B1F26; --on: #FFFFFF;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+html { overflow-x: clip; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 16px; line-height: 1.7; font-weight: 500; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.app { max-width: 520px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
+
+/* header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px 12px;
+}
+.top-row { display: flex; align-items: center; gap: 8px; }
+.brand { font-weight: 800; font-size: 15px; color: var(--ink); margin-right: auto; letter-spacing: .02em; }
+.brand { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.role-pill, .xp { font-size: 12px; font-weight: 800; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.role-pill { background: var(--pop-soft); color: var(--pop); }
+.xp { background: var(--sun-soft); color: var(--ink); font-variant-numeric: tabular-nums; }
+.xp b { color: var(--sun); -webkit-text-stroke: .3px var(--ink); }
+.steps { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-top: 12px; }
+.steps div { min-width: 0; }
+.steps i { display: block; height: 10px; border-radius: 99px; background: var(--line); }
+.steps span { display: block; font-size: 10.5px; font-weight: 700; color: var(--muted); text-align: center; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.steps .done i { background: var(--brand); }
+.steps .now i { background: linear-gradient(90deg, var(--brand) 0 50%, var(--line) 50%); }
+.steps .now span { color: var(--brand-deep); }
+
+/* main */
+main { flex: 1; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 8px 130px; display: flex; flex-direction: column; gap: 16px; }
+.eyebrow { align-self: flex-start; font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--pop); background: var(--pop-soft); padding: 4px 12px; border-radius: 999px; }
+h1, h2 { font-weight: 800; margin: 0; text-wrap: balance; line-height: 1.35; letter-spacing: .01em; }
+h1 { font-size: 32px; }
+h1 em { font-style: normal; background: linear-gradient(transparent 60%, var(--sun) 60%); }
+h2 { font-size: 24px; }
+p { margin: 0; }
+.lead { color: var(--muted); }
+.media { border-radius: 22px; overflow: hidden; background: var(--pop-soft); aspect-ratio: 16 / 9; max-width: 100%; box-shadow: 0 4px 0 var(--line); }
+.media img, .media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cap { font-size: 12.5px; color: var(--muted); margin-top: -6px; }
+
+.panel { background: var(--surface); border: 2px solid var(--line); border-radius: 20px; padding: 16px; }
+.kv { display: grid; grid-template-columns: 5.5em 1fr; gap: 8px 12px; font-size: 15px; }
+.kv dt { color: var(--muted); font-size: 12px; font-weight: 800; padding-top: 3px; }
+.kv dd { margin: 0; min-width: 0; font-weight: 700; }
+.unk { color: var(--muted); font-size: 14px; font-weight: 500; }
+.kv dd.unk { font-weight: 500; }
+
+.q { display: flex; gap: 10px; align-items: flex-start; background: var(--surface); border-radius: 20px; padding: 14px; border: 2px solid var(--line); }
+.q b { flex: none; width: 34px; height: 34px; border-radius: 12px; background: var(--pop); color: var(--on); display: grid; place-items: center; font-size: 15px; font-weight: 800; transform: rotate(-6deg); }
+.q p { font-weight: 800; font-size: 17px; line-height: 1.6; min-width: 0; }
+
+.opts { display: grid; gap: 10px; }
+.opt {
+  font: inherit; font-weight: 700; text-align: left; width: 100%; cursor: pointer;
+  background: var(--surface); color: var(--ink); border: 2px solid var(--line); border-radius: 18px;
+  padding: 12px 14px; display: flex; gap: 12px; align-items: center; min-height: 56px;
+  box-shadow: 0 4px 0 var(--line); transition: transform .08s, box-shadow .08s, background .15s;
+}
+.opt:active:not([disabled]) { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+.opt:focus-visible, .btn:focus-visible, .seg button:focus-visible, .herb:focus-visible, .role:focus-visible { outline: 3px solid var(--pop); outline-offset: 3px; }
+.opt .k { flex: none; width: 30px; height: 30px; border-radius: 10px; border: 2px solid var(--line); display: grid; place-items: center; font-size: 14px; font-weight: 800; color: var(--muted); }
+.opt.multi .k { border-radius: 8px; }
+.opt .t { min-width: 0; }
+.opt .t small { display: block; color: var(--muted); font-size: 13px; line-height: 1.5; font-weight: 500; }
+.opt.sel { border-color: var(--pop); background: var(--pop-soft); box-shadow: 0 4px 0 var(--pop); }
+.opt.sel .k { background: var(--pop); border-color: var(--pop); color: var(--on); }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); box-shadow: 0 4px 0 var(--ok); }
+.opt.right .k { background: var(--ok); border-color: var(--ok); color: var(--on); }
+.opt.wrong { border-color: var(--ng); background: var(--ng-soft); box-shadow: 0 4px 0 var(--ng); }
+.opt.wrong .k { background: var(--ng); border-color: var(--ng); color: var(--on); }
+.opt[disabled] { cursor: default; }
+.opt .why { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-top: 4px; line-height: 1.55; }
+
+.seg-row { display: grid; gap: 6px; }
+.seg-row label { font-size: 13px; font-weight: 800; color: var(--muted); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.seg button {
+  font: inherit; font-weight: 800; font-size: 20px; cursor: pointer; padding: 10px; border-radius: 18px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--ink); box-shadow: 0 4px 0 var(--line); transition: transform .08s, box-shadow .08s;
+}
+.seg button:active:not([disabled]) { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+.seg button.sel { border-color: var(--pop); background: var(--pop-soft); color: var(--pop); box-shadow: 0 4px 0 var(--pop); }
+.seg button.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ok-deep); box-shadow: 0 4px 0 var(--ok); }
+.seg button.wrong { border-color: var(--ng); background: var(--ng-soft); color: var(--ng-deep); box-shadow: 0 4px 0 var(--ng); }
+
+.fb { border-radius: 20px; padding: 16px; display: grid; gap: 6px; animation: pop .35s cubic-bezier(.2, 1.4, .4, 1); }
+.fb.good { background: var(--ok-soft); }
+.fb.bad { background: var(--ng-soft); }
+.fb .verdict { font-weight: 800; font-size: 22px; }
+.fb.good .verdict { color: var(--ok-deep); }
+.fb.bad .verdict { color: var(--ng-deep); }
+:root:not([data-theme="light"]) .fb.good .verdict { color: var(--ok); }
+.fb.good .verdict::after { content: "  ＋1"; font-size: 14px; color: var(--ink); background: var(--sun); border-radius: 999px; padding: 1px 8px; margin-left: 8px; vertical-align: 3px; }
+.fb.bad .verdict::after { content: ""; }
+.fb ul, .panel ul { margin: 0; padding-left: 1.2em; }
+.fb li, .panel li { margin: 3px 0; }
+.caution { font-size: 14px; font-weight: 700; color: var(--ng-deep); background: var(--ng-soft); border-radius: 14px; padding: 10px 14px; }
+
+.tip { background: var(--sun-soft); border-radius: 20px; padding: 14px 16px; font-size: 14.5px; border: 2px dashed var(--sun); }
+.tip strong { display: table; font-size: 12px; font-weight: 800; color: var(--ink); background: var(--sun); border-radius: 999px; padding: 2px 10px; margin-bottom: 6px; }
+
+.term { border-bottom: 2px dotted var(--pop); cursor: help; background: none; border-top: 0; border-left: 0; border-right: 0; font: inherit; color: inherit; padding: 0; }
+.gloss { font-size: 14px; background: var(--pop-soft); color: var(--ink); border-radius: 14px; padding: 8px 12px; }
+
+.big-sho { background: linear-gradient(135deg, var(--pop), var(--brand)); color: var(--on); border-radius: 24px; padding: 20px; text-align: center; box-shadow: 0 6px 0 var(--pop-deep); }
+.big-sho .s { font-size: 13px; font-weight: 800; opacity: .9; }
+.big-sho .n { font-size: 44px; font-weight: 800; letter-spacing: .08em; line-height: 1.3; }
+
+.herbs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.herb {
+  font: inherit; cursor: pointer; border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+  border-radius: 22px; padding: 14px 10px; min-height: 128px; display: grid; place-items: center; text-align: center; gap: 2px;
+  box-shadow: 0 5px 0 var(--line); transition: transform .08s, box-shadow .08s;
+}
+.herb:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--line); }
+.herb .hn { font-size: 30px; font-weight: 800; line-height: 1.2; }
+.herb .hr { font-size: 12px; color: var(--muted); }
+.herb .hd { font-size: 14px; line-height: 1.5; font-weight: 700; }
+.herb.open { background: var(--brand-soft); border-color: var(--brand); box-shadow: 0 5px 0 var(--brand); }
+
+.roles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.role {
+  font: inherit; cursor: pointer; padding: 14px 10px; border-radius: 18px; border: 2px solid var(--line);
+  background: var(--surface); color: var(--ink); font-weight: 800; font-size: 16px; box-shadow: 0 4px 0 var(--line); transition: transform .08s, box-shadow .08s;
+}
+.role:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+.role small { display: block; font-weight: 500; font-size: 12px; color: var(--muted); }
+.role.sel { border-color: var(--pop); background: var(--pop-soft); color: var(--pop); box-shadow: 0 4px 0 var(--pop); }
+
+.score { display: flex; align-items: baseline; gap: 8px; background: linear-gradient(135deg, var(--sun-soft), var(--pop-soft)); border: 0; }
+.score .num { font-size: 64px; font-weight: 800; color: var(--pop); line-height: 1; font-variant-numeric: tabular-nums; }
+.score .of { color: var(--ink); font-weight: 800; }
+.take { display: grid; gap: 10px; counter-reset: t; }
+.take div { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; background: var(--surface); border-radius: 18px; padding: 12px; border: 2px solid var(--line); }
+.take div::before { counter-increment: t; content: counter(t); width: 32px; height: 32px; border-radius: 10px; background: var(--brand); color: var(--on); display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+.take p { min-width: 0; }
+.refs { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+.refs summary { cursor: pointer; font-weight: 800; }
+.refs a { color: var(--pop); word-break: break-all; }
+
+.voice { font: inherit; font-size: 12px; font-weight: 800; border: 0; border-radius: 999px; padding: 4px 10px 4px 8px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; background: var(--brand-soft); color: var(--brand-deep); white-space: nowrap; }
+:root:not([data-theme="light"]) .voice { color: var(--brand); }
+.voice[aria-pressed="false"] { background: var(--line); color: var(--muted); }
+.voice:focus-visible, .say:focus-visible { outline: 3px solid var(--pop); outline-offset: 2px; }
+.say { flex: none; margin-left: auto; font: inherit; font-size: 12px; font-weight: 800; border: 2px solid var(--line); background: var(--surface); color: var(--pop); border-radius: 12px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 2px; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.say.speaking { background: var(--pop); color: var(--on); border-color: var(--pop); box-shadow: 0 3px 0 var(--pop-deep); }
+.say:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
+.q { align-items: center; }
+.voice-set { display: grid; gap: 8px; }
+.voice-set label { font-weight: 800; font-size: 14px; }
+.voice-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.voice-row select { font: inherit; font-size: 14px; min-width: 0; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 10px; }
+.voice-row .btn { font-size: 14px; padding: 8px 12px; box-shadow: 0 3px 0 var(--line); }
+
+.finish { position: relative; overflow: hidden; text-align: center; border-radius: 28px; padding: 22px 16px 20px; display: grid; justify-items: center; gap: 4px;
+  background: linear-gradient(160deg, var(--pop-soft), var(--sun-soft) 60%, var(--brand-soft)); }
+.rays { position: absolute; left: 50%; top: 92px; width: 520px; height: 520px; margin: -260px 0 0 -260px; border-radius: 50%; pointer-events: none;
+  background: repeating-conic-gradient(var(--rank) 0 8deg, transparent 8deg 24deg); opacity: .14; animation: spin 18s linear infinite; }
+.medal { position: relative; width: 104px; height: auto; animation: medal .9s cubic-bezier(.2, 1.5, .4, 1) both; filter: drop-shadow(0 6px 0 rgba(0,0,0,.12)); }
+.clear { position: relative; font-weight: 800; font-size: 13px; letter-spacing: .14em; color: var(--pop); margin-top: 6px; }
+.rank-title { position: relative; font-weight: 800; font-size: 34px; line-height: 1.25; text-wrap: balance; animation: pop .5s .35s cubic-bezier(.2, 1.4, .4, 1) both; }
+.rank-msg { position: relative; font-size: 14.5px; max-width: 30em; color: var(--ink); }
+.scorebig { position: relative; display: flex; align-items: baseline; gap: 6px; margin-top: 6px; }
+.scorebig .num { font-size: 72px; font-weight: 800; line-height: 1; color: var(--pop); font-variant-numeric: tabular-nums; }
+.scorebig .num.done { animation: pop .4s cubic-bezier(.2, 1.6, .4, 1); }
+.scorebig .of { font-size: 22px; font-weight: 800; color: var(--muted); }
+.best { position: relative; font-size: 12.5px; font-weight: 800; background: var(--sun); color: #1C1A2E; border-radius: 999px; padding: 3px 12px; }
+.stamps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stamp { display: flex; align-items: center; gap: 6px; justify-content: center; font-size: 13px; font-weight: 800; color: var(--brand-deep); background: var(--brand-soft); border-radius: 14px; padding: 8px 6px; animation: stampIn .4s cubic-bezier(.2, 1.6, .4, 1) both; min-width: 0; }
+:root:not([data-theme="light"]) .stamp { color: var(--brand); }
+.stamp svg { width: 18px; height: 18px; flex: none; color: var(--on); background: var(--brand); border-radius: 50%; padding: 2px; }
+.cert { border-radius: 22px; padding: 16px 18px; background: var(--surface); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--pop); display: grid; gap: 4px; }
+.cert-k { font-size: 11px; font-weight: 800; letter-spacing: .16em; color: var(--pop); }
+.cert-t { font-size: 18px; font-weight: 800; }
+.cert-s { font-size: 13.5px; color: var(--muted); }
+.cert-skills { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 4px; }
+.cert-skills span { font-size: 12px; font-weight: 800; border-radius: 999px; padding: 3px 10px; background: var(--brand-soft); color: var(--ink); }
+.cert-f { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; font-weight: 700; color: var(--muted); border-top: 2px dashed var(--line); padding-top: 8px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes medal { from { transform: scale(.2) rotate(-30deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes stampIn { from { transform: scale(1.6); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .rays, .medal, .rank-title, .stamp, .scorebig .num.done { animation: none; } }
+.home { align-self: center; margin-top: 8px; font: inherit; font-size: 14px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; color: var(--muted); background: var(--surface); border: 2px solid var(--line); border-radius: 999px; padding: 8px 18px; box-shadow: 0 3px 0 var(--line); }
+.home:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
+.home:focus-visible { outline: 3px solid var(--pop); outline-offset: 3px; }
+.cases { display: grid; gap: 10px; }
+.case { font: inherit; text-align: left; cursor: pointer; display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: center; padding: 8px; border-radius: 18px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); box-shadow: 0 4px 0 var(--line); transition: transform .08s, box-shadow .08s; }
+.case:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+.case img { width: 84px; height: 60px; object-fit: cover; border-radius: 12px; display: block; }
+.case span { min-width: 0; font-weight: 800; font-size: 15px; line-height: 1.45; }
+.case b { display: block; font-size: 11px; letter-spacing: .1em; color: var(--pop); }
+.case small { display: block; font-weight: 500; font-size: 12px; color: var(--muted); }
+.case .badge { display: inline-block; margin-top: 3px; font-size: 11px; font-weight: 800; border-radius: 999px; padding: 1px 8px; background: var(--brand-soft); color: var(--ink); }
+.case .badge.perfect { background: var(--sun); color: #1C1A2E; }
+.case.sel { border-color: var(--pop); background: var(--pop-soft); box-shadow: 0 4px 0 var(--pop); }
+.case:focus-visible { outline: 3px solid var(--pop); outline-offset: 3px; }
+.herb.wide { grid-column: 1 / -1; }
+.hero-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.hero-grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block; box-shadow: 0 4px 0 var(--line); }
+.hero-grid img:nth-child(odd) { transform: rotate(-2deg); }
+.hero-grid img:nth-child(even) { transform: rotate(2deg) translateY(6px); }
+.char { display: grid; grid-template-columns: 112px 1fr; gap: 14px; align-items: center; background: var(--surface); border: 2px solid var(--line); border-radius: 22px; padding: 12px; }
+.char-img { width: 112px; aspect-ratio: 3 / 4; border-radius: 16px; overflow: hidden; background: var(--pop-soft); }
+.char-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.char-info { min-width: 0; display: grid; gap: 2px; }
+.char-k { font-size: 11px; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
+.char-lv { font-size: 13px; font-weight: 800; color: var(--pop); }
+.char-name { font-size: 19px; font-weight: 800; line-height: 1.35; }
+.xpbar { height: 10px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 6px; }
+.xpbar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--brand), var(--pop)); }
+.char-next { font-size: 12px; color: var(--muted); font-weight: 700; }
+.char.up { border-color: var(--sun); background: linear-gradient(135deg, var(--sun-soft), var(--pop-soft)); box-shadow: 0 6px 0 var(--sun); }
+.char.up .char-img { animation: medal .9s .6s cubic-bezier(.2, 1.5, .4, 1) both; }
+.lvup { justify-self: start; font-size: 13px; font-weight: 800; letter-spacing: .12em; color: #1C1A2E; background: var(--sun); border-radius: 999px; padding: 2px 10px; animation: pop .5s .9s cubic-bezier(.2, 1.6, .4, 1) both; }
+@media (prefers-reduced-motion: reduce) { .char.up .char-img, .lvup { animation: none; } }
+/* action bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--bg);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: 12px; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+}
+.bar-in { max-width: 488px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr; gap: 10px; }
+.btn { font: inherit; font-weight: 800; font-size: 17px; letter-spacing: .04em; border-radius: 18px; padding: 14px 18px; cursor: pointer; border: 2px solid var(--line); background: var(--surface); color: var(--ink); box-shadow: 0 5px 0 var(--line); transition: transform .08s, box-shadow .08s; }
+.btn:active:not([disabled]) { transform: translateY(4px); box-shadow: 0 1px 0 var(--line); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: var(--on); box-shadow: 0 5px 0 var(--brand-deep); }
+.btn.primary:active:not([disabled]) { box-shadow: 0 1px 0 var(--brand-deep); }
+.btn.ask { background: var(--pop); border-color: var(--pop); color: var(--on); box-shadow: 0 5px 0 var(--pop-deep); }
+.btn.ask:active:not([disabled]) { box-shadow: 0 1px 0 var(--pop-deep); }
+.btn[disabled] { background: var(--line); border-color: var(--line); color: var(--muted); box-shadow: 0 5px 0 var(--line); cursor: default; }
+.screen { animation: rise .28s ease-out; display: flex; flex-direction: column; gap: 16px; }
+@keyframes rise { from { opacity: .3; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+@keyframes pop { from { transform: scale(.92); opacity: .4; } to { transform: none; opacity: 1; } }
+.confetti { position: fixed; top: 0; left: 0; width: 9px; height: 14px; border-radius: 3px; pointer-events: none; z-index: 20; }
+@media (prefers-reduced-motion: reduce) { .screen, .fb { animation: none; } .opt, .herb, .btn, .seg button, .role { transition: none; } }
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="top-row">
+      <span class="brand">症例で学ぶ漢方</span>
+      <span class="role-pill" id="rolePill" hidden></span>
+      <span class="xp" id="xp"></span>
+      <button type="button" class="voice" id="voice" aria-pressed="true"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span id="voiceLbl">音声ON</span></button>
+    </div>
+    <div class="steps" id="steps"></div>
+  </header>
+  <main id="main"></main>
+</div>
+<nav class="bar"><div class="bar-in"><button class="btn" id="back" type="button">戻る</button><button class="btn primary" id="next" type="button">次へ</button></div></nav>
+
+<script>
+const STEP_LABELS = {
+  med: ["症例", "情報収集", "四診", "証", "処方", "安全確認"],
+  res: ["症例", "初期対応", "四診", "証", "処方", "フォロー"],
+  pharm: ["症例", "服薬歴", "四診", "証", "処方", "服薬指導"],
+  nurse: ["症例", "観察", "四診", "証", "処方の理解", "ケア"],
+};
+const stepLabels = () => STEP_LABELS[state.role] || STEP_LABELS.med;
+const ROLES = {
+  med: { name: "医学生", sub: "四診と証の根拠づけ" },
+  pharm: { name: "薬学生", sub: "生薬構成と安全性" },
+  nurse: { name: "看護学生", sub: "観察と生活の支援" },
+  res: { name: "研修医", sub: "鑑別と診療の判断" },
+};
+const TIPS = {
+  redflag: {
+    med: "高齢者の新規の食欲不振は、まず器質的疾患を疑う。漢方的な評価は除外の後、または並行して行う。",
+    pharm: "服薬歴の聴取は薬剤師の出番。食欲低下を起こしうる薬（NSAIDs、ジギタリス、一部の抗菌薬・抗うつ薬など）がないか確認する。",
+    nurse: "体重の推移、食事摂取量、便の色（黒色便）の観察は看護記録が手がかりになる。気づいたらすぐ医師へ共有。",
+    res: "警告徴候があれば上部内視鏡・血液検査を検討。徴候がなく、胃もたれ・早期満腹感が続けば機能性ディスペプシアも鑑別に入れる。",
+  },
+  formula: {
+    med: "処方名を覚えるより、「虚・寒・裏」という根拠のそろい方で選ぶ練習をしよう。",
+    pharm: "朮は製品により蒼朮・白朮が異なる。同じ人参湯でも構成生薬と甘草量を添付文書で確認する。",
+    nurse: "服用時の様子（飲みにくさ、飲み忘れ）も効果判定に影響する。服薬状況を観察しよう。",
+    res: "類似処方との違いを1行で説明できるようにしておくと、指導医への提示がスムーズになる。",
+  },
+  safety: {
+    med: "甘草による偽アルドステロン症は、低K血症・高血圧・浮腫・脱力が手がかり。",
+    pharm: "他の甘草含有漢方、グリチルリチン酸製剤、利尿薬（K排泄型）との併用で甘草の影響が重なる。重複処方をチェック。",
+    nurse: "むくみ、血圧上昇、手足のだるさ・脱力の訴えは、偽アルドステロン症のサインになりうる。バイタルと併せて観察。",
+    res: "開始前に血清Kと血圧を確認し、再診時に効果（食事量・疲労・冷え・便性状）と副作用を一緒に評価する。",
+  },
+};
+const GLOSS = {
+  "心下部": "しんかぶ。みぞおちのあたり。",
+  "脾胃": "ひい。漢方医学で消化・吸収を担う機能のまとまり。",
+  "白苔": "はくたい。舌の表面につく白い苔。",
+  "瘀血": "おけつ。血の巡りが滞った状態を表す漢方医学の概念。",
+  "八綱": "はっこう。陰陽・虚実・寒熱・表裏の8つの物差しで病態を整理する方法。",
+  "腹力": "ふくりょく。腹壁の緊張・弾力の強さ。弱いと虚証を示唆する。",
+};
+
+let state = { i: 0, role: null, case: "c1", ans: {}, firstTry: {} };
+function save() { try { localStorage.setItem("kampo-ninjin", JSON.stringify(state)); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem("kampo-ninjin")); if (s && typeof s.i === "number") state = s; } catch (e) {} }
+
+const term = (w) => `<button type="button" class="term" data-g="${w}">${w}</button>`;
+const tip = (key) => state.role ? `<div class="tip"><strong>${ROLES[state.role].name}のポイント</strong>${TIPS[key][state.role]}</div>` : "";
+
+// ---------- question definitions ----------
+const Q = {
+  redflag: {
+    kind: "multi", prompt: "処方を考える前に、最優先で確認すべき「警告徴候」をすべて選ぼう",
+    options: [
+      { t: "体重減少", ok: true },
+      { t: "消化管出血（黒色便・吐血）", ok: true },
+      { t: "反復する嘔吐", ok: true },
+      { t: "高齢での新規発症", ok: true },
+      { t: "手足の冷え", ok: false, why: "漢方的な評価には大切だが、警告徴候ではない" },
+      { t: "舌の白苔", ok: false, why: "四診の所見。重い病気を除外する手がかりではない" },
+    ],
+    good: "その通り。高齢者の新規の食欲不振は、まず器質的疾患を除外する。",
+    bad: "警告徴候は4つ。冷えや舌の所見は、除外の後に漢方的な性質を詰めるための情報。",
+    after: `<div class="panel"><ul><li>警告徴候があれば上部内視鏡・血液検査を検討</li><li>服薬歴、栄養状態、貧血・代謝異常も確認</li><li>漢方的には「温めると楽か」「胃もたれ・つかえ」「便の性状」を詰める</li></ul></div>`,
+    tip: "redflag",
+  },
+  tongue: {
+    kind: "single", prompt: "白っぽく、むくんだ舌。表面に" + "白苔" + "。まず考える病態は？",
+    options: [
+      { t: "虚・寒", ok: true, why: "淡白・腫大傾向は、食欲低下や冷えと合わせて虚寒を示唆する" },
+      { t: "実・熱", ok: false, why: "熱なら舌は紅く、苔は黄色みを帯びやすい" },
+      { t: "陰虚", ok: false, why: "裂紋が見えても、単独で陰虚とは判断しない" },
+      { t: "瘀血", ok: false, why: "瘀血は舌の暗紫色や舌下静脈の怒張などで評価する" },
+    ],
+    good: "淡白・腫大傾向の舌は虚寒を示唆する。",
+    bad: "答えは「虚・寒」。舌は他の所見と合わせて読む。",
+    after: `<p class="caution">画像の色だけで寒熱を断定しない。歯痕・湿潤・口渇を確認し、水滞の程度も評価する。</p>`,
+  },
+  pulse: {
+    kind: "single", prompt: "診察者は「細くて弱い脈」と述べた。支持するのは？",
+    options: [
+      { t: "虚証", ok: true, why: "按圧に対する脈の力が乏しい" },
+      { t: "実証", ok: false, why: "実証では脈に力がある" },
+      { t: "沈脈・遅脈と確定できる", ok: false, why: "深さと速さは動画で評価されていない" },
+    ],
+    good: "疲れやすさ・腹力低下とそろって、虚の評価が補強される。",
+    bad: "答えは「虚証」。ただし浮沈・遅数は未評価なので、沈脈・遅脈とは確定できない。",
+  },
+  abdomen: {
+    kind: "seg", prompt: "腹診の2つの所見は、それぞれ何の根拠になる？",
+    rows: [
+      { label: "腹力が弱い", a: ["虚", "実"], ok: 0 },
+      { label: "心下部が冷え、抵抗がある", a: ["寒", "熱"], ok: 0 },
+    ],
+    good: "腹力低下は虚、心下部の冷えは寒の根拠。",
+    bad: "腹力低下 → 虚、心下部の冷え → 寒。",
+    after: `<p class="caution">抵抗だけで心下痞硬とは確定しない。つかえの自覚、圧痛、振水音も確認する。</p>`,
+  },
+  sublingual: {
+    kind: "single", prompt: "青紫色の舌下静脈が目立つ。駆瘀血剤を第一選択にする？",
+    options: [
+      { t: "はい、瘀血として駆瘀血剤を選ぶ", ok: false, why: "主訴とも腹証とも一致していない" },
+      { t: "いいえ、併存の可能性として記録する", ok: true, why: "主訴と虚寒の所見を優先する" },
+    ],
+    good: "目立つ所見に引きずられず、主訴と全体像を優先する。",
+    bad: "ひっかけ問題でした。駆瘀血剤には下腹部の抵抗・圧痛などの腹証が必要。",
+  },
+  sho: {
+    kind: "seg", prompt: term("八綱") + "で整理しよう。この症例はどちら？",
+    rows: [
+      { label: "虚実", a: ["虚", "実"], ok: 0 },
+      { label: "寒熱", a: ["寒", "熱"], ok: 0 },
+      { label: "表裏", a: ["表", "裏"], ok: 1 },
+    ],
+    good: "虚＋寒＋裏（消化器）。",
+    bad: "答えは 虚・寒・裏。易疲労・細弱脈・腹力低下が虚、手足と心下部の冷えが寒、食欲低下と軟便が裏。",
+    after: `<div class="big-sho"><div class="s">本症例の主病態</div><div class="n">脾胃虚寒</div><div>胃腸の働きが弱り、冷えている状態<br>→ 消化機能を補い、胃腸を温める</div></div>`,
+  },
+  formula: {
+    kind: "single", prompt: "脾胃虚寒の治療として、最も適した処方は？",
+    options: [
+      { t: "人参湯", s: "胃腸の冷え、食欲低下、軟便、虚弱", ok: true, why: "虚と寒がそろい、軟便を伴う。第一候補" },
+      { t: "六君子湯", s: "食欲低下、胃もたれ、つかえ、疲労", ok: false, why: "胃もたれ・悪心・振水音が目立つときに検討" },
+      { t: "真武湯", s: "全身の冷え、下痢、めまい・ふらつき", ok: false, why: "水様便や水滞症状（めまいなど）があれば検討" },
+      { t: "半夏瀉心湯", s: "つかえ、悪心、腹鳴、軟便・下痢", ok: false, why: "心下部の抵抗と軟便だけでは決めない" },
+    ],
+    good: "人参湯が教育上の第一候補。",
+    bad: "答えは人参湯。主訴が重なる処方は、冷え・胃もたれ・水滞で分ける。",
+    after: `<p class="caution">六君子湯でも手足の冷えはあり得る。冷えの有無だけでなく、心下部の冷え・軟便を含む全体像で判断する。</p>`,
+    tip: "formula",
+  },
+  potassium: {
+    kind: "single", prompt: "人参湯を始める前に、とくに確認したい検査値は？",
+    options: [
+      { t: "血清カリウム", ok: true, why: "甘草による低K血症・偽アルドステロン症に注意" },
+      { t: "HbA1c", ok: false, why: "糖尿病の評価には重要だが、甘草の安全性とは直接関係しない" },
+      { t: "CRP", ok: false, why: "炎症の評価。本処方の開始前確認の中心ではない" },
+      { t: "血清尿酸", ok: false, why: "本処方の安全性確認の中心ではない" },
+    ],
+    good: "人参湯には甘草が含まれる。",
+    bad: "答えは血清カリウム。人参湯の甘草に注意する。",
+    after: `<div class="panel"><ul><li><b>禁忌</b>：アルドステロン症、ミオパチー、低カリウム血症</li><li><b>開始前</b>：併用薬（甘草含有製剤・グリチルリチン酸製剤・利尿薬）、血圧</li><li><b>効果判定</b>：食事量、疲労感、冷え、便性状を経時的に比較</li><li><b>見直す</b>：浮腫・血圧上昇・脱力、改善不足なら漫然と継続しない</li></ul></div>`,
+    tip: "safety",
+  },
+};
+
+Object.assign(Q, {
+  diff: {
+    kind: "single", prompt: "応用：もしこの患者に振水音と、めまい・ふらつきがあり、便が水様だったら、まず検討する処方は？",
+    options: [
+      { t: "真武湯", s: "全身の冷え、下痢、めまい・ふらつき", ok: true, why: "全身の冷えに水滞（めまい・ふらつき、水様便）が加わる" },
+      { t: "人参湯のまま", ok: false, why: "水滞を示す所見が加われば、処方を見直す" },
+      { t: "半夏瀉心湯", ok: false, why: "つかえ・悪心・腹鳴が目立つときに検討する" },
+      { t: "桂枝茯苓丸", ok: false, why: "瘀血の腹証（下腹部の抵抗・圧痛）が必要" },
+    ],
+    good: "所見の組み合わせが変われば、処方も変わる。",
+    bad: "答えは真武湯。全身の冷えと水滞の所見があれば検討する。",
+  },
+  resWorkup: {
+    kind: "single", prompt: "80歳で新たに始まった食欲不振。警告徴候の「高齢での新規発症」に当てはまる。次の一手として適切なのは？",
+    options: [
+      { t: "上部内視鏡・血液検査を検討し、器質的疾患を評価する", ok: true, why: "器質的疾患の評価と並行して、漢方的な評価を進める" },
+      { t: "まず漢方薬で様子をみてから考える", ok: false, why: "器質的疾患の評価を後回しにしない" },
+      { t: "加齢による食欲低下と説明する", ok: false, why: "高齢での新規発症は警告徴候" },
+      { t: "体重減少がないので検査は不要", ok: false, why: "体重変化は未確認。他の警告徴候もある" },
+    ],
+    good: "器質的疾患の評価と、漢方的な評価を並行して進める。",
+    bad: "答えは「上部内視鏡・血液検査を検討」。高齢での新規発症は警告徴候。",
+    after: `<div class="panel"><ul><li>服薬歴、栄養状態、貧血・代謝異常も確認</li><li>警告徴候がなく、胃もたれ・早期満腹感が続けば機能性ディスペプシアも鑑別</li></ul></div>`,
+  },
+  resFollow: {
+    kind: "multi", prompt: "人参湯を開始した。再診時に評価する項目をすべて選ぼう",
+    options: [
+      { t: "食事量", ok: true }, { t: "疲労感", ok: true }, { t: "冷え", ok: true }, { t: "便の性状", ok: true },
+      { t: "血圧・むくみ・脱力（副作用）", ok: true },
+      { t: "舌下静脈の色", ok: false, why: "主病態の効果判定の中心ではない" },
+    ],
+    good: "効果と副作用を一緒に評価する。",
+    bad: "効果（食事量・疲労・冷え・便性状）と副作用（血圧・むくみ・脱力）の両方をみる。",
+    after: `<p class="caution">改善が乏しければ漫然と継続せず、診断と処方を見直す。</p>`,
+    tip: "safety",
+  },
+  pharmMeds: {
+    kind: "multi", prompt: "服薬歴の聴取で確認したいことをすべて選ぼう",
+    options: [
+      { t: "他院の漢方薬・市販薬", ok: true, why: "甘草の重複や相互作用に関わる" },
+      { t: "利尿薬", ok: true, why: "甘草との併用で低K血症に注意" },
+      { t: "食欲低下の原因になりうる薬", ok: true, why: "薬剤性の食欲低下を見逃さない" },
+      { t: "サプリメント・健康食品", ok: true, why: "甘草（グリチルリチン）を含むものもある" },
+      { t: "舌の色", ok: false, why: "四診の所見。服薬歴ではない" },
+    ],
+    good: "服薬歴の聴取は薬剤師の大切な役割。",
+    bad: "舌の色以外はすべて確認したい項目。",
+    tip: "redflag",
+  },
+  pharmHerb: {
+    kind: "single", prompt: "人参湯の構成生薬のうち、胃腸の冷えを温める要となるのは？",
+    options: [
+      { t: "乾姜", ok: true, why: "胃腸の冷えを温めるという伝統的な使用目標" },
+      { t: "人参", ok: false, why: "消化機能を補う中心" },
+      { t: "朮", ok: false, why: "胃腸の水分代謝を整える" },
+      { t: "甘草", ok: false, why: "全体を調和する" },
+    ],
+    good: "乾姜が「温める」、人参が「補う」。",
+    bad: "答えは乾姜。脾胃虚寒の「寒」に対応する。",
+  },
+  pharmKanzo: {
+    kind: "single", prompt: "人参湯と併用すると、甘草が重複するのはどれ？",
+    options: [
+      { t: "芍薬甘草湯", ok: true, why: "甘草を含む" },
+      { t: "真武湯", ok: false, why: "甘草を含まない" },
+      { t: "五苓散", ok: false, why: "甘草を含まない" },
+      { t: "呉茱萸湯", ok: false, why: "甘草を含まない" },
+    ],
+    good: "甘草の重複は処方監査の基本。",
+    bad: "答えは芍薬甘草湯。",
+    after: `<p class="caution">漢方薬の多くは甘草を含む。重複の有無は製品ごとの構成で確認する。</p>`,
+  },
+  pharmCounsel: {
+    kind: "multi", prompt: "服薬指導で、患者さんに伝えておきたいことをすべて選ぼう",
+    options: [
+      { t: "むくみ・血圧上昇・手足のだるさが出たら相談する", ok: true },
+      { t: "他の漢方薬や市販薬を使うときは相談する", ok: true },
+      { t: "食欲や便の様子を気にかけてもらう", ok: true, why: "効果判定の手がかりになる" },
+      { t: "効かないと感じたら自分の判断で量を増やす", ok: false, why: "自己判断で増量しない" },
+    ],
+    good: "副作用のサインと、効果をみるポイントの両方を伝える。",
+    bad: "自己判断での増量は勧めない。他の3つは伝えたい内容。",
+    tip: "safety",
+  },
+  nurseReport: {
+    kind: "multi", prompt: "問診で聞き取った情報のうち、すぐ医師に伝えるべき危険なサインをすべて選ぼう",
+    options: [
+      { t: "黒い便が出た", ok: true }, { t: "体重が減ってきた", ok: true }, { t: "吐くことを繰り返す", ok: true },
+      { t: "手足が冷える", ok: false, why: "漢方的な評価には大切だが、危険なサインではない" },
+      { t: "便が柔らかい", ok: false, why: "随伴症状として記録する" },
+    ],
+    good: "危険なサインは、気づいた時点ですぐ共有する。",
+    bad: "黒色便・体重減少・反復する嘔吐が危険なサイン。",
+    tip: "redflag",
+  },
+  nurseObserve: {
+    kind: "multi", prompt: "看護の観察・記録として、経過を追うのに役立つものをすべて選ぼう",
+    options: [
+      { t: "食事摂取量", ok: true }, { t: "体重の推移", ok: true }, { t: "便の回数・性状・色", ok: true }, { t: "手足の冷えの訴え", ok: true },
+      { t: "血液型", ok: false, why: "経過の評価には関係しない" },
+    ],
+    good: "日々の記録が、そのまま効果判定の材料になる。",
+    bad: "血液型以外はすべて経過を追うのに役立つ。",
+  },
+  nurseFormulaWhy: {
+    kind: "single", prompt: "医師は人参湯を処方した。この処方のねらいとして正しいのは？",
+    options: [
+      { t: "胃腸を温め、働きを補う", ok: true, why: "脾胃虚寒（胃腸が弱り冷えた状態）に対応する" },
+      { t: "体の熱を冷ます", ok: false, why: "この症例は寒証" },
+      { t: "余分な水分を尿で出す", ok: false, why: "主なねらいではない" },
+      { t: "血の巡りの滞りを改善する", ok: false, why: "瘀血は主病態ではない" },
+    ],
+    good: "処方のねらいが分かると、観察のポイントも見えてくる。",
+    bad: "答えは「胃腸を温め、働きを補う」。",
+  },
+  nurseSide: {
+    kind: "multi", prompt: "服用中、副作用のサインとして観察したいものをすべて選ぼう",
+    options: [
+      { t: "むくみ", ok: true }, { t: "血圧の上昇", ok: true }, { t: "手足のだるさ・力が入りにくい", ok: true },
+      { t: "食欲が出てきた", ok: false, why: "これは期待する効果" },
+    ],
+    good: "甘草による偽アルドステロン症のサインを見逃さない。",
+    bad: "食欲の回復は効果。むくみ・血圧上昇・脱力が副作用のサイン。",
+    tip: "safety",
+  },
+  nurseCare: {
+    kind: "single", prompt: "冷えと軟便のある患者さんへの生活支援として、適切なのは？",
+    options: [
+      { t: "衣類・室温・温かい飲み物で、体を冷やさない工夫をする", ok: true, why: "寒証の患者さんの生活を支える" },
+      { t: "水分は冷たいものを多めにとるよう勧める", ok: false, why: "冷えを強めるおそれがある" },
+      { t: "食事量が少ないので、食事を抜いてもよいと伝える", ok: false, why: "食事摂取は見守り、記録する" },
+      { t: "疲れやすいので、ずっと横になっているよう勧める", ok: false, why: "活動を制限しすぎない" },
+    ],
+    good: "看護のケアでも、病態（冷え）に合わせて支える。",
+    bad: "答えは「体を冷やさない工夫」。",
+  },
+});
+
+const QS = {
+  redflag: [2, "情報収集", "処方の前に確かめること"],
+  resWorkup: [2, "初期対応", "次の一手を決める"],
+  pharmMeds: [2, "服薬歴", "服薬歴を聞き取る"],
+  nurseReport: [2, "観察", "医師に伝えるべきサイン"],
+  nurseObserve: [2, "観察", "経過を追う記録"],
+  tongue: [3, "四診：舌診", "舌を読む", ["tongue.jpg", "患者の舌。白っぽく、表面に白い苔がある"], "動画 0:17〜0:24"],
+  pulse: [3, "四診：脈診", "脈を読む", ["pulse.jpg", "研修医が患者の手首で脈をみている"], "動画 0:32〜0:40"],
+  abdomen: [3, "四診：腹診", "腹を読む", ["abdomen.jpg", "腹診の場面"], "動画 0:46〜0:59。"],
+  sublingual: [3, "ひっかけ問題", "舌の裏に気づいたら", ["sublingual.jpg", "舌の裏。青紫色の静脈が見える"], "動画 0:27 の画像所見（音声での評価なし）"],
+  sho: [4, "証", "証を立てる"],
+  formula: [5, "処方", "処方を選ぶ"],
+  diff: [5, "応用問題", "所見が変わったら"],
+  pharmHerb: [5, "生薬", "要となる生薬"],
+  nurseFormulaWhy: [5, "処方の理解", "処方のねらい"],
+  potassium: [6, "安全確認", "飲み始める前に"],
+  resFollow: [6, "フォロー", "再診で何をみる？"],
+  pharmKanzo: [6, "服薬指導", "甘草の重複に注意"],
+  pharmCounsel: [6, "服薬指導", "患者さんに伝えること"],
+  nurseSide: [6, "ケア", "副作用のサインを見逃さない"],
+  nurseCare: [6, "ケア", "生活の支援"],
+};
+const FLOWS = {
+  med: ["redflag", "tongue", "pulse", "abdomen", "sublingual", "sho", "formula", "HERBS", "diff", "potassium"],
+  res: ["resWorkup", "tongue", "pulse", "abdomen", "sublingual", "sho", "formula", "potassium", "resFollow"],
+  pharm: ["pharmMeds", "tongue", "pulse", "sho", "formula", "HERBS", "pharmHerb", "pharmKanzo", "potassium", "pharmCounsel"],
+  nurse: ["nurseReport", "nurseObserve", "tongue", "abdomen", "sho", "nurseFormulaWhy", "nurseSide", "nurseCare"],
+};
+const graded = () => { const f = (CASES[state.case] || CASES.c1).flows; return (f[state.role] || f.med).filter((k) => k !== "HERBS"); };
+const TAKE = {
+  med: ["<b>まず除外。</b>高齢者の食欲不振は、警告徴候と器質的疾患の評価から始める。", "<b>所見を束ねる。</b>舌・脈・腹・問診がそろって「虚＋寒＋裏」を指すとき、脾胃虚寒と判断する。", "<b>鑑別して選ぶ。</b>主訴が重なる処方は、冷え・胃もたれ・水滞で分け、人参湯を選ぶ。"],
+  res: ["<b>まず除外。</b>高齢での新規発症は警告徴候。内視鏡・血液検査を検討しつつ漢方的評価を進める。", "<b>所見を束ねる。</b>「虚＋寒＋裏」がそろえば脾胃虚寒。人参湯を第一候補にする。", "<b>評価して見直す。</b>効果と副作用を再診で確かめ、漫然と継続しない。"],
+  pharm: ["<b>服薬歴から始める。</b>他の漢方薬・市販薬・利尿薬・健康食品を確認する。", "<b>構成で理解する。</b>人参で補い、乾姜で温める。構成が脾胃虚寒に対応している。", "<b>甘草に注意。</b>重複をチェックし、偽アルドステロン症のサインを服薬指導で伝える。"],
+  nurse: ["<b>危険なサインはすぐ共有。</b>黒色便・体重減少・反復する嘔吐。", "<b>観察が評価になる。</b>食事量・体重・便・冷えを記録して経過を追う。", "<b>ケアでも支える。</b>体を冷やさない工夫と、むくみ・血圧・脱力の観察。"],
+};
+const SKILLS = {
+  med: ["四診を読む", "脾胃虚寒", "人参湯の鑑別", "甘草の安全確認"],
+  res: ["警告徴候の評価", "四診と証", "処方選択", "再診での評価"],
+  pharm: ["服薬歴の聴取", "生薬構成", "甘草の重複チェック", "服薬指導"],
+  nurse: ["危険サインの共有", "観察と記録", "処方のねらい", "副作用の観察とケア"],
+};
+
+// ===== CASE 02：動悸・不安 =====
+Object.assign(GLOSS, {
+  "臍上悸": "せいじょうき。へその上で触れる拍動。気逆のサインとされる。",
+  "気逆": "きぎゃく。気が上につき上げる状態。発作性の動悸・のぼせなど。",
+  "気虚": "ききょ。気（エネルギー）が不足した状態。",
+  "気血水": "きけつすい。気・血・水の3つの要素の過不足や滞りで病態をみる考え方。",
+  "胸脇苦満": "きょうきょうくまん。みぞおちから肋骨の下が張って苦しく、押すと抵抗や圧痛がある所見。",
+});
+Object.assign(TIPS, {
+  c2redflag: {
+    med: "動悸の評価は、器質的疾患（不整脈・心疾患・貧血・甲状腺）の除外が先。漢方的評価は並行して進める。",
+    pharm: "カフェイン、気管支拡張薬、甲状腺ホルモン薬、市販の鼻炎薬など、動悸を起こしうるものを服薬歴で確認する。",
+    nurse: "脈拍とリズム、血圧を測り、動悸の起きた状況を記録。胸痛・失神があればすぐ医師へ。",
+    res: "発作時の心電図が取れていなければホルター心電図も検討。危険なサインがあれば再評価する。",
+  },
+  c2formula: {
+    med: "竜骨・牡蛎を含む2処方は虚実で分ける。腹力と胸脇苦満を確かめよう。",
+    pharm: "桂枝加竜骨牡蛎湯は桂枝湯＋竜骨・牡蛎。甘草を含むので重複に注意する。",
+    nurse: "処方のねらい（気持ちを落ち着かせる）が分かると、不安や睡眠の観察がそのまま効果判定になる。",
+    res: "「虚証・気逆・臍上悸」と根拠を短く言えると、指導医への提示が明快になる。",
+  },
+  c2safety: {
+    med: "甘草による偽アルドステロン症は、低K血症・高血圧・浮腫・脱力が手がかり。",
+    pharm: "他の甘草含有漢方、グリチルリチン酸製剤、利尿薬との併用で甘草の影響が重なる。重複処方をチェック。",
+    nurse: "むくみ、血圧上昇、手足のだるさの訴えに注意。動悸の回数の変化も記録する。",
+    res: "効果（動悸・不安・脈拍）と副作用（血圧・むくみ・K）を再診で一緒に評価する。",
+  },
+});
+Object.assign(Q, {
+  c2_tests: {
+    kind: "multi", prompt: "「検査で異常のない動悸」と判断するために必要な検査をすべて選ぼう",
+    options: [
+      { t: "心電図", ok: true }, { t: "心エコー", ok: true }, { t: "胸部X線", ok: true }, { t: "採血（貧血・甲状腺機能など）", ok: true },
+      { t: "舌診", ok: false, why: "漢方の診察。器質的疾患の除外には使わない" },
+    ],
+    good: "本症例ではすべて異常なし。機能性の動悸と考える。",
+    bad: "舌診以外はすべて、器質的疾患の除外に必要な検査。",
+    after: `<div class="panel"><ul><li>胸痛・失神・不規則で極端に速い脈があれば、すぐ再評価</li><li>カフェインや薬など、動悸を起こすものも確認</li></ul></div>`,
+    tip: "c2redflag",
+  },
+  c2_pulse: {
+    kind: "single", prompt: "脈はやや速く（数）、押さえると弱い。示唆するのは？",
+    options: [
+      { t: "虚・気の不足", ok: true, why: "速くても按じて弱ければ虚と考える" },
+      { t: "実・熱", ok: false, why: "脈に力がなく、実熱とはいえない" },
+      { t: "脈の結代（炙甘草湯の像）", ok: false, why: "脈の乱れは自覚しておらず、結代ではない" },
+    ],
+    good: "速さより「押さえたときの力」で虚実をみる。",
+    bad: "答えは「虚・気の不足」。按じて弱い脈は虚。",
+  },
+  c2_tongue: {
+    kind: "single", prompt: "淡紅〜淡白色の舌、薄い白苔、湿潤。寒熱はどう考える？",
+    options: [
+      { t: "熱証なし・やや寒", ok: true, why: "紅い舌や黄苔がなく、熱の所見はない" },
+      { t: "実熱", ok: false, why: "紅舌・黄苔がない" },
+      { t: "陰虚", ok: false, why: "乾燥や無苔ではなく、湿潤している" },
+    ],
+    good: "寒熱は中間〜やや寒。熱を冷ます処方は合わない。",
+    bad: "答えは「熱証なし・やや寒」。",
+  },
+  c2_abd: {
+    kind: "seg", prompt: "腹診の2つの所見は、それぞれ何の根拠になる？",
+    rows: [
+      { label: "腹力が軟弱", a: ["虚", "実"], ok: 0 },
+      { label: "臍上悸（へその上の拍動）", a: ["気逆", "瘀血"], ok: 0 },
+    ],
+    good: "腹力軟弱は虚、臍上悸は気逆の根拠。",
+    bad: "腹力軟弱 → 虚、臍上悸 → 気逆。",
+    after: `<p class="caution">本症例の臍上悸は、典型例として想定した所見。胸脇苦満の有無も確かめる（柴胡剤との鑑別）。</p>`,
+  },
+  c2_sho: {
+    kind: "seg", prompt: "八綱で整理しよう。この症例はどちら？",
+    rows: [
+      { label: "虚実", a: ["虚", "実"], ok: 0 },
+      { label: "寒熱", a: ["寒寄り", "熱"], ok: 0 },
+      { label: "表裏", a: ["表", "裏"], ok: 1 },
+    ],
+    good: "虚証、中間〜やや寒、裏（精神神経症状が主体）。",
+    bad: "答えは 虚・寒寄り・裏。脈弱・腹力軟弱が虚、熱候なし、精神神経症状が主体で裏。",
+  },
+  c2_qi: {
+    kind: "single", prompt: "気血水で整理すると、この症例は？",
+    options: [
+      { t: "気逆＋気虚", ok: true, why: "発作性の動悸・不安＝気逆、脈弱・腹力軟弱＝気虚" },
+      { t: "水滞", ok: false, why: "めまい・むくみなど水の異常は目立たない" },
+      { t: "血虚", ok: false, why: "血の明らかな異常はない" },
+      { t: "気うつ", ok: false, why: "咽の閉塞感や抑うつが強ければ考える" },
+    ],
+    good: "気逆＋気虚。血・水の明らかな異常はない。",
+    bad: "答えは気逆＋気虚。",
+    after: `<div class="big-sho"><div class="s">本症例の病態</div><div class="n">虚証・気逆</div><div>気が不足し、上につき上げて動悸・不安となる<br>→ 気の上衝を整え、心を落ち着かせる</div></div>`,
+  },
+  c2_formula: {
+    kind: "single", prompt: "虚証・気逆の動悸と不安。最も適した処方は？",
+    options: [
+      { t: "桂枝加竜骨牡蛎湯", s: "虚証、気逆、臍上悸、腹力軟弱", ok: true, why: "典型像に一致。第一候補" },
+      { t: "柴胡加竜骨牡蛎湯", s: "実証、胸脇苦満", ok: false, why: "本例は虚証で非該当" },
+      { t: "炙甘草湯", s: "動悸、脈の結代", ok: false, why: "脈の乱れがなく非該当" },
+      { t: "加味逍遙散", s: "のぼせ、いらだち、更年期症状", ok: false, why: "これらを伴うときに検討" },
+    ],
+    good: "桂枝加竜骨牡蛎湯が教育上の第一候補。",
+    bad: "答えは桂枝加竜骨牡蛎湯。竜骨・牡蛎の2処方は虚実で分ける。",
+    tip: "c2formula",
+  },
+  c2_diff: {
+    kind: "single", prompt: "応用：動悸に加えて、めまい・立ちくらみが目立つときに考える処方は？",
+    options: [
+      { t: "苓桂朮甘湯", ok: true, why: "めまい・立ちくらみなど水滞が前景のとき" },
+      { t: "半夏厚朴湯", ok: false, why: "咽の閉塞感・気うつが強いとき" },
+      { t: "柴胡加竜骨牡蛎湯", ok: false, why: "実証・胸脇苦満のとき" },
+      { t: "桂枝加竜骨牡蛎湯のまま", ok: false, why: "水滞の所見が前景なら見直す" },
+    ],
+    good: "随伴症状が変われば、処方も変わる。",
+    bad: "答えは苓桂朮甘湯。",
+  },
+  c2_safety: {
+    kind: "multi", prompt: "桂枝加竜骨牡蛎湯を続けるとき、注意したい副作用のサインをすべて選ぼう",
+    options: [
+      { t: "むくみ", ok: true }, { t: "血圧の上昇", ok: true }, { t: "手足のだるさ・脱力", ok: true },
+      { t: "動悸がおさまってきた", ok: false, why: "これは期待する効果" },
+    ],
+    good: "甘草による偽アルドステロン症のサインを見逃さない。",
+    bad: "動悸の改善は効果。むくみ・血圧上昇・脱力が副作用のサイン。",
+    after: `<div class="panel"><ul><li><b>甘草を含む</b>：併用薬（甘草含有製剤・グリチルリチン酸製剤・利尿薬）を確認</li><li>禁忌・甘草量は製品の添付文書で確認</li><li>胸痛・失神・脈の不整が出たら再評価</li></ul></div>`,
+    tip: "c2safety",
+  },
+  c2_resPlan: {
+    kind: "single", prompt: "検査はすべて異常なし。研修医として次の対応は？",
+    options: [
+      { t: "結果を説明し、漢方的評価をふまえて治療を提案する。症状が変われば再評価", ok: true, why: "安心につなげつつ、症状への治療を行う" },
+      { t: "異常がないので治療は不要と説明して終える", ok: false, why: "動悸と不安は続いている" },
+      { t: "念のため冠動脈造影を予定する", ok: false, why: "所見がなく適応に乏しい" },
+      { t: "「精神的なもの」と伝えて終える", ok: false, why: "つらさを受け止め、評価と治療につなげる" },
+    ],
+    good: "「異常なし」で終えず、治療につなげる。",
+    bad: "答えは「説明して治療を提案、症状が変われば再評価」。",
+    tip: "c2redflag",
+  },
+  c2_resFollow: {
+    kind: "multi", prompt: "再診時に評価する項目をすべて選ぼう",
+    options: [
+      { t: "動悸の頻度と強さ", ok: true }, { t: "不安の程度", ok: true }, { t: "脈拍・脈の不整", ok: true }, { t: "血圧・むくみ（副作用）", ok: true },
+      { t: "腹部CT", ok: false, why: "所見がなく必要性は乏しい" },
+    ],
+    good: "効果と副作用を一緒に評価する。",
+    bad: "腹部CT以外はすべて再診で確認したい項目。",
+    after: `<p class="caution">改善が乏しければ漫然と継続せず、診断と処方を見直す。</p>`,
+    tip: "c2safety",
+  },
+  c2_pharmMeds: {
+    kind: "multi", prompt: "動悸の原因になりうるものとして、確認したいことをすべて選ぼう",
+    options: [
+      { t: "カフェイン（コーヒー・エナジードリンク）", ok: true }, { t: "気管支拡張薬などの薬", ok: true }, { t: "甲状腺ホルモン薬", ok: true }, { t: "市販薬・サプリメント", ok: true },
+      { t: "舌の色", ok: false, why: "四診の所見。服薬歴ではない" },
+    ],
+    good: "動悸の原因を薬・嗜好品から探すのは薬剤師の大切な役割。",
+    bad: "舌の色以外はすべて確認したい項目。",
+    tip: "c2redflag",
+  },
+  c2_pharmHerb: {
+    kind: "single", prompt: "桂枝加竜骨牡蛎湯は、桂枝湯に何を加えた処方？",
+    options: [
+      { t: "竜骨と牡蛎", ok: true, why: "名前のとおり、桂枝湯＋竜骨・牡蛎" },
+      { t: "人参と乾姜", ok: false, why: "人参湯の主な構成" },
+      { t: "柴胡と黄芩", ok: false, why: "柴胡剤に含まれる組み合わせ" },
+      { t: "茯苓と朮", ok: false, why: "苓桂朮甘湯などに含まれる" },
+    ],
+    good: "処方名に構成が表れている。",
+    bad: "答えは竜骨と牡蛎。",
+  },
+  c2_pharmKanzo: {
+    kind: "single", prompt: "同じく竜骨と牡蛎を含む処方は？",
+    options: [
+      { t: "柴胡加竜骨牡蛎湯", ok: true, why: "虚実で使い分ける" },
+      { t: "苓桂朮甘湯", ok: false, why: "竜骨・牡蛎を含まない" },
+      { t: "半夏厚朴湯", ok: false, why: "竜骨・牡蛎を含まない" },
+      { t: "加味逍遙散", ok: false, why: "竜骨・牡蛎を含まない" },
+    ],
+    good: "虚証なら桂枝加竜骨牡蛎湯、実証なら柴胡加竜骨牡蛎湯。",
+    bad: "答えは柴胡加竜骨牡蛎湯。",
+    after: `<p class="caution">竜骨は化石由来の天然資源。製品の構成と供給状況にも気を配る。</p>`,
+  },
+  c2_pharmCounsel: {
+    kind: "multi", prompt: "服薬指導で、患者さんに伝えておきたいことをすべて選ぼう",
+    options: [
+      { t: "胸痛・失神・脈の乱れが出たらすぐ受診する", ok: true },
+      { t: "むくみ・血圧上昇・だるさが出たら相談する", ok: true },
+      { t: "カフェインのとりすぎに気をつける", ok: true },
+      { t: "効かないときは自分の判断で量を増やす", ok: false, why: "自己判断で増量しない" },
+    ],
+    good: "受診のサイン、副作用、生活の注意をセットで伝える。",
+    bad: "自己判断での増量は勧めない。他の3つは伝えたい内容。",
+    tip: "c2safety",
+  },
+  c2_nurseReport: {
+    kind: "multi", prompt: "動悸を訴える患者さんで、すぐ医師に伝えるべき危険なサインをすべて選ぼう",
+    options: [
+      { t: "胸痛を伴う", ok: true }, { t: "失神・意識が遠のく", ok: true }, { t: "脈が不規則・極端に速い", ok: true },
+      { t: "「漢方が好き」と話す", ok: false, why: "服薬継続に役立つ情報。危険なサインではない" },
+    ],
+    good: "危険なサインは、気づいた時点ですぐ共有する。",
+    bad: "胸痛・失神・不規則で極端に速い脈が危険なサイン。",
+    tip: "c2redflag",
+  },
+  c2_nurseObs: {
+    kind: "multi", prompt: "看護師として、観察・記録したいことをすべて選ぼう",
+    options: [
+      { t: "脈拍数とリズム", ok: true }, { t: "血圧", ok: true }, { t: "動悸が起きた状況と時間", ok: true }, { t: "不安の表情や言葉", ok: true },
+      { t: "血液型", ok: false, why: "経過の評価には関係しない" },
+    ],
+    good: "測って記録することが、診断と効果判定を支える。",
+    bad: "血液型以外はすべて観察・記録したい項目。",
+  },
+  c2_nurseWhy: {
+    kind: "single", prompt: "医師は桂枝加竜骨牡蛎湯を処方した。この処方のねらいは？",
+    options: [
+      { t: "気の上衝を整え、気持ちを落ち着かせる", ok: true, why: "虚証・気逆の動悸と不安に対応する" },
+      { t: "体の熱を冷ます", ok: false, why: "熱証はない" },
+      { t: "血の巡りの滞りを改善する", ok: false, why: "瘀血は主病態ではない" },
+      { t: "余分な水分を出す", ok: false, why: "水滞は目立たない" },
+    ],
+    good: "ねらいが分かると、観察のポイントも見えてくる。",
+    bad: "答えは「気の上衝を整え、気持ちを落ち着かせる」。",
+    tip: "c2formula",
+  },
+  c2_nurseCare: {
+    kind: "single", prompt: "不安の強い患者さんへの関わり方として適切なのは？",
+    options: [
+      { t: "検査で異常がなかったことを伝えつつ、つらさを受け止めて話を聴く", ok: true, why: "安心と信頼につながる" },
+      { t: "異常がないので「気にしすぎ」と伝える", ok: false, why: "不安を強めかねない" },
+      { t: "動悸が出ても我慢するよう伝える", ok: false, why: "危険なサインは知らせてもらう" },
+      { t: "コーヒーで気分転換を勧める", ok: false, why: "カフェインは動悸を誘発しうる" },
+    ],
+    good: "不安に寄り添う関わりも、看護の大切なケア。",
+    bad: "答えは「異常なしを伝えつつ、つらさを受け止めて話を聴く」。",
+  },
+});
+Object.assign(QS, {
+  c2_tests: [2, "情報収集", "異常なしの動悸を確かめる"],
+  c2_resPlan: [2, "初期対応", "次の対応を決める"],
+  c2_pharmMeds: [2, "服薬歴", "動悸の原因を聞き取る"],
+  c2_nurseReport: [2, "観察", "医師に伝えるべきサイン"],
+  c2_nurseObs: [2, "観察", "測って記録する"],
+  c2_pulse: [3, "四診：脈診", "脈を読む", ["c2/pulse.jpg", "医師が患者の手首で脈をみている"], "脈の乱れは自覚せず、脈が速い"],
+  c2_tongue: [3, "四診：舌診", "舌を読む", ["c2/tongue.jpg", "患者の舌。淡い色で薄い白い苔がある"], "淡紅〜淡白色、薄い白苔、湿潤"],
+  c2_abd: [3, "四診：腹診", "腹を読む", ["c2/abd.jpg", "やせ型の腹部を医師が触診している"], "やせ型、腹力軟弱。へその上の拍動（臍上悸）は典型例として想定"],
+  c2_sho: [4, "証", "八綱で整理する"],
+  c2_qi: [4, "証", "気血水で整理する"],
+  c2_formula: [5, "処方", "処方を選ぶ"],
+  c2_diff: [5, "応用問題", "症状が変わったら"],
+  c2_pharmHerb: [5, "生薬", "処方の成り立ち"],
+  c2_nurseWhy: [5, "処方の理解", "処方のねらい"],
+  c2_safety: [6, "安全確認", "副作用のサイン"],
+  c2_resFollow: [6, "フォロー", "再診で何をみる？"],
+  c2_pharmKanzo: [6, "服薬指導", "竜骨・牡蛎を含む処方"],
+  c2_pharmCounsel: [6, "服薬指導", "患者さんに伝えること"],
+  c2_nurseCare: [6, "ケア", "不安への関わり"],
+});
+const CASES = {
+  c1: {
+    label: "CASE 01", short: "食欲がなく、疲れやすい", who: "80歳女性　食欲不振・冷え・軟便", img: "scene.jpg", imgAlt: "研修医が高齢女性を問診している診察室",
+    titleHTML: "食欲がなく、<br><em>疲れやすい</em>", lead: "動画を観て、四診の所見から証を立て、処方を選ぶ。問いに答えながら6ステップで進みます（約10分）。",
+    certSub: "食欲不振・冷え・軟便の80歳女性", flows: FLOWS, take: TAKE, skills: SKILLS, safetyTip: "safety",
+    reflectQ: "振水音とめまいがあったら、処方はどう変わる？",
+    reflectA: "水滞を示す所見が加われば、全身の冷えと水滞を目標とする真武湯や、胃もたれ・振水音を目標とする六君子湯も候補に入る。所見の組み合わせで処方は変わる。",
+  },
+  c2: {
+    label: "CASE 02", short: "動悸がして、不安になる", who: "若年女性　動悸・不安（検査異常なし）", img: "c2/zenkei.jpg", imgAlt: "医師が胸に手を当てた若い女性を問診している診察室",
+    titleHTML: "動悸がして、<br><em>不安になる</em>", lead: "検査で異常のない動悸を、脈・舌・腹の所見から読み解き、処方を選ぶ。問いに答えながら6ステップで進みます（約10分）。",
+    certSub: "動悸・不安を訴える若年女性", safetyTip: "c2safety",
+    flows: {
+      med: ["c2_tests", "c2_pulse", "c2_tongue", "c2_abd", "c2_sho", "c2_qi", "c2_formula", "HERBS", "c2_diff", "c2_safety"],
+      res: ["c2_resPlan", "c2_pulse", "c2_tongue", "c2_abd", "c2_sho", "c2_qi", "c2_formula", "c2_safety", "c2_resFollow"],
+      pharm: ["c2_pharmMeds", "c2_pulse", "c2_tongue", "c2_sho", "c2_qi", "c2_formula", "HERBS", "c2_pharmHerb", "c2_pharmKanzo", "c2_pharmCounsel"],
+      nurse: ["c2_nurseReport", "c2_nurseObs", "c2_pulse", "c2_tongue", "c2_sho", "c2_nurseWhy", "c2_safety", "c2_nurseCare"],
+    },
+    take: {
+      med: ["<b>まず除外。</b>動悸は心電図・心エコー・採血などで器質的疾患を除外してから評価する。", "<b>所見をそろえる。</b>脈（弱）・舌（淡）・腹（軟・臍上悸）がそろえば「虚証・気逆」。", "<b>鑑別して選ぶ。</b>竜骨・牡蛎の2処方は虚実で分ける。虚証なら桂枝加竜骨牡蛎湯。"],
+      res: ["<b>除外を確認する。</b>検査で異常なしでも、危険なサインがあれば再評価する。", "<b>説明して治療へ。</b>「異常なし」で終えず、虚証・気逆として治療を提案する。", "<b>再診で評価する。</b>動悸・不安・脈拍と、甘草の副作用を一緒にみる。"],
+      pharm: ["<b>原因を聞き取る。</b>カフェイン・気管支拡張薬・甲状腺ホルモン薬・市販薬を確認する。", "<b>構成で理解する。</b>桂枝湯＋竜骨・牡蛎。竜骨・牡蛎が気持ちを落ち着かせる。", "<b>甘草に注意。</b>重複をチェックし、受診すべきサインも服薬指導で伝える。"],
+      nurse: ["<b>危険なサインはすぐ共有。</b>胸痛・失神・不規則で極端に速い脈。", "<b>測って記録する。</b>脈拍とリズム、血圧、動悸の起きた状況。", "<b>不安を受け止める。</b>異常なしを伝えつつ、つらさに寄り添って話を聴く。"],
+    },
+    skills: {
+      med: ["除外診断の確認", "脈・舌・腹の統合", "虚証・気逆", "竜骨牡蛎剤の鑑別"],
+      res: ["危険サインの評価", "説明と治療提案", "処方選択", "再診での評価"],
+      pharm: ["動悸の原因薬の確認", "桂枝湯＋竜骨・牡蛎", "竜骨牡蛎剤の比較", "服薬指導"],
+      nurse: ["危険サインの共有", "バイタルと記録", "処方のねらい", "不安への関わり"],
+    },
+    reflectQ: "めまい・立ちくらみが目立っていたら、処方はどう変わる？",
+    reflectA: "水滞の所見が前景なら苓桂朮甘湯、咽の閉塞感・気うつが強ければ半夏厚朴湯、のぼせ・いらだちを伴えば加味逍遙散も候補に入る。",
+  },
+};
+const CS = () => CASES[state.case] || CASES.c1;
+// 症例カードに、選んだ立場での自己ベストを表示（症例が増えても進み具合が分かる）
+function caseBadge(k, c) {
+  if (!state.role) return "";
+  let best = 0; try { best = +(localStorage.getItem("kampo-best-" + k + "-" + state.role) || 0); } catch (e) {}
+  const total = (c.flows[state.role] || c.flows.med).filter((x) => x !== "HERBS").length;
+  if (!best) return `<i class="badge" style="font-style:normal;background:var(--line)">未挑戦</i>`;
+  return `<i class="badge${best >= total ? " perfect" : ""}" style="font-style:normal">${best >= total ? "パーフェクト" : "自己ベスト"} ${best}/${total}</i>`;
+}
+
+// ---------- screens ----------
+const BASE = [
+  { step: 0, start: true, html: () => `
+    <div class="hero-grid">${Object.values(CASES).map((c) => `<img src="${c.img}" alt="${c.imgAlt}">`).join("")}</div>
+    <div class="eyebrow">症例チュートリアル　全${Object.keys(CASES).length}症例</div>
+    <h1>症例で学ぶ<br><em>漢方</em></h1>
+    <p class="lead">症例を選んで、四診の所見から証を立て、処方を選ぶ。立場に合わせた問いに答えながら6ステップで進みます（1症例約10分）。</p>
+    <div class="panel" style="display:grid;gap:10px">
+      <p style="font-weight:700">症例を選んでください</p>
+      <div class="cases">${Object.entries(CASES).map(([k, c]) => `<button type="button" class="case${(state.case || "c1") === k ? " sel" : ""}" data-case="${k}"><img src="${c.img}" alt=""><span><b>${c.label}</b>${c.short}<small>${c.who}</small>${caseBadge(k, c)}</span></button>`).join("")}</div>
+    </div>
+    <div class="panel" style="display:grid;gap:10px">
+      <p style="font-weight:700">あなたの立場を選んでください</p>
+      <div class="roles">${Object.entries(ROLES).map(([k, r]) => `<button type="button" class="role${state.role === k ? " sel" : ""}" data-role="${k}">${r.name}<small>${r.sub}</small></button>`).join("")}</div>
+      <p class="unk">立場によって、問いの内容が変わります。</p>
+      ${state.role ? charCard(state.role, totalXP(state.role)) : ""}
+    </div>` },
+  { step: 1, html: () => state.case === "c2" ? `
+    <div class="eyebrow">STEP 1　症例</div>
+    <h2>まず動画を観よう（約50秒）</h2>
+    <div class="media"><video src="c2/case2.mp4" poster="c2/poster2.jpg" controls playsinline preload="metadata"></video></div>
+    <p class="cap">観察ポイント：訴えと問診・検査の結果（〜0:28）、脈（〜0:35）、舌（〜0:43）、腹（〜0:52）</p>
+    <p class="cap">教育用の模擬症例（AI生成動画）</p>
+    <div class="panel"><dl class="kv">
+      <dt>患者</dt><dd>若年　女性　やせ型</dd>
+      <dt>主訴</dt><dd>動悸を繰り返し、不安で受診</dd>
+      <dt>問診</dt><dd>脈の乱れは自覚せず、脈が速い。診察中も動悸あり</dd>
+      <dt>検査</dt><dd>心電図・心エコー・胸部X線・採血：異常なし</dd>
+      <dt>嗜好</dt><dd>「漢方好き」→ 服薬継続が期待できる</dd>
+    </dl></div>
+    <p class="unk">検査で異常がなくても、本人の動悸と不安は続いています。ここから四診で手がかりを探します。</p>` : `
+    <div class="eyebrow">STEP 1　症例</div>
+    <h2>まず動画を観よう（約60秒）</h2>
+    <div class="media"><video src="case.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video></div>
+    <p class="cap">観察ポイント：訴え（〜0:16）、舌と舌の裏（〜0:30）、脈（〜0:40）、腹（〜0:59）</p>
+    <div class="panel"><dl class="kv">
+      <dt>患者</dt><dd>80歳　女性　やせ型</dd>
+      <dt>主訴</dt><dd>食欲がない／疲れやすい</dd>
+      <dt>随伴症状</dt><dd>手足が冷える／便が柔らかい</dd>
+      <dt>未提示</dt><dd class="unk">既往歴・家族歴、発症時期と経過、体重変化、服薬歴、バイタル</dd>
+    </dl></div>
+    <p class="unk">動画で提示されていない情報は、「ない」ではなく「まだ確認していない」と考えます。</p>` },
+  { step: 5, herbs: true, key: "HERBS", html: () => state.case === "c2" ? `
+    <div class="eyebrow">STEP 5　処方の中身</div>
+    <h2>桂枝湯＋竜骨・牡蛎</h2>
+    <p class="lead">カードをタップして、それぞれの役割を確かめよう。</p>
+    <div class="herbs">${[["桂枝湯", "けいしとう", "桂皮・芍薬・大棗・生姜・甘草。気の上衝を整える土台"], ["竜骨", "りゅうこつ", "大型哺乳類の化石骨。気持ちを落ち着かせる"], ["牡蛎", "ぼれい", "カキの貝殻。竜骨とともに心を落ち着かせる"]].map(([n, r, d], i) => `<button type="button" class="herb${i === 0 ? " wide" : ""}" data-h="${i}" aria-expanded="false"><span><span class="hn">${n}</span><br><span class="hr">${r}</span></span><span class="hd" hidden>${d}</span></button>`).join("")}</div>
+    <div class="panel">${term("気逆")}による動悸と不安に、「整える」桂枝湯と「落ち着かせる」竜骨・牡蛎が対応しています。</div>
+    <p class="unk">生薬の種類・量は製品ごとに添付文書で確認。甘草を含む。</p>` : `
+    <div class="eyebrow">STEP 5　処方の中身</div>
+    <h2>人参湯は4つの生薬でできている</h2>
+    <p class="lead">カードをタップして、それぞれの役割を確かめよう。</p>
+    <div class="herbs">${[["人参", "にんじん", "消化機能を補う中心"], ["乾姜", "かんきょう", "胃腸の冷えを温める要"], ["朮", "じゅつ", "胃腸の水分代謝を整える"], ["甘草", "かんぞう", "全体を調和する。量に注意"]].map(([n, r, d], i) => `<button type="button" class="herb" data-h="${i}" aria-expanded="false"><span><span class="hn">${n}</span><br><span class="hr">${r}</span></span><span class="hd" hidden>${d}</span></button>`).join("")}</div>
+    <div class="panel">「補う」人参と「温める」乾姜が、${term("脾胃")}虚寒という病態にそのまま対応しています。</div>
+    <p class="unk">例：ツムラ医療用製剤は人参・乾姜・蒼朮・甘草 各3 g（原料生薬）。朮の種類や量は製品ごとに確認。</p>` },
+  { step: 7, end: true },
+];
+function buildScreens(role) {
+  const fl = (CASES[state.case] || CASES.c1).flows;
+  const flow = fl[role] || fl.med;
+  const start = BASE.filter((x) => !x.herbs && !x.end);
+  const herbs = BASE.find((x) => x.herbs), end = BASE.find((x) => x.end);
+  return [...start, ...flow.map((k) => {
+    if (k === "HERBS") return herbs;
+    const [step, label, title, img, cap] = QS[k];
+    return { step, q: k, head: `STEP ${step}　${label}`, title, img, cap };
+  }), end];
+}
+let S = buildScreens(null);
+
+// ---------- rendering ----------
+const $ = (s, r = document) => r.querySelector(s);
+const main = $("#main");
+
+function renderSteps(step) {
+  $("#steps").innerHTML = stepLabels().map((s, i) => `<div class="${i + 1 < step ? "done" : i + 1 === step ? "now" : ""}"><i></i><span>${s}</span></div>`).join("");
+  const pill = $("#rolePill");
+  const got = graded().filter((k) => state.firstTry[k]).length;
+  $("#xp").innerHTML = `<b>●</b> ${got} / ${graded().length}`;
+  if (state.role) { pill.hidden = false; pill.textContent = ROLES[state.role].name; } else pill.hidden = true;
+}
+
+function qHTML(key, sc) {
+  const q = Q[key]; const a = state.ans[key];
+  const done = a && a.checked;
+  let body = "";
+  if (q.kind === "single" || q.kind === "multi") {
+    body = `<div class="opts">${q.options.map((o, i) => {
+      const sel = a && a.sel.includes(i);
+      let cls = "opt" + (q.kind === "multi" ? " multi" : "");
+      if (done) { if (o.ok) cls += " right"; else if (sel) cls += " wrong"; }
+      else if (sel) cls += " sel";
+      const mark = done ? (o.ok ? "✓" : sel ? "×" : "") : (q.kind === "multi" ? (sel ? "✓" : "") : String.fromCharCode(97 + i));
+      const why = done && o.why && (sel || o.ok) ? `<span class="why">${o.why}</span>` : "";
+      return `<button type="button" class="${cls}" data-o="${i}" ${done ? "disabled" : ""} aria-pressed="${sel ? "true" : "false"}"><span class="k">${mark}</span><span class="t">${o.t}${o.s ? `<small>${o.s}</small>` : ""}${why}</span></button>`;
+    }).join("")}</div>`;
+  } else {
+    body = q.rows.map((r, ri) => `<div class="seg-row"><label>${r.label}</label><div class="seg">${r.a.map((t, ai) => {
+      const sel = a && a.sel[ri] === ai;
+      let cls = "";
+      if (done) { if (ai === r.ok) cls = "right"; else if (sel) cls = "wrong"; } else if (sel) cls = "sel";
+      return `<button type="button" class="${cls}" data-r="${ri}" data-a="${ai}" ${done ? "disabled" : ""} aria-pressed="${sel ? "true" : "false"}">${t}</button>`;
+    }).join("")}</div></div>`).join("");
+  }
+  const fb = done ? `<div class="fb ${a.correct ? "good" : "bad"}" role="status"><div class="verdict">${a.correct ? "ナイス！正解" : "おしい！"}</div><p>${a.correct ? q.good : q.bad}</p></div>${q.after || ""}${q.tip ? tip(q.tip) : ""}` : "";
+  const prompt = q.prompt.replace(/白苔/g, term("白苔"));
+  return `<div class="eyebrow">${sc.head}</div><h2>${sc.title}</h2>
+    ${sc.img ? `<div class="media"><img src="${sc.img[0]}" alt="${sc.img[1]}"></div><p class="cap">${sc.cap}${sc.q === "abdomen" ? ` ${term("腹力")}と${term("心下部")}に注目。` : ""}</p>` : ""}
+    <div class="q"><b>Q</b><p>${prompt}</p>${done ? "" : `<button type="button" class="say" id="say" aria-label="問題をもう一度聞く"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>もう一度</button>`}</div>${body}${fb}`;
+}
+
+const RANKS = [
+  { min: 1, clip: "rank8", title: "漢方マスター", msg: "全問正解、パーフェクト！四診から処方まで、筋道立てて考えられています。", color: "--sun", star: 3 },
+  { min: 0.75, clip: "rank6", title: "証の見極め上手", msg: "あと少しでパーフェクト。間違えた問題の解説を見直して、もう一度挑戦しよう。", color: "--pop", star: 2 },
+  { min: 0.5, clip: "rank4", title: "四診トレーニー", msg: "基本はつかめています。舌・脈・腹の読み方をもう一度確認しよう。", color: "--brand", star: 1 },
+  { min: 0, clip: "rank0", title: "伸びしろ無限大", msg: "最初はみんなここから。解説を読んでから、もう一度チャレンジ！", color: "--ng", star: 1 },
+];
+const rankOf = (sc) => RANKS.find((r) => sc / graded().length >= r.min - 1e-9);
+function getBest() { try { return +(localStorage.getItem("kampo-best-" + (state.case || "c1") + "-" + state.role) || 0); } catch (e) { return 0; } }
+function setBest(v) { try { if (v > getBest()) localStorage.setItem("kampo-best-" + (state.case || "c1") + "-" + state.role, String(v)); } catch (e) {} }
+function medalSVG(r) {
+  const stars = [0, 1, 2].map((i) => `<path transform="translate(${44 + (i - 1) * 26} ${i === 1 ? 128 : 134}) scale(${i === 1 ? 0.5 : 0.4})" d="M0-20 6-6 21-6 9 3 13 18 0 9-13 18-9 3-21-6-6-6z" fill="${i < r.star ? "var(--sun)" : "var(--line)"}" stroke="var(--ink)" stroke-width="2"/>`).join("");
+  return `<svg class="medal" viewBox="0 0 88 150" role="img" aria-label="ランク ${r.title}">
+    <path d="M22 0h18l10 40H32z" fill="var(--pop)"/><path d="M48 0h18L56 40H38z" fill="var(--brand)"/>
+    <circle cx="44" cy="74" r="36" fill="var(--rank)" stroke="var(--ink)" stroke-width="3"/>
+    <circle cx="44" cy="74" r="27" fill="none" stroke="var(--on)" stroke-width="3" stroke-dasharray="4 5" opacity=".9"/>
+    <text x="44" y="84" text-anchor="middle" font-size="26" font-weight="800" fill="var(--on)" font-family="var(--f)">漢</text>
+    ${stars}
+  </svg>`;
+}
+function fanfare() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const ac = new AC(); const t0 = ac.currentTime + 0.05;
+    [[523.25, 0, .14], [659.25, .14, .14], [783.99, .28, .14], [1046.5, .42, .5], [783.99, .42, .5], [659.25, .42, .5]].forEach(([f, st, du]) => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = "triangle"; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t0 + st); g.gain.linearRampToValueAtTime(0.16, t0 + st + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t0 + st + du);
+      o.connect(g).connect(ac.destination); o.start(t0 + st); o.stop(t0 + st + du + 0.05);
+    });
+    setTimeout(() => ac.close(), 1500);
+  } catch (e) {}
+}
+function celebrate() {
+  const score = graded().filter((k) => state.firstTry[k]).length; const r = rankOf(score);
+  setBest(score);
+  if (state.voice !== false) fanfare();
+  const el = document.getElementById("countUp");
+  if (el && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let n = 0; el.textContent = "0";
+    const tick = () => { el.textContent = String(n); if (n < score) { n++; setTimeout(tick, 140); } else el.classList.add("done"); };
+    setTimeout(tick, 300);
+  }
+  [0, 350, 700].forEach((ms, i) => setTimeout(() => burst(i === 1 ? 0.25 : i === 2 ? 0.75 : 0.5, 0.35, 60), ms));
+  if (state.voice !== false) setTimeout(() => playClip(r.clip, `クリア、おめでとう！ランクは、${r.title}です。`), 900);
+}
+
+// ---------- レベルとキャラクター ----------
+// 経験値＝その立場で各症例の自己ベストの合計。症例が増えるほど上のレベルを目指せる
+const LV_XP = [0, 4, 8, 13, 18];
+const CHARS = {
+  med: ["医学生", "臨床実習生", "研修医", "専攻医", "漢方専門医"],
+  res: ["研修医1年目", "研修医2年目", "専攻医", "指導医", "漢方の名医"],
+  pharm: ["薬学生", "実務実習生", "薬剤師", "漢方に強い薬剤師", "漢方の名薬剤師"],
+  nurse: ["看護学生", "臨地実習生", "看護師", "主任看護師", "統合ケアのスペシャリスト"],
+};
+function bestOf(caseId, role) { try { return +(localStorage.getItem("kampo-best-" + caseId + "-" + role) || 0); } catch (e) { return 0; } }
+function totalXP(role, override) {
+  return Object.keys(CASES).reduce((sum, k) => sum + (override && override[k] !== undefined ? override[k] : bestOf(k, role)), 0);
+}
+function levelOf(xp) { let l = 0; LV_XP.forEach((t, i) => { if (xp >= t) l = i; }); return l; }
+function charCard(role, xp, opts = {}) {
+  const l = levelOf(xp), names = CHARS[role] || CHARS.med;
+  const next = LV_XP[l + 1], base = LV_XP[l];
+  const pct = next === undefined ? 100 : Math.round(((xp - base) / (next - base)) * 100);
+  return `<div class="char${opts.up ? " up" : ""}">
+    <div class="char-img"><img src="chars/${role}${l + 1}.jpg" alt="${names[l]}のキャラクター"></div>
+    <div class="char-info">
+      ${opts.up ? `<div class="lvup">LEVEL UP!</div>` : `<div class="char-k">あなたのキャラクター</div>`}
+      <div class="char-lv">Lv.${l + 1}</div>
+      <div class="char-name">${names[l]}</div>
+      <div class="xpbar" role="img" aria-label="経験値 ${xp}"><i style="width:${pct}%"></i></div>
+      <div class="char-next">${next === undefined ? "最高レベルに到達！" : `次のレベル「${names[l + 1]}」まで あと${next - xp}点`}</div>
+    </div>
+  </div>`;
+}
+function endHTML() {
+  const score = graded().filter((k) => state.firstTry[k]).length;
+  const r = rankOf(score);
+  const prev = getBest(), best = Math.max(score, prev);
+  const xpBefore = totalXP(state.role), xpAfter = totalXP(state.role, { [state.case || "c1"]: best });
+  const leveled = levelOf(xpAfter) > levelOf(xpBefore);
+  const d = new Date(); const date = `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`;
+  return `<div class="finish" style="--rank: var(${r.color})">
+      <div class="rays" aria-hidden="true"></div>
+      ${medalSVG(r)}
+      <div class="clear">${CS().label} CLEAR!</div>
+      <div class="rank-title">${r.title}</div>
+      <p class="rank-msg">${r.msg}</p>
+      <div class="scorebig"><span class="num" id="countUp" data-to="${score}">${score}</span><span class="of">/ ${graded().length}</span></div>
+      <div class="best">${score > prev ? "自己ベスト更新！" : `自己ベスト ${best} / ${graded().length}`}</div>
+    </div>
+    ${charCard(state.role, xpAfter, { up: leveled })}
+    <div class="stamps">${stepLabels().map((st, i) => `<div class="stamp" style="animation-delay:${0.5 + i * 0.12}s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${st}</span></div>`).join("")}</div>
+    <div class="cert">
+      <div class="cert-k">修了カード</div>
+      <div class="cert-t">症例で学ぶ漢方　${CS().label}</div>
+      <div class="cert-s">${CS().certSub}</div>
+      <div class="cert-skills">${(CS().skills[state.role] || CS().skills.med).map((x) => `<span>${x}</span>`).join("")}</div>
+      <div class="cert-f"><span>${state.role ? ROLES[state.role].name : "学習者"}</span><span>${date}</span><span>ランク：${r.title}</span></div>
+    </div>
+    <p style="font-weight:800">この症例から持ち帰る3つのこと</p>
+    <div class="take">
+      ${(CS().take[state.role] || CS().take.med).map((t) => `<div><p>${t}</p></div>`).join("")}
+    </div>
+    <div class="panel" style="display:grid;gap:8px"><p style="font-weight:700">考えてみよう：${CS().reflectQ}</p>
+      <button type="button" class="btn" id="hintBtn" aria-expanded="false">考え方を見る</button>
+      <p id="hint" hidden>${CS().reflectA}</p>
+    </div>
+    ${state.role ? `<div class="tip"><strong>${ROLES[state.role].name}のポイント（まとめ）</strong>${TIPS[CS().safetyTip][state.role]}</div>` : ""}
+    <p class="unk">本教材の症例は動画の画像・音声に基づく教育用設定です。処方は教育上の第一候補であり、実患者への確定処方ではありません。適応・用量は製品ごとの添付文書を確認してください。</p>
+    <details class="refs"><summary>参考資料</summary>
+      <p>${state.case === "c2" ? "【CASE 02】提供された症例スライド（教育用の模擬症例）に基づく。動悸を起こす薬・危険なサイン・安全確認は一般的事項として補足。<br>" : ""}日本東洋医学会「四診」「切診」 <a href="https://www.jsom.or.jp/kampo/consultation/sessin.html" target="_blank" rel="noopener">jsom.or.jp</a><br>
+      富山大学 伝統医薬データベース「人参湯」 <a href="https://dentomed.toyama-wakan.net/ja/漢方方剤/人参湯/SCP000030?w=1" target="_blank" rel="noopener">dentomed.toyama-wakan.net</a><br>
+      PMDA 人参湯 添付文書 <a href="https://www.pmda.go.jp/PmdaSearch/iyakuDetail/460026_5200116D1060_1_09" target="_blank" rel="noopener">pmda.go.jp</a><br>
+      日本薬学会「人参湯類」 <a href="https://www.pharm.or.jp/words/post-73.html" target="_blank" rel="noopener">pharm.or.jp</a><br>
+      日本消化器病学会 FD診療ガイドライン2021 <a href="https://www.jsge.or.jp/committees/guideline/guideline/pdf/fd2021r_.pdf" target="_blank" rel="noopener">jsge.or.jp</a><br>
+      参照日：2026年11月1日。本資料は富山大学和漢医薬学総合研究所の伝統医薬データベースの情報を利用した。</p>
+    </details>`;
+}
+
+function canCheck(key) {
+  const q = Q[key], a = state.ans[key];
+  if (!a) return false;
+  if (q.kind === "seg") return q.rows.every((_, i) => a.sel[i] !== undefined && a.sel[i] !== null);
+  return a.sel.length > 0;
+}
+
+function render() {
+  const sc = S[state.i];
+  renderSteps(sc.step);
+  let html;
+  if (sc.q) html = qHTML(sc.q, sc);
+  else if (sc.end) html = endHTML();
+  else html = sc.html();
+  main.innerHTML = `<section class="screen">${html}</section>` + (state.i > 0 ? `<button type="button" class="home" id="home"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V20h-5.5v-5h-5v5H4z" fill="currentColor"/></svg>スタートに戻る</button>` : "");
+  const back = $("#back"), next = $("#next");
+  back.hidden = state.i === 0;
+  next.className = "btn primary"; next.disabled = false;
+  if (sc.start) { next.textContent = "始める"; next.disabled = !state.role; }
+  else if (sc.end) { next.textContent = graded().filter((k) => state.firstTry[k]).length === graded().length ? "もう一度遊ぶ" : "パーフェクトを目指す"; }
+  else if (sc.q && !(state.ans[sc.q] && state.ans[sc.q].checked)) { next.textContent = "答え合わせ"; next.className = "btn ask"; next.disabled = !canCheck(sc.q); }
+  else next.textContent = "次へ";
+  renderVoice();
+  $(".bar-in").style.gridTemplateColumns = back.hidden ? "1fr" : "auto 1fr";
+  save();
+}
+
+main.addEventListener("click", (e) => {
+  const sc = S[state.i];
+  if (e.target.closest("#home")) {
+    stopAll();
+    state = { i: 0, role: state.role, case: state.case, ans: {}, firstTry: {}, voice: state.voice };
+    S = buildScreens(state.role); render(); window.scrollTo(0, 0); return;
+  }
+  const cs = e.target.closest(".case");
+  if (cs) { state.case = cs.dataset.case; state.ans = {}; state.firstTry = {}; S = buildScreens(state.role); render(); window.scrollTo(0, 0); return; }
+  const role = e.target.closest(".role");
+  if (role) { state.role = role.dataset.role; state.ans = {}; state.firstTry = {}; S = buildScreens(state.role); render(); return; }
+  const g = e.target.closest(".term");
+  if (g) {
+    const box = g.closest("section").querySelector(".gloss[data-for='" + g.dataset.g + "']");
+    if (box) { box.remove(); return; }
+    const d = document.createElement("div"); d.className = "gloss"; d.dataset.for = g.dataset.g; d.setAttribute("role", "note");
+    d.textContent = g.dataset.g + "：" + GLOSS[g.dataset.g];
+    const host = g.closest("p, .panel, .q, .take div") || g.parentElement;
+    host.after(d); return;
+  }
+  const h = e.target.closest(".herb");
+  if (h) { const d = h.querySelector(".hd"); d.hidden = !d.hidden; h.classList.toggle("open", !d.hidden); h.setAttribute("aria-expanded", String(!d.hidden)); return; }
+  if (e.target.closest("#say")) { playClip(sc.q, questionSpeech(sc.q)); return; }
+  if (e.target.id === "hintBtn") { const p = $("#hint"); p.hidden = !p.hidden; e.target.setAttribute("aria-expanded", String(!p.hidden)); return; }
+  if (!sc.q) return;
+  const q = Q[sc.q];
+  const a = state.ans[sc.q] || (state.ans[sc.q] = { sel: q.kind === "seg" ? [] : [], checked: false });
+  if (a.checked) return;
+  const o = e.target.closest(".opt");
+  if (o) {
+    const i = +o.dataset.o;
+    if (q.kind === "single") a.sel = [i];
+    else a.sel = a.sel.includes(i) ? a.sel.filter((x) => x !== i) : [...a.sel, i];
+    render(); return;
+  }
+  const sb = e.target.closest(".seg button");
+  if (sb) { a.sel[+sb.dataset.r] = +sb.dataset.a; render(); }
+});
+
+$("#next").addEventListener("click", () => {
+  const sc = S[state.i];
+  if (sc.end) { state = { i: 0, role: state.role, case: state.case, ans: {}, firstTry: {}, voice: state.voice }; render(); window.scrollTo(0, 0); return; }
+  if (sc.q && !(state.ans[sc.q] && state.ans[sc.q].checked)) {
+    const q = Q[sc.q], a = state.ans[sc.q];
+    let correct;
+    if (q.kind === "seg") correct = q.rows.every((r, i) => a.sel[i] === r.ok);
+    else { const want = q.options.map((o, i) => o.ok ? i : -1).filter((x) => x >= 0); correct = want.length === a.sel.length && want.every((x) => a.sel.includes(x)); }
+    a.checked = true; a.correct = correct;
+    stopAll();
+    if (correct) burst();
+    if (state.voice !== false) setTimeout(() => playClip(correct ? "ok" : "ng", correct ? "正解！" : "おしい！"), 60);
+    if (!(sc.q in state.firstTry)) state.firstTry[sc.q] = correct;
+    render();
+    const fb = main.querySelector(".fb"); if (fb) fb.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    return;
+  }
+  state.i = Math.min(S.length - 1, state.i + 1); render(); window.scrollTo(0, 0); speakCurrent(); if (S[state.i].end) celebrate();
+});
+$("#back").addEventListener("click", () => { state.i = Math.max(0, state.i - 1); render(); window.scrollTo(0, 0); speakCurrent(); });
+
+// ---------- voice ----------
+const YOMI = [
+  ["半夏瀉心湯", "はんげしゃしんとう"], ["六君子湯", "りっくんしとう"], ["真武湯", "しんぶとう"], ["人参湯", "にんじんとう"],
+  ["駆瘀血剤", "くおけつざい"], ["瘀血", "おけつ"], ["舌下静脈", "ぜっかじょうみゃく"], ["心下部", "しんかぶ"], ["脾胃虚寒", "ひいきょかん"], ["脾胃", "ひい"],
+  ["白苔", "はくたい"], ["八綱", "はっこう"], ["腹力", "ふくりょく"], ["虚証", "きょしょう"], ["実証", "じっしょう"],
+  ["虚・寒", "きょ、かん"], ["実・熱", "じつ、ねつ"], ["陰虚", "いんきょ"], ["沈脈・遅脈", "ちんみゃく、ちみゃく"], ["HbA1c", "ヘモグロビン・エーワンシー"], ["CRP", "シーアールピー"],
+];
+const SEG_YOMI = { "虚": "きょ", "実": "じつ", "寒": "かん", "熱": "ねつ", "表": "ひょう", "裏": "り", "虚実": "きょじつ", "寒熱": "かんねつ", "表裏": "ひょうり" };
+const yomi = (t) => YOMI.reduce((s, [k, v]) => s.split(k).join(v), t);
+const plain = (h) => { const d = document.createElement("div"); d.innerHTML = h; return d.textContent; };
+const SPEECH = {
+  redflag: "処方を考える前に、まず確かめておきたい、危険なサインはどれでしょう。当てはまるものを、すべて選んでください。",
+  tongue: "では、舌を見てみましょう。白っぽくて、むくんだ舌に、白いこけがついています。まず考えられる病態は、どれでしょう。",
+  pulse: "次は脈です。診察した先生は、細くて弱い脈、と言っていました。この脈が示しているのは、どれでしょう。",
+  abdomen: "おなかの診察です。腹力が弱く、みぞおちが冷えていて、抵抗があります。それぞれ、何の手がかりになるでしょう。",
+  sublingual: "ここで、ひっかけ問題です。舌の裏に、青紫色の静脈が目立っています。おけつと考えて、おけつを治す薬を、まず選ぶべきでしょうか。",
+  sho: "ここまでの所見を、はっこうで整理しましょう。きょか、じつか。かんか、ねつか。ひょうか、りか。それぞれ選んでください。",
+  formula: "いよいよ処方選びです。ひいきょかんを治すのに、いちばん合う処方はどれでしょう。にんじんとう、りっくんしとう、しんぶとう、はんげしゃしんとう。この中から、ひとつ選んでください。",
+  potassium: "最後の問題です。にんじんとうを飲み始める前に、特に確認しておきたい検査値は、どれでしょう。",
+};
+function questionSpeech(key) { return SPEECH[key] || yomi(plain(Q[key].prompt)); }
+let jaVoice = null, jaVoices = [];
+const VOICE_RANK = [/natural/i, /online/i, /nanami/i, /google/i, /o-ren|オーレン/i, /kyoko|キョウコ/i, /siri/i, /premium|enhanced|拡張/i, /haruka|ayumi|sayaka/i];
+const vScore = (v) => { const i = VOICE_RANK.findIndex((r) => r.test(v.name)); return (i < 0 ? 99 : i) + (v.localService ? 0.5 : 0); };
+function pickVoice() {
+  try {
+    jaVoices = speechSynthesis.getVoices().filter((v) => /^ja/i.test(v.lang)).sort((a, b) => vScore(a) - vScore(b));
+    let saved = null; try { saved = localStorage.getItem("kampo-voice"); } catch (e) {}
+    jaVoice = jaVoices.find((v) => v.name === saved) || jaVoices[0] || null;
+    const sel = document.getElementById("voiceSel");
+    if (sel) fillVoiceSel(sel);
+  } catch (e) {}
+}
+function fillVoiceSel(sel) {
+  sel.innerHTML = jaVoices.length ? jaVoices.map((v) => `<option value="${v.name}"${jaVoice && v.name === jaVoice.name ? " selected" : ""}>${v.name.replace(/Microsoft |Google /, "")}</option>`).join("") : `<option>この端末の標準の声</option>`;
+}
+if ("speechSynthesis" in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(text) {
+  if (!("speechSynthesis" in window)) return;
+  try {
+    speechSynthesis.cancel();
+    // 文ごとに区切って読む：長文の途切れを防ぎ、句点で自然な間をとる
+    const parts = text.split(/(?<=[。？！])/).map((x) => x.trim()).filter(Boolean);
+    const setSpeaking = (on) => { const x = document.getElementById("say"); x && x.classList.toggle("speaking", on); };
+    parts.forEach((t, i) => {
+      const u = new SpeechSynthesisUtterance(t);
+      u.lang = "ja-JP"; if (jaVoice) u.voice = jaVoice;
+      u.rate = jaVoice && /natural|online|google/i.test(jaVoice.name) ? 1.08 : 1.12; u.pitch = 1.0;
+      if (i === 0) u.onstart = () => setSpeaking(true);
+      if (i === parts.length - 1) u.onend = () => setSpeaking(false);
+      u.onerror = () => setSpeaking(false);
+      speechSynthesis.speak(u);
+    });
+  } catch (e) {}
+}
+// 音読さんで作成した音声（声：エリス）。再生できない端末ではブラウザの読み上げに切り替える
+let clip = null;
+function stopAll() { try { if (clip) { clip.pause(); clip = null; } } catch (e) {} try { speechSynthesis.cancel(); } catch (e) {} const x = document.getElementById("say"); x && x.classList.remove("speaking"); }
+function playClip(key, fallback) {
+  stopAll();
+  const setSpeaking = (on) => { const x = document.getElementById("say"); x && x.classList.toggle("speaking", on); };
+  try {
+    const a = new Audio(`voice/${key}.mp3`); clip = a;
+    a.onplay = () => setSpeaking(true);
+    a.onended = () => { setSpeaking(false); if (clip === a) clip = null; };
+    const p = a.play();
+    if (p && p.catch) p.catch(() => { if (clip === a && fallback) speak(fallback); });
+    a.onerror = () => { if (clip === a && fallback) speak(fallback); };
+  } catch (e) { if (fallback) speak(fallback); }
+}
+function speakCurrent() {
+  const sc = S[state.i];
+  stopAll();
+  if (state.voice === false || !sc.q || (state.ans[sc.q] && state.ans[sc.q].checked)) return;
+  playClip(sc.q, questionSpeech(sc.q));
+}
+function renderVoice() {
+  const on = state.voice !== false, b = $("#voice");
+  b.setAttribute("aria-pressed", String(on)); $("#voiceLbl").textContent = on ? "音声ON" : "音声OFF";
+}
+main.addEventListener("change", (e) => {
+  if (e.target.id !== "voiceSel") return;
+  jaVoice = jaVoices.find((v) => v.name === e.target.value) || jaVoice;
+  try { localStorage.setItem("kampo-voice", jaVoice ? jaVoice.name : ""); } catch (er) {}
+  speak("この声で読み上げます。");
+});
+$("#voice").addEventListener("click", () => {
+  state.voice = state.voice === false; renderVoice(); save();
+  if (state.voice) speakCurrent(); else stopAll();
+});
+
+function burst(ox = 0.5, oy = 0.75, count = 36) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cs = getComputedStyle(document.documentElement);
+  const cols = ["--brand", "--pop", "--sun", "--ng"].map((v) => cs.getPropertyValue(v).trim());
+  const W = innerWidth, H = innerHeight;
+  for (let n = 0; n < count; n++) {
+    const d = document.createElement("div"); d.className = "confetti";
+    d.style.background = cols[n % cols.length];
+    document.body.appendChild(d);
+    const x0 = W * ox, y0 = H * oy, ang = (Math.random() * 0.9 + 0.05) * Math.PI, sp = 260 + Math.random() * 320;
+    const dx = Math.cos(ang) * sp * (Math.random() < .5 ? -1 : 1) * 0.8, dy = -Math.sin(ang) * sp - 120;
+    const rot = (Math.random() * 720 - 360);
+    d.animate([
+      { transform: `translate(${x0}px, ${y0}px) rotate(0deg)`, opacity: 1 },
+      { transform: `translate(${x0 + dx}px, ${y0 + dy}px) rotate(${rot / 2}deg)`, opacity: 1, offset: .45 },
+      { transform: `translate(${x0 + dx * 1.3}px, ${y0 + dy + 420}px) rotate(${rot}deg)`, opacity: 0 },
+    ], { duration: 1200 + Math.random() * 500, easing: "cubic-bezier(.2,.7,.4,1)" }).onfinish = () => d.remove();
+  }
+}
+function start(data) { if (data && typeof data.i === "number") state = data; else load(); S = buildScreens(state.role); if (state.i >= S.length) state.i = 0; render(); }
+window.claude?.hot?.snapshot?.(() => state);
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? null);
+</script>
+
+</body>
+</html>
