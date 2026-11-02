@@ -1513,21 +1513,12 @@ render();
   const play=k=>{if(pref.se&&SE[k])try{SE[k]()}catch(e){}};
 
   /* 読み上げ */
-  const synth=window.speechSynthesis;let jaVoice=null;
-  const pickVoice=()=>{try{const v=synth.getVoices().filter(v=>/^ja/i.test(v.lang));jaVoice=v.find(x=>/Kyoko|Nanami|Google|O-ren|Haruka/i.test(x.name))||v[0]||null}catch(e){}};
-  if(synth){pickVoice();try{synth.onvoiceschanged=pickVoice}catch(e){}}
+  /* 読み上げは音読さんで作った音声（audio/）のみ。ブラウザの合成音声は使わない */
+  const synth=null;
   const txt=el=>{if(!el)return'';const c=el.cloneNode(true);c.querySelectorAll('small,.chip,cite,i,em').forEach(x=>x.remove());return c.textContent.replace(/\s+/g,' ').trim()};
-  function speak(s){
-    if(!pref.voice||!synth||!s)return;
-    try{if(vAudio){vAudio.pause();vAudio=null}}catch(e){}
-    s=s.replace(/主訴/g,'しゅそ').replace(/悪心/g,'おしん');
-    try{synth.cancel();const u=new SpeechSynthesisUtterance(s);u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;u.rate=1.05;u.pitch=1.15;
-      u.onstart=()=>document.body.classList.add('speaking');u.onend=u.onerror=()=>document.body.classList.remove('speaking');synth.speak(u)}catch(e){}
-  }
-
-  /* 音読さんで作った問いの音声（audio/）を優先して再生し、なければブラウザ読み上げ */
-  let vAudio=null;
-  function stopVoice(){try{if(vAudio){vAudio.pause();vAudio=null}}catch(e){}try{synth&&synth.cancel()}catch(e){}document.body.classList.remove('speaking')}
+  function speak(){}
+  let vAudio=null,pendingVoice=null;
+  function stopVoice(){pendingVoice=null;try{if(vAudio){vAudio.pause();vAudio=null}}catch(e){}document.body.classList.remove('speaking')}
   function voiceFile(){
     try{if(typeof S!=='undefined'&&S.view==='urgent')return (typeof OUT!=='undefined'&&OUT.includes(S.key))?'x_out.mp3':'x_urgent.mp3';
       if(typeof S==='undefined'||S.view!=='play'||!S.deck||!S.deck[S.idx])return null;
@@ -1536,13 +1527,18 @@ render();
       if(S.stage===1)return id+'_s1.mp3';if(S.stage===2)return id+'_s2.mp3';
       if(S.stage===3)return id+'_s3_'+c.pair.indexOf(ans)+'.mp3';if(S.stage===4)return id+'_s4.mp3';
     }catch(e){}return null}
-  function playVoice(f,fallback){
+  function playVoice(f){
     if(!pref.voice)return;stopVoice();
-    try{const a=new Audio('audio/'+f);vAudio=a;
+    try{const a=new Audio('audio/'+f);a.preload='auto';vAudio=a;
       a.onplay=()=>document.body.classList.add('speaking');a.onended=()=>document.body.classList.remove('speaking');
-      a.onerror=()=>{if(vAudio===a){vAudio=null;speak(fallback)}};
-      const p=a.play();if(p&&p.catch)p.catch(()=>{if(vAudio===a){vAudio=null;speak(fallback)}});
-    }catch(e){speak(fallback)}}
+      a.onerror=()=>{if(vAudio===a)vAudio=null};
+      const p=a.play();
+      if(p&&p.catch)p.catch(()=>{if(vAudio===a){pendingVoice=f}});  /* 自動再生が止められたら、次の操作のときに再生 */
+    }catch(e){}}
+  const retryVoice=()=>{if(pendingVoice&&pref.voice){const f=pendingVoice;pendingVoice=null;playVoice(f)}};
+  document.addEventListener('pointerdown',retryVoice,true);document.addEventListener('keydown',retryVoice,true);
+  /* 次に流す音声を先読みして、切り替わりを速くする */
+  function prefetchVoice(){try{if(typeof S==='undefined'||S.view!=='play'||!S.deck||!S.deck[S.idx])return;const {c,ans}=S.deck[S.idx];const id='c'+String(CASES.indexOf(c)+1).padStart(2,'0');const nx=S.stage===1?id+'_s2.mp3':S.stage===2?id+'_s3_'+c.pair.indexOf(ans)+'.mp3':S.stage===3?id+'_s4.mp3':null;if(nx){const a=new Audio('audio/'+nx);a.preload='auto';a.load()}}catch(e){}}
 
   /* スイッチ */
   function mountSwitch(){
@@ -1553,7 +1549,6 @@ render();
     const sync=()=>{d.querySelector('#sw-se').setAttribute('aria-pressed',pref.se);d.querySelector('#sw-vo').setAttribute('aria-pressed',pref.voice)};sync();
     d.querySelector('#sw-se').onclick=e=>{e.stopPropagation();pref.se=!pref.se;save();sync();play('tap')};
     d.querySelector('#sw-vo').onclick=e=>{e.stopPropagation();pref.voice=!pref.voice;save();sync();if(!pref.voice)stopVoice();else{lastQ='';after()}};
-    if(!synth)d.querySelector('#sw-vo').hidden=true;
   }
 
   /* クリックの音 */
@@ -1580,7 +1575,7 @@ render();
     const ch=app.querySelector('.row.chief .val');
     const lead=adds.length?'追加情報。'+txt(adds[adds.length-1]):ch?'主訴。'+txt(ch):'';
     const key=lead+'|'+qt;
-    if(key!==lastQ){lastQ=key;const say=(lead?lead+'。':'')+qt;const vf=voiceFile();if(vf)playVoice(vf,say);else speak(say)}
+    if(key!==lastQ){lastQ=key;const vf=voiceFile();if(vf)playVoice(vf);else stopVoice();prefetchVoice()}
   }
   const orig=window.render;
   if(typeof orig==='function'){window.render=function(){const r=orig.apply(this,arguments);try{after()}catch(e){}return r};}
