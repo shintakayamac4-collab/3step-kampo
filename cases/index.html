@@ -1000,7 +1000,7 @@ const BASE = [
     <p class="lead">カードをタップして、それぞれの役割を確かめよう。</p>
     <div class="herbs">${[["人参", "にんじん", "消化機能を補う中心"], ["乾姜", "かんきょう", "胃腸の冷えを温める要"], ["朮", "じゅつ", "胃腸の水分代謝を整える"], ["甘草", "かんぞう", "全体を調和する。量に注意"]].map(([n, r, d], i) => `<button type="button" class="herb" data-h="${i}" aria-expanded="false"><span><span class="hn">${n}</span><br><span class="hr">${r}</span></span><span class="hd" hidden>${d}</span></button>`).join("")}</div>
     <div class="panel">「補う」人参と「温める」乾姜が、${term("脾胃")}虚寒という病態にそのまま対応しています。</div>
-    <p class="unk">例：ツムラ医療用製剤は人参・乾姜・蒼朮・甘草 各3 g（原料生薬）。朮の種類や量は製品ごとに確認。</p>` },
+    <p class="unk">例：【32】は人参・乾姜・蒼朮・甘草 各3 g（原料生薬）。朮の種類や量は製品ごとに確認。</p>` },
   { step: 7, end: true },
 ];
 function buildScreens(role) {
