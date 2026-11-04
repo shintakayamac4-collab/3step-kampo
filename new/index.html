@@ -1461,7 +1461,7 @@ function metHTML(){
   return `<section class="met" aria-labelledby="met-h"><h2 class="h2" id="met-h">漢方薬を学ぶ</h2>
    <p class="lead2">この教材に出てくる${all.length}方剤です。押すと、患者さんスライド・添付文書・一般的な使用目標・臨床報告・処方解説を見られます。</p>
    <div class="lfilter" role="tablist"><button class="link${LEARN_FILTER==='all'?' on':''}" data-f="all" role="tab" aria-selected="${LEARN_FILTER==='all'}">すべて（${all.length}）</button><button class="link${LEARN_FILTER==='met'?' on':''}" data-f="met" role="tab" aria-selected="${LEARN_FILTER==='met'}">出会った方剤（${metN}）</button></div>
-   ${list.length?`<div class="metgrid">${list.map(e=>`<button class="metbtn${e.met?(e.met.ok?' ok':' seen'):''}" data-n="${e.n}" title="${e.n}"><b>${e.n}</b><small><i>ツムラ ${e.no}</i>${e.met?` ・${e.met.cases.join('・')}で正解${e.met.ok?' ✓':''}`:(e.cases.length?` ・${e.cases.slice(0,2).join('・')}${e.cases.length>2?'ほか':''}`:'')}</small></button>`).join('')}</div>`:`<p class="note2">まだ出会った方剤はありません。症例を解くと、正解になった方剤がここに集まります。</p>`}
+   ${list.length?`<div class="metgrid">${list.map(e=>`<button class="metbtn${e.met?(e.met.ok?' ok':' seen'):''}" data-n="${e.n}" title="${e.n}"><b>${e.n}</b><small><i>【${e.no}】</i>${e.met?` ・${e.met.cases.join('・')}で正解${e.met.ok?' ✓':''}`:(e.cases.length?` ・${e.cases.slice(0,2).join('・')}${e.cases.length>2?'ほか':''}`:'')}</small></button>`).join('')}</div>`:`<p class="note2">まだ出会った方剤はありません。症例を解くと、正解になった方剤がここに集まります。</p>`}
    <p class="note2">緑＝その方剤で合格した症例あり、青＝正解として出会った方剤、白＝まだ出会っていない方剤。</p>
   </section>`;
 }
@@ -1541,7 +1541,7 @@ function descHTML(name){
 function fx(name,open,isAns){
   const f=F[name];
   const reps=(R[name]||[]).map(r=>`<div class="fxrow">${chip('report')}<span>${r.p}<cite>${r.c} <a href="${r.u}" target="_blank" rel="noopener">${r.l||'PubMed'}</a></cite></span></div>`).join('');
-  return `<details class="fx${isAns?' ans':''}"${open?' open':''}><summary><b>${name}</b><i>ツムラ ${f.no}</i>${isAns?'<em>正解</em>':''}</summary>
+  return `<details class="fx${isAns?' ans':''}"${open?' open':''}><summary><b>${name}</b><i>【${f.no}】</i>${isAns?'<em>正解</em>':''}</summary>
    <div class="fxrow">${chip('label')}<span>${f.L}</span></div>
    <div class="fxrow">${chip('general')}<span>${f.G}${f.rv?`<cite>総説：${f.rv.c} <a href="${f.rv.u}" target="_blank" rel="noopener">Wiley</a></cite>`:''}</span></div>${reps}${descHTML(name)}</details>`;
 }
@@ -1675,7 +1675,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.02-2245';
+const APP_VER='2026.11.04-2225';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
