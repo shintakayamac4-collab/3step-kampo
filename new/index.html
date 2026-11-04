@@ -760,6 +760,8 @@ header{padding-top:16px}
 @media (min-width:0px){header{padding-top:16px}.snd{position:static;order:0;flex:none;justify-content:flex-end}}
 
 .note2.gl{margin:0;line-height:1.6}
+
+.credit{margin:6px 0 0;font-size:12px;font-weight:700;color:var(--on-pop);opacity:.8;letter-spacing:.04em}
 </style>
 
 <div class="wrap">
@@ -768,6 +770,7 @@ header{padding-top:16px}
     <div>
       <h1><em>3-Step</em> 漢方</h1>
       <p class="sub">主訴から4方剤を想起し、追加情報で2つ、さらに1つへ。</p>
+      <p class="credit">作成：東北大学病院　高山 真</p>
     </div>
     <div class="score"><img id="ava" class="ava" alt="" width="52" height="52"><span id="rank" class="rank">ビギナー</span><b id="pts">0</b><span class="of">/ <span id="max">0</span> ゲット</span></div>
   </header>
@@ -1675,7 +1678,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.04-2225';
+const APP_VER='2026.11.04-2230';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
