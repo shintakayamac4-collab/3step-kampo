@@ -261,7 +261,7 @@ p { margin: 0; }
 .case.sel { border-color: var(--pop); background: var(--pop-soft); box-shadow: 0 4px 0 var(--pop); }
 .case:focus-visible { outline: 3px solid var(--pop); outline-offset: 3px; }
 .herb.wide { grid-column: 1 / -1; }
-.hero-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.hero-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
 .hero-grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block; box-shadow: 0 4px 0 var(--line); }
 .hero-grid img:nth-child(odd) { transform: rotate(-2deg); }
 .hero-grid img:nth-child(even) { transform: rotate(2deg) translateY(6px); }
@@ -937,6 +937,314 @@ const CASES = {
   },
 };
 const CS = () => CASES[state.case] || CASES.c1;
+// ===== CASE 03：発熱・悪寒・項背部のこわばり（葛根湯） =====
+Object.assign(GLOSS, {
+  "項背部": "こうはいぶ。首の後ろから背中の上のあたり。",
+  "表証": "ひょうしょう。病気がまだ体の表面（表）にある段階。悪寒・発熱・頭痛・首や肩のこわばりなど。",
+  "太陽病": "たいようびょう。六病位の最初の段階。急性の発熱性疾患の初期で、悪寒・発熱・頭痛・脈が浮くのが特徴。",
+  "六病位": "ろくびょうい。急性の病気の進み方を6段階（太陽・少陽・陽明・太陰・少陰・厥陰）に分ける考え方。",
+  "浮脈": "ふみゃく。指を軽く当てただけで触れる脈。表証を示唆する。",
+  "麻黄": "まおう。発汗を促し、表の邪を散らす生薬。エフェドリンを含み、動悸・不眠・血圧上昇などに注意。",
+  "項部硬直": "こうぶこうちょく。首を前に曲げようとすると抵抗がある所見。髄膜炎の疑い。肩こりとは区別する。",
+});
+Object.assign(TIPS, {
+  c3redflag: {
+    med: "「首のこわばり」は、肩こりと項部硬直を区別する。高熱・激しい頭痛・意識の変化を伴えば髄膜炎を疑う。",
+    pharm: "麻黄を含む処方は、エフェドリン類を含む市販の総合感冒薬や気管支拡張薬との重複に注意。",
+    nurse: "体温・脈拍・呼吸数・意識状態を記録。高熱が続く、ぐったりする、呼吸が苦しそう、ならすぐ医師へ。",
+    res: "インフルエンザ・COVID-19の流行状況と接触歴を確認し、必要なら迅速検査。項部硬直・Kernig徴候を自分で確かめる。",
+  },
+  c3formula: {
+    med: "かぜの初期は「汗の有無」と「体力（脈の力）」で処方が分かれる。無汗・脈に力あり → 葛根湯／麻黄湯、有汗・脈が弱い → 桂枝湯。",
+    pharm: "葛根湯＝桂枝湯＋葛根・麻黄。麻黄と甘草を含むことを処方監査の基本にする。",
+    nurse: "処方のねらい（温めて汗をかかせ、こわばりをとる）が分かると、保温と水分のケアがつながる。",
+    res: "「表・実・寒、太陽病の葛根湯証」と一言で言えると、指導医への提示が明快になる。",
+  },
+  c3safety: {
+    med: "麻黄（エフェドリン）：動悸・不眠・血圧上昇・排尿困難。心疾患・高血圧・前立腺肥大・甲状腺機能亢進症では慎重に。",
+    pharm: "麻黄の重複（麻黄湯・小青竜湯・市販感冒薬）、MAO阻害薬・交感神経刺激薬との併用、甘草の重複を確認。",
+    nurse: "動悸、眠れない、血圧上昇、尿が出にくい、の訴えは麻黄の副作用のサイン。発汗したら伝える。",
+    res: "発汗がみられたら中止を伝える。2〜3日で改善しなければ再評価し、漫然と続けない。",
+  },
+});
+Object.assign(Q, {
+  c3_redflag: {
+    kind: "multi", prompt: "発熱と首・肩のこわばり。かぜと決める前に見逃してはいけない危険なサインをすべて選ぼう",
+    options: [
+      { t: "項部硬直・激しい頭痛・意識の変化（髄膜炎）", ok: true },
+      { t: "呼吸が苦しい、SpO2低下（肺炎）", ok: true },
+      { t: "高熱が続き、ぐったりしている", ok: true },
+      { t: "首すじから肩にかけての「こわばり」", ok: false, why: "葛根湯の目標となる症状。項部硬直とは区別する" },
+      { t: "汗をかいていない", ok: false, why: "表証の手がかり。危険なサインではない" },
+    ],
+    good: "髄膜炎・肺炎などの除外が先。本症例では、意識は清明で項部硬直はないものとして進める。",
+    bad: "項部硬直・呼吸困難・高熱の持続が危険なサイン。こわばりと無汗は漢方的な手がかり。",
+    after: `<div class="panel"><ul><li>インフルエンザ・COVID-19の流行状況、接触歴、必要なら迅速検査</li><li>咽頭所見、呼吸音、脱水の有無</li><li>漢方的には「悪寒」「汗の有無」「首・肩のこわばり」「脈の力」を詰める</li></ul></div>`,
+    tip: "c3redflag",
+  },
+  c3_sweat: {
+    kind: "single", prompt: "昨日から寒気、汗はなし、項背部のこわばりと頭痛。この組み合わせが示すのは？",
+    options: [
+      { t: "表証・寒証（病邪がまだ体表にある）", ok: true, why: "悪寒・無汗・頭痛・項背部のこわばりは太陽病の表証" },
+      { t: "裏証・熱証（病邪が内に入った）", ok: false, why: "高熱・口渇・便秘など裏熱の所見はない" },
+      { t: "虚証の慢性的な肩こり", ok: false, why: "急性の発症で、悪寒・発熱を伴う" },
+    ],
+    good: "悪寒・無汗・項背部のこわばりは、葛根湯の典型的な使用目標。",
+    bad: "答えは「表証・寒証」。急性の悪寒・無汗・頭痛・こわばりは病邪が体表にある段階。",
+  },
+  c3_pulse: {
+    kind: "single", prompt: "脈は浮いていて、緊張した力のある脈（浮・緊）。示唆するのは？",
+    options: [
+      { t: "表証・実証", ok: true, why: "浮脈は表証、力のある脈は実証を示す" },
+      { t: "表証・虚証", ok: false, why: "虚証なら浮いていても押さえると弱い（浮・弱）" },
+      { t: "裏証・寒証", ok: false, why: "裏寒なら脈は沈んで遅い" },
+    ],
+    good: "浮・緊の脈は、無汗の表証（麻黄剤の適応）を支持する。",
+    bad: "答えは「表証・実証」。浮＝表、力がある＝実。",
+    after: `<p class="caution">脈に力があるかどうかが、葛根湯・麻黄湯（実）と桂枝湯（虚）を分けるポイント。</p>`,
+  },
+  c3_tongue: {
+    kind: "single", prompt: "淡紅色の舌に薄い白苔。この舌から言えることは？",
+    options: [
+      { t: "病邪はまだ表にあり、裏の熱はない", ok: true, why: "薄白苔は病初期の表証でよくみられる" },
+      { t: "裏に熱がこもっている", ok: false, why: "裏熱なら紅舌・黄苔になりやすい" },
+      { t: "強い虚寒がある", ok: false, why: "淡白・腫大ではない" },
+    ],
+    good: "舌は「まだ裏に入っていない」ことの確認に役立つ。",
+    bad: "答えは「病邪はまだ表にあり、裏の熱はない」。",
+  },
+  c3_sho: {
+    kind: "seg", prompt: "八綱で整理しよう。この症例はどちら？",
+    rows: [
+      { label: "虚実", a: ["実", "虚"], ok: 0 },
+      { label: "寒熱", a: ["寒", "熱"], ok: 0 },
+      { label: "表裏", a: ["表", "裏"], ok: 0 },
+    ],
+    good: "実・寒・表。急性のかぜの初期で、体力があり汗をかいていない状態。",
+    bad: "答えは 実・寒・表。脈に力があり（実）、悪寒がして（寒）、病邪が体表にある（表）。",
+  },
+  c3_stage: {
+    kind: "single", prompt: "六病位で考えると、この症例の病期は？",
+    options: [
+      { t: "太陽病", ok: true, why: "悪寒・発熱・頭痛・項背部のこわばり・浮脈は太陽病の典型" },
+      { t: "少陽病", ok: false, why: "往来寒熱・口苦・胸脇苦満が目標" },
+      { t: "陽明病", ok: false, why: "高熱・口渇・便秘など裏熱が目標" },
+      { t: "少陰病", ok: false, why: "冷え・倦怠・沈んで弱い脈が目標" },
+    ],
+    good: "太陽病の実証。表を温めて発汗させる処方（麻黄剤）の適応。",
+    bad: "答えは太陽病。悪寒・発熱・頭痛・浮脈は太陽病の目標。",
+    after: `<div class="big-sho"><div class="s">本症例の病態</div><div class="n">太陽病・表実寒</div><div>病邪が体表にあり、体力はある。汗をかかせて表の邪を散らす</div></div>`,
+  },
+  c3_formula: {
+    kind: "single", prompt: "悪寒・無汗・項背部のこわばり・頭痛、脈は浮緊。最も適した処方は？",
+    options: [
+      { t: "葛根湯", s: "項背部のこわばり、無汗、悪寒", ok: true, why: "首・肩のこわばりを伴う無汗の表証の第一選択" },
+      { t: "麻黄湯", s: "高熱、関節痛、無汗、強い悪寒", ok: false, why: "こわばりより高熱・関節痛・咳が目立つときに検討" },
+      { t: "桂枝湯", s: "自然に汗が出る、虚証", ok: false, why: "本例は無汗で脈に力がある" },
+      { t: "麻黄附子細辛湯", s: "冷え、倦怠、沈んで弱い脈", ok: false, why: "少陰病（高齢・虚弱）の悪寒が目標" },
+    ],
+    good: "葛根湯が教育上の第一候補。項背部のこわばりが決め手。",
+    bad: "答えは葛根湯。無汗・悪寒・項背部のこわばりの組み合わせが目標。",
+    tip: "c3formula",
+  },
+  c3_diff: {
+    kind: "single", prompt: "応用：同じ症状でも、じっとり汗をかいていて脈が弱かったら？",
+    options: [
+      { t: "桂枝湯", ok: true, why: "有汗・虚証の表証。麻黄剤は使わない" },
+      { t: "葛根湯のまま", ok: false, why: "有汗・脈弱では麻黄剤で発汗しすぎるおそれ" },
+      { t: "麻黄湯", ok: false, why: "無汗・実証が目標" },
+      { t: "小青竜湯", ok: false, why: "水様の鼻水・くしゃみが目立つときに検討" },
+    ],
+    good: "汗の有無と脈の力で、麻黄剤と桂枝湯を分ける。",
+    bad: "答えは桂枝湯。有汗・虚証では麻黄を含まない処方を選ぶ。",
+  },
+  c3_safety: {
+    kind: "multi", prompt: "葛根湯には麻黄が含まれる。処方前に確認したいことをすべて選ぼう",
+    options: [
+      { t: "心疾患・高血圧・不整脈", ok: true }, { t: "前立腺肥大（排尿困難）", ok: true }, { t: "甲状腺機能亢進症", ok: true },
+      { t: "エフェドリン類を含む市販の感冒薬や気管支拡張薬の併用", ok: true },
+      { t: "血液型", ok: false, why: "麻黄の安全性には関係しない" },
+    ],
+    good: "麻黄（エフェドリン）の交感神経刺激作用に注意する。",
+    bad: "血液型以外はすべて、麻黄を使う前に確認したい項目。",
+    after: `<div class="panel"><ul><li><b>麻黄</b>：動悸・不眠・血圧上昇・排尿困難。MAO阻害薬・交感神経刺激薬との併用に注意</li><li><b>甘草</b>：偽アルドステロン症（むくみ・血圧上昇・脱力）</li><li><b>飲み方</b>：早めに、温かい湯で。発汗したら中止。2〜3日で改善なければ再評価</li></ul></div>`,
+    tip: "c3safety",
+  },
+  c3_resPlan: {
+    kind: "single", prompt: "発熱・頭痛・首のこわばりの患者。研修医としてまず行うことは？",
+    options: [
+      { t: "バイタルと項部硬直を確認し、流行状況に応じてインフルエンザ等の迅速検査を検討", ok: true, why: "髄膜炎・インフルエンザ・肺炎を除外してから" },
+      { t: "すぐに葛根湯を処方して帰宅させる", ok: false, why: "危険なサインの評価が先" },
+      { t: "全例に頭部CTを撮る", ok: false, why: "所見に応じて判断する" },
+      { t: "抗菌薬を処方する", ok: false, why: "ウイルス性のかぜに抗菌薬は不要" },
+    ],
+    good: "除外と評価を済ませてから、漢方的な評価に入る。",
+    bad: "答えは「バイタルと項部硬直の確認、必要に応じて迅速検査」。",
+    after: `<div class="panel"><ul><li>本症例：意識清明、項部硬直なし、呼吸音正常、迅速検査陰性、と想定して進める</li></ul></div>`,
+    tip: "c3redflag",
+  },
+  c3_resFollow: {
+    kind: "multi", prompt: "葛根湯を処方した。飲み方とやめどきとして患者に伝えることをすべて選ぼう",
+    options: [
+      { t: "早めに飲み始め、温かい湯で服用する", ok: true },
+      { t: "汗が出て楽になったら中止してよい", ok: true },
+      { t: "2〜3日で改善しなければ再受診する", ok: true },
+      { t: "動悸・不眠・尿が出にくいなどがあれば中止して相談", ok: true },
+      { t: "症状がなくなっても1か月は飲み続ける", ok: false, why: "急性期の処方。漫然と続けない" },
+    ],
+    good: "葛根湯は「早く、温かく、汗が出たらやめる」。",
+    bad: "1か月の継続は不要。他の4つはすべて伝えたい内容。",
+    tip: "c3safety",
+  },
+  c3_pharmMeds: {
+    kind: "multi", prompt: "麻黄を含む処方を出す前に、確認したい併用薬・持病をすべて選ぼう",
+    options: [
+      { t: "エフェドリン・プソイドエフェドリンを含む市販感冒薬", ok: true },
+      { t: "MAO阻害薬、交感神経刺激薬", ok: true },
+      { t: "他の麻黄含有漢方（麻黄湯・小青竜湯など）", ok: true },
+      { t: "高血圧・心疾患・前立腺肥大・甲状腺機能亢進症", ok: true },
+      { t: "舌の色", ok: false, why: "四診の所見。併用薬の確認ではない" },
+    ],
+    good: "麻黄の重複と相互作用の確認は薬剤師の大切な役割。",
+    bad: "舌の色以外はすべて確認したい項目。",
+    tip: "c3redflag",
+  },
+  c3_pharmHerb: {
+    kind: "single", prompt: "葛根湯は、桂枝湯に何を加えた処方？",
+    options: [
+      { t: "葛根と麻黄", ok: true, why: "桂枝湯（桂皮・芍薬・大棗・生姜・甘草）＋葛根・麻黄" },
+      { t: "竜骨と牡蛎", ok: false, why: "桂枝加竜骨牡蛎湯" },
+      { t: "人参と乾姜", ok: false, why: "人参湯の主な構成" },
+      { t: "附子と細辛", ok: false, why: "麻黄附子細辛湯に含まれる" },
+    ],
+    good: "葛根が項背部のこわばりをとり、麻黄が発汗を促す。",
+    bad: "答えは葛根と麻黄。",
+  },
+  c3_pharmMao: {
+    kind: "multi", prompt: "麻黄を含む処方をすべて選ぼう",
+    options: [
+      { t: "麻黄湯", ok: true }, { t: "小青竜湯", ok: true }, { t: "麻杏甘石湯", ok: true },
+      { t: "桂枝湯", ok: false, why: "麻黄を含まない" },
+      { t: "人参湯", ok: false, why: "麻黄を含まない" },
+    ],
+    good: "麻黄剤どうしの重複は処方監査で必ず確認。",
+    bad: "麻黄湯・小青竜湯・麻杏甘石湯が麻黄を含む。桂枝湯・人参湯は含まない。",
+    after: `<p class="caution">麻黄の含有量は処方・製品ごとに異なる。添付文書で確認する。</p>`,
+  },
+  c3_pharmCounsel: {
+    kind: "multi", prompt: "服薬指導で、患者さんに伝えておきたいことをすべて選ぼう",
+    options: [
+      { t: "温かい湯で、食前または食間に早めに飲む", ok: true },
+      { t: "汗が出て楽になったらやめてよい", ok: true },
+      { t: "動悸・眠れない・尿が出にくい・むくみが出たら相談する", ok: true },
+      { t: "市販の総合感冒薬と一緒に飲んでよい", ok: false, why: "エフェドリン類の重複のおそれ。相談してもらう" },
+    ],
+    good: "飲み方・やめどき・副作用のサインをセットで伝える。",
+    bad: "市販感冒薬との併用は勧めない。他の3つは伝えたい内容。",
+    tip: "c3safety",
+  },
+  c3_nurseReport: {
+    kind: "multi", prompt: "発熱して首がこわばる患者さんで、すぐ医師に伝えるべき危険なサインをすべて選ぼう",
+    options: [
+      { t: "意識がぼんやりしている、呼びかけに反応が鈍い", ok: true }, { t: "首を前に曲げられない（項部硬直）", ok: true },
+      { t: "呼吸が速い・苦しそう、SpO2が低い", ok: true },
+      { t: "首すじから肩がこっている", ok: false, why: "葛根湯の目標となる症状。危険なサインではない" },
+    ],
+    good: "髄膜炎・肺炎を疑うサインは、気づいた時点ですぐ共有する。",
+    bad: "意識の変化・項部硬直・呼吸の異常が危険なサイン。",
+    tip: "c3redflag",
+  },
+  c3_nurseObs: {
+    kind: "multi", prompt: "看護師として、観察・記録したいことをすべて選ぼう",
+    options: [
+      { t: "体温・脈拍・呼吸数・SpO2", ok: true }, { t: "汗の有無と悪寒", ok: true }, { t: "水分・食事の摂取量", ok: true }, { t: "頭痛・こわばりの程度", ok: true },
+      { t: "血液型", ok: false, why: "経過の評価には関係しない" },
+    ],
+    good: "汗の有無は、処方のやめどきを決める大切な観察。",
+    bad: "血液型以外はすべて観察・記録したい項目。",
+  },
+  c3_nurseWhy: {
+    kind: "single", prompt: "医師は葛根湯を処方した。この処方のねらいは？",
+    options: [
+      { t: "体を温めて汗をかかせ、表の邪を散らし、首・肩のこわばりをとる", ok: true, why: "太陽病の表実証に対応する" },
+      { t: "体の熱を冷ます", ok: false, why: "裏熱の処方ではない" },
+      { t: "胃腸を温めて働きを補う", ok: false, why: "人参湯のねらい" },
+      { t: "気持ちを落ち着かせる", ok: false, why: "桂枝加竜骨牡蛎湯のねらい" },
+    ],
+    good: "ねらいが分かると、保温・水分のケアがつながる。",
+    bad: "答えは「温めて汗をかかせ、表の邪を散らす」。",
+    tip: "c3formula",
+  },
+  c3_nurseSide: {
+    kind: "multi", prompt: "服用中、副作用のサインとして観察したいものをすべて選ぼう",
+    options: [
+      { t: "動悸・脈が速い", ok: true }, { t: "眠れない", ok: true }, { t: "尿が出にくい", ok: true }, { t: "むくみ・血圧上昇", ok: true },
+      { t: "汗が出て熱が下がった", ok: false, why: "これは期待する効果。中止のタイミングとして伝える" },
+    ],
+    good: "麻黄（動悸・不眠・排尿困難）と甘草（むくみ・血圧）のサインを見逃さない。",
+    bad: "発汗して解熱するのは効果。動悸・不眠・排尿困難・むくみが副作用のサイン。",
+    tip: "c3safety",
+  },
+  c3_nurseCare: {
+    kind: "single", prompt: "寒気がして汗をかいていない患者さんへのケアとして適切なのは？",
+    options: [
+      { t: "体を温めて休ませ、温かい飲み物で水分をとってもらう", ok: true, why: "処方のねらい（温めて発汗）を支えるケア" },
+      { t: "冷たい飲み物で体を冷やす", ok: false, why: "悪寒のある表寒証には合わない" },
+      { t: "汗をかいたらそのままにしておく", ok: false, why: "汗を拭き、冷えないように着替えを勧める" },
+      { t: "熱があるので絶食を勧める", ok: false, why: "水分と食べられるものはとってもらう" },
+    ],
+    good: "温める・休む・水分、そして汗をかいたら拭いて着替え。",
+    bad: "答えは「温めて休ませ、温かい飲み物で水分」。",
+  },
+});
+Object.assign(QS, {
+  c3_redflag: [2, "情報収集", "かぜと決める前に"],
+  c3_resPlan: [2, "初期対応", "まず何をする？"],
+  c3_pharmMeds: [2, "服薬歴", "麻黄を出す前に"],
+  c3_nurseReport: [2, "観察", "医師に伝えるべきサイン"],
+  c3_nurseObs: [2, "観察", "測って記録する"],
+  c3_sweat: [3, "四診：問診", "症状を読む"],
+  c3_pulse: [3, "四診：脈診", "脈を読む", ["c3/pulse.jpg", "医師が患者の手首で脈をみている"], "動画 0:20〜0:30"],
+  c3_tongue: [3, "四診：舌診", "舌を読む", ["c3/tongue.jpg", "患者の舌。淡い紅色で薄い白い苔がある"], "動画 0:30〜0:34"],
+  c3_sho: [4, "証", "八綱で整理する"],
+  c3_stage: [4, "証", "六病位で整理する"],
+  c3_formula: [5, "処方", "処方を選ぶ"],
+  c3_diff: [5, "応用問題", "汗をかいていたら"],
+  c3_pharmHerb: [5, "生薬", "処方の成り立ち"],
+  c3_pharmMao: [5, "生薬", "麻黄を含む処方"],
+  c3_nurseWhy: [5, "処方の理解", "処方のねらい"],
+  c3_safety: [6, "安全確認", "麻黄の注意点"],
+  c3_resFollow: [6, "フォロー", "飲み方とやめどき"],
+  c3_pharmCounsel: [6, "服薬指導", "患者さんに伝えること"],
+  c3_nurseSide: [6, "ケア", "副作用のサイン"],
+  c3_nurseCare: [6, "ケア", "温めるケア"],
+});
+CASES.c3 = {
+  label: "CASE 03", short: "寒気がして、首や肩がこわばる", who: "40代男性　発熱・悪寒・項背部のこわばり", img: "c3/scene.jpg", imgAlt: "医師が首に手を当てた中年男性を問診している診察室",
+  titleHTML: "寒気がして、<br><em>首や肩がこわばる</em>", lead: "急性のかぜの初期を、悪寒・汗・脈・舌の所見から読み解き、処方を選ぶ。問いに答えながら6ステップで進みます（約10分）。",
+  certSub: "発熱・悪寒・項背部のこわばりの40代男性", safetyTip: "c3safety",
+  flows: {
+    med: ["c3_redflag", "c3_sweat", "c3_pulse", "c3_tongue", "c3_sho", "c3_stage", "c3_formula", "HERBS", "c3_diff", "c3_safety"],
+    res: ["c3_resPlan", "c3_sweat", "c3_pulse", "c3_tongue", "c3_sho", "c3_formula", "c3_diff", "c3_safety", "c3_resFollow"],
+    pharm: ["c3_pharmMeds", "c3_pulse", "c3_tongue", "c3_sho", "c3_formula", "HERBS", "c3_pharmHerb", "c3_pharmMao", "c3_pharmCounsel"],
+    nurse: ["c3_nurseReport", "c3_nurseObs", "c3_sweat", "c3_tongue", "c3_sho", "c3_nurseWhy", "c3_nurseSide", "c3_nurseCare"],
+  },
+  take: {
+    med: ["<b>まず除外。</b>発熱と首のこわばりは、項部硬直・呼吸困難・高熱の持続を確かめてから。", "<b>汗と脈で分ける。</b>無汗・脈に力あり・項背部のこわばりなら、太陽病の表実証。", "<b>麻黄に注意。</b>葛根湯は桂枝湯＋葛根・麻黄。動悸・不眠・排尿困難、発汗したら中止。"],
+    res: ["<b>除外してから。</b>バイタル・項部硬直・迅速検査で髄膜炎・インフルエンザ・肺炎を除く。", "<b>証を一言で。</b>「太陽病・表実寒、葛根湯証」と根拠を添えて提示する。", "<b>飲み方を伝える。</b>早めに温かく、汗が出たら中止、2〜3日で改善なければ再受診。"],
+    pharm: ["<b>麻黄の重複を見る。</b>市販感冒薬・他の麻黄剤・MAO阻害薬・持病を確認。", "<b>構成で理解する。</b>桂枝湯＋葛根・麻黄。葛根がこわばりを、麻黄が発汗を担う。", "<b>服薬指導。</b>温かい湯で早めに、汗が出たらやめる、動悸・不眠・排尿困難は相談。"],
+    nurse: ["<b>危険なサインはすぐ共有。</b>意識の変化・項部硬直・呼吸の異常。", "<b>汗を観察する。</b>汗の有無は、処方のやめどきを決める観察。", "<b>温めるケア。</b>保温・休養・温かい水分、汗をかいたら拭いて着替え。"],
+  },
+  skills: {
+    med: ["危険サインの除外", "汗と脈で証を立てる", "太陽病・表実寒", "麻黄剤の安全確認"],
+    res: ["髄膜炎・肺炎の除外", "証の提示", "処方選択", "飲み方とやめどき"],
+    pharm: ["麻黄の重複チェック", "桂枝湯＋葛根・麻黄", "麻黄剤の比較", "服薬指導"],
+    nurse: ["危険サインの共有", "汗と体温の観察", "処方のねらい", "温めるケア"],
+  },
+  reflectQ: "同じ患者で、水のような鼻水とくしゃみが目立っていたら、処方はどう変わる？",
+  reflectA: "水様の鼻水・くしゃみ・咳が前景なら小青竜湯も候補に入る。高熱・関節痛・咳が強ければ麻黄湯、有汗で虚証なら桂枝湯。表証の中でも、随伴症状と体力で処方が分かれる。",
+};
+
 // 症例カードに、選んだ立場での自己ベストを表示（症例が増えても進み具合が分かる）
 function caseBadge(k, c) {
   if (!state.role) return "";
@@ -963,7 +1271,19 @@ const BASE = [
       <p class="unk">立場によって、問いの内容が変わります。</p>
       ${state.role ? charCard(state.role, totalXP(state.role)) : ""}
     </div>` },
-  { step: 1, html: () => state.case === "c2" ? `
+  { step: 1, html: () => state.case === "c3" ? `
+    <div class="eyebrow">STEP 1　症例</div>
+    <h2>まず動画を観よう（約40秒）</h2>
+    <div class="media"><video src="c3/case3.mp4" poster="c3/poster3.jpg" controls playsinline preload="metadata"></video></div>
+    <p class="cap">観察ポイント：訴えと問診（〜0:20）、脈（〜0:30）、舌（〜0:34）、舌の裏（〜0:40）</p>
+    <p class="cap">教育用の模擬症例（AI生成動画）</p>
+    <div class="panel"><dl class="kv">
+      <dt>患者</dt><dd>40代　男性</dd>
+      <dt>主訴</dt><dd>昨日から寒気がして、首すじから肩にかけてこわばる。頭も痛い</dd>
+      <dt>問診</dt><dd>発熱あり。汗はかいていない。のどの痛みや咳は目立たない</dd>
+      <dt>所見</dt><dd>意識は清明、${term("項部硬直")}なし、呼吸音は正常（想定）</dd>
+    </dl></div>
+    <p class="unk">急性のかぜの初期です。汗の有無と、脈の力に注目しながら、四診で手がかりを探します。</p>` : state.case === "c2" ? `
     <div class="eyebrow">STEP 1　症例</div>
     <h2>まず動画を観よう（約50秒）</h2>
     <div class="media"><video src="c2/case2.mp4" poster="c2/poster2.jpg" controls playsinline preload="metadata"></video></div>
@@ -988,7 +1308,13 @@ const BASE = [
       <dt>未提示</dt><dd class="unk">既往歴・家族歴、発症時期と経過、体重変化、服薬歴、バイタル</dd>
     </dl></div>
     <p class="unk">動画で提示されていない情報は、「ない」ではなく「まだ確認していない」と考えます。</p>` },
-  { step: 5, herbs: true, key: "HERBS", html: () => state.case === "c2" ? `
+  { step: 5, herbs: true, key: "HERBS", html: () => state.case === "c3" ? `
+    <div class="eyebrow">STEP 5　処方の中身</div>
+    <h2>桂枝湯＋葛根・麻黄</h2>
+    <p class="lead">カードをタップして、それぞれの役割を確かめよう。</p>
+    <div class="herbs">${[["桂枝湯", "けいしとう", "桂皮・芍薬・大棗・生姜・甘草。表を温めて整える土台"], ["葛根", "かっこん", "クズの根。項背部のこわばりをゆるめる"], ["麻黄", "まおう", "発汗を促して表の邪を散らす。エフェドリンを含み、動悸・不眠に注意"]].map(([n, r, d], i) => `<button type="button" class="herb${i === 0 ? " wide" : ""}" data-h="${i}" aria-expanded="false"><span><span class="hn">${n}</span><br><span class="hr">${r}</span></span><span class="hd" hidden>${d}</span></button>`).join("")}</div>
+    <div class="panel">${term("表証")}の悪寒・無汗・こわばりに、「温める」桂枝湯、「ゆるめる」葛根、「汗をかかせる」${term("麻黄")}が対応しています。</div>
+    <p class="unk">生薬の種類・量は製品ごとに添付文書で確認。麻黄と甘草を含む。</p>` : state.case === "c2" ? `
     <div class="eyebrow">STEP 5　処方の中身</div>
     <h2>桂枝湯＋竜骨・牡蛎</h2>
     <p class="lead">カードをタップして、それぞれの役割を確かめよう。</p>
@@ -1105,7 +1431,10 @@ function celebrate() {
 
 // ---------- レベルとキャラクター ----------
 // 経験値＝その立場で各症例の自己ベストの合計。症例が増えるほど上のレベルを目指せる
-const LV_XP = [0, 4, 8, 13, 18];
+// 必要な経験値は、その立場で取れる全症例の合計点に対する割合で決める（症例が増えても自動で調整）
+const LV_RATIO = [0, 0.2, 0.4, 0.65, 0.9];
+function maxXP(role) { return Object.values(CASES).reduce((n, c) => n + (c.flows[role] || c.flows.med).filter((k) => k !== "HERBS").length, 0); }
+function lvxp(role) { const m = maxXP(role); return LV_RATIO.map((r) => Math.round(m * r)); }
 const CHARS = {
   med: ["医学生", "臨床実習生", "研修医", "専攻医", "漢方専門医"],
   res: ["研修医1年目", "研修医2年目", "専攻医", "指導医", "漢方の名医"],
@@ -1116,10 +1445,10 @@ function bestOf(caseId, role) { try { return +(localStorage.getItem("kampo-best-
 function totalXP(role, override) {
   return Object.keys(CASES).reduce((sum, k) => sum + (override && override[k] !== undefined ? override[k] : bestOf(k, role)), 0);
 }
-function levelOf(xp) { let l = 0; LV_XP.forEach((t, i) => { if (xp >= t) l = i; }); return l; }
+function levelOf(xp, role = state.role) { let l = 0; lvxp(role || "med").forEach((t, i) => { if (xp >= t) l = i; }); return l; }
 function charCard(role, xp, opts = {}) {
-  const l = levelOf(xp), names = CHARS[role] || CHARS.med;
-  const next = LV_XP[l + 1], base = LV_XP[l];
+  const LX = lvxp(role), l = levelOf(xp, role), names = CHARS[role] || CHARS.med;
+  const next = LX[l + 1], base = LX[l];
   const pct = next === undefined ? 100 : Math.round(((xp - base) / (next - base)) * 100);
   return `<div class="char${opts.up ? " up" : ""}">
     <div class="char-img"><img src="chars/${role}${l + 1}.jpg" alt="${names[l]}のキャラクター"></div>
@@ -1168,7 +1497,7 @@ function endHTML() {
     ${state.role ? `<div class="tip"><strong>${ROLES[state.role].name}のポイント（まとめ）</strong>${TIPS[CS().safetyTip][state.role]}</div>` : ""}
     <p class="unk">本教材の症例は動画の画像・音声に基づく教育用設定です。処方は教育上の第一候補であり、実患者への確定処方ではありません。適応・用量は製品ごとの添付文書を確認してください。</p>
     <details class="refs"><summary>参考資料</summary>
-      <p>${state.case === "c2" ? "【CASE 02】提供された症例スライド（教育用の模擬症例）に基づく。動悸を起こす薬・危険なサイン・安全確認は一般的事項として補足。<br>" : ""}日本東洋医学会「四診」「切診」 <a href="https://www.jsom.or.jp/kampo/consultation/sessin.html" target="_blank" rel="noopener">jsom.or.jp</a><br>
+      <p>${state.case === "c3" ? "【CASE 03】提供された症例動画（教育用の模擬症例）に基づく。危険なサイン・安全確認は一般的事項として補足。<br>" : ""}${state.case === "c2" ? "【CASE 02】提供された症例スライド（教育用の模擬症例）に基づく。動悸を起こす薬・危険なサイン・安全確認は一般的事項として補足。<br>" : ""}日本東洋医学会「四診」「切診」 <a href="https://www.jsom.or.jp/kampo/consultation/sessin.html" target="_blank" rel="noopener">jsom.or.jp</a><br>
       富山大学 伝統医薬データベース「人参湯」 <a href="https://dentomed.toyama-wakan.net/ja/漢方方剤/人参湯/SCP000030?w=1" target="_blank" rel="noopener">dentomed.toyama-wakan.net</a><br>
       PMDA 人参湯 添付文書 <a href="https://www.pmda.go.jp/PmdaSearch/iyakuDetail/460026_5200116D1060_1_09" target="_blank" rel="noopener">pmda.go.jp</a><br>
       日本薬学会「人参湯類」 <a href="https://www.pharm.or.jp/words/post-73.html" target="_blank" rel="noopener">pharm.or.jp</a><br>
