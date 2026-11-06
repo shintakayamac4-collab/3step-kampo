@@ -307,6 +307,8 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .screen, .fb { animation: none; } .opt, .herb, .btn, .seg button, .role { transition: none; } }
 </style>
 
+</head>
+<body>
 <div class="app">
   <header class="top">
     <div class="top-row">
@@ -2373,3 +2375,6 @@ function start(data) { if (data && typeof data.i === "number") state = data; els
 window.claude?.hot?.snapshot?.(() => state);
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? null);
 </script>
+
+</body>
+</html>
