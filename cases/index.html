@@ -307,8 +307,6 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .screen, .fb { animation: none; } .opt, .herb, .btn, .seg button, .role { transition: none; } }
 </style>
 
-</head>
-<body>
 <div class="app">
   <header class="top">
     <div class="top-row">
@@ -615,10 +613,10 @@ const QS = {
   pharmMeds: [2, "服薬歴", "服薬歴を聞き取る"],
   nurseReport: [2, "観察", "医師に伝えるべきサイン"],
   nurseObserve: [2, "観察", "経過を追う記録"],
-  tongue: [3, "四診：舌診", "舌を読む", ["tongue.jpg", "患者の舌。白っぽく、表面に白い苔がある"], "動画 0:17〜0:24"],
+  tongue: [3, "四診：舌診", "舌を読む", ["tongue.jpg", "患者の舌。白っぽく、表面に白い苔がある"], "動画 0:19〜0:25"],
   pulse: [3, "四診：脈診", "脈を読む", ["pulse.jpg", "研修医が患者の手首で脈をみている"], "動画 0:32〜0:40"],
-  abdomen: [3, "四診：腹診", "腹を読む", ["abdomen.jpg", "腹診の場面"], "動画 0:46〜0:59。"],
-  sublingual: [3, "ひっかけ問題", "舌の裏に気づいたら", ["sublingual.jpg", "舌の裏。青紫色の静脈が見える"], "動画 0:27 の画像所見（音声での評価なし）"],
+  abdomen: [3, "四診：腹診", "腹を読む", ["abdomen.jpg", "腹診の場面"], "動画 0:40〜0:59"],
+  sublingual: [3, "ひっかけ問題", "舌の裏に気づいたら", ["sublingual.jpg", "舌の裏。青紫色の静脈が見える"], "動画 0:25〜0:32 の画像所見（音声での評価なし）"],
   sho: [4, "証", "証を立てる"],
   formula: [5, "処方", "処方を選ぶ"],
   diff: [5, "応用問題", "所見が変わったら"],
@@ -1212,7 +1210,7 @@ Object.assign(QS, {
   c3_nurseObs: [2, "観察", "測って記録する"],
   c3_sweat: [3, "四診：問診", "症状を読む"],
   c3_pulse: [3, "四診：脈診", "脈を読む", ["c3/pulse.jpg", "医師が患者の手首で脈をみている"], "動画 0:20〜0:30"],
-  c3_tongue: [3, "四診：舌診", "舌を読む", ["c3/tongue.jpg", "患者の舌。淡い紅色で薄い白い苔がある"], "動画 0:30〜0:34"],
+  c3_tongue: [3, "四診：舌診", "舌を読む", ["c3/tongue.jpg", "患者の舌。淡い紅色で薄い白い苔がある"], "動画 0:30〜0:35"],
   c3_sho: [4, "証", "八綱で整理する"],
   c3_stage: [4, "証", "六病位で整理する"],
   c3_formula: [5, "処方", "処方を選ぶ"],
@@ -1528,7 +1526,7 @@ Object.assign(QS, {
   c4_nurseObs: [2, "観察", "測って記録する"],
   c4_sweat: [3, "四診：問診", "症状を読む"],
   c4_pulse: [3, "四診：脈診", "脈を読む", ["c4/pulse.jpg", "医師が高齢男性の手首で脈をみている"], "動画 0:24〜0:34"],
-  c4_tongue: [3, "四診：舌診", "舌を読む", ["c4/tongue.jpg", "高齢男性の舌。淡い紅色で薄い白い苔がある"], "動画 0:34〜0:40"],
+  c4_tongue: [3, "四診：舌診", "舌を読む", ["c4/tongue.jpg", "高齢男性の舌。淡い紅色で薄い白い苔がある"], "動画 0:35〜0:40"],
   c4_sho: [4, "証", "八綱で整理する"],
   c4_stage: [4, "証", "六病位で整理する"],
   c4_formula: [5, "処方", "処方を選ぶ"],
@@ -1899,7 +1897,7 @@ const BASE = [
     <div class="eyebrow">STEP 1　症例</div>
     <h2>まず動画を観よう（約45秒）</h2>
     <div class="media"><video src="c5/case5.mp4" poster="c5/poster5.jpg" controls playsinline preload="metadata"></video></div>
-    <p class="cap">観察ポイント：訴えと問診（〜0:23）、脈（〜0:33）、舌（〜0:40）、舌の裏（〜0:43）</p>
+    <p class="cap">観察ポイント：訴えと問診 0:00–0:23 ／ 脈 0:23–0:33 ／ 舌 0:33–0:40 ／ 舌の裏 0:40–0:43</p>
     <p class="cap">教育用の模擬症例（AI生成動画）</p>
     <div class="panel"><dl class="kv">
       <dt>患者</dt><dd>30代　男性　がっしりした体格</dd>
@@ -1911,7 +1909,7 @@ const BASE = [
     <div class="eyebrow">STEP 1　症例</div>
     <h2>まず動画を観よう（約45秒）</h2>
     <div class="media"><video src="c4/case4.mp4" poster="c4/poster4.jpg" controls playsinline preload="metadata"></video></div>
-    <p class="cap">観察ポイント：訴えと問診（〜0:24）、脈（〜0:34）、舌（〜0:40）、舌の裏（〜0:44）</p>
+    <p class="cap">観察ポイント：訴えと問診 0:00–0:24 ／ 脈 0:24–0:34 ／ 舌 0:35–0:40 ／ 舌の裏 0:40–0:44</p>
     <p class="cap">教育用の模擬症例（AI生成動画）</p>
     <div class="panel"><dl class="kv">
       <dt>患者</dt><dd>80代　男性　やせ型</dd>
@@ -1923,7 +1921,7 @@ const BASE = [
     <div class="eyebrow">STEP 1　症例</div>
     <h2>まず動画を観よう（約40秒）</h2>
     <div class="media"><video src="c3/case3.mp4" poster="c3/poster3.jpg" controls playsinline preload="metadata"></video></div>
-    <p class="cap">観察ポイント：訴えと問診（〜0:20）、脈（〜0:30）、舌（〜0:34）、舌の裏（〜0:40）</p>
+    <p class="cap">観察ポイント：訴えと問診 0:00–0:20 ／ 脈 0:20–0:30 ／ 舌 0:30–0:35 ／ 舌の裏 0:35–0:40</p>
     <p class="cap">教育用の模擬症例（AI生成動画）</p>
     <div class="panel"><dl class="kv">
       <dt>患者</dt><dd>40代　男性</dd>
@@ -1935,7 +1933,7 @@ const BASE = [
     <div class="eyebrow">STEP 1　症例</div>
     <h2>まず動画を観よう（約50秒）</h2>
     <div class="media"><video src="c2/case2.mp4" poster="c2/poster2.jpg" controls playsinline preload="metadata"></video></div>
-    <p class="cap">観察ポイント：訴えと問診・検査の結果（〜0:28）、脈（〜0:35）、舌（〜0:43）、腹（〜0:52）</p>
+    <p class="cap">観察ポイント：訴えと問診・検査の結果 0:00–0:29 ／ 脈 0:29–0:35 ／ 舌 0:35–0:41 ／ 舌の裏 0:41–0:43 ／ 腹 0:43–0:52</p>
     <p class="cap">教育用の模擬症例（AI生成動画）</p>
     <div class="panel"><dl class="kv">
       <dt>患者</dt><dd>若年　女性　やせ型</dd>
@@ -1948,7 +1946,7 @@ const BASE = [
     <div class="eyebrow">STEP 1　症例</div>
     <h2>まず動画を観よう（約60秒）</h2>
     <div class="media"><video src="case.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video></div>
-    <p class="cap">観察ポイント：訴え（〜0:16）、舌と舌の裏（〜0:30）、脈（〜0:40）、腹（〜0:59）</p>
+    <p class="cap">観察ポイント：訴え 0:00–0:16 ／ 舌 0:19–0:25 ／ 舌の裏 0:25–0:32 ／ 脈 0:32–0:40 ／ 腹 0:40–0:59</p>
     <div class="panel"><dl class="kv">
       <dt>患者</dt><dd>80歳　女性　やせ型</dd>
       <dt>主訴</dt><dd>食欲がない／疲れやすい</dd>
@@ -2375,6 +2373,3 @@ function start(data) { if (data && typeof data.i === "number") state = data; els
 window.claude?.hot?.snapshot?.(() => state);
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? null);
 </script>
-
-</body>
-</html>
