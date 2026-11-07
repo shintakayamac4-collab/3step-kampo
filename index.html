@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>3-Step 漢方｜臨床研修 指導ガイドライン（2024年度版）</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1037,5 +1038,50 @@ function render(){
 render();
 </script>
 
+<!--kampo-protect-->
+<style>
+body, .app, main { -webkit-user-select: none; -moz-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
+img, video { -webkit-user-drag: none; user-drag: none; pointer-events: auto; }
+.kampo-legal { font-size: 11px; line-height: 1.6; color: #6b6f7a; text-align: center; padding: 18px 16px calc(24px + env(safe-area-inset-bottom, 0px)); }
+.kampo-legal b { font-weight: 600; }
+@media print { body { display: none !important; } }
+</style>
+<script>
+(function () {
+  var stop = function (e) { e.preventDefault(); return false; };
+  ["contextmenu", "copy", "cut", "dragstart", "selectstart"].forEach(function (t) {
+    document.addEventListener(t, function (e) {
+      var el = e.target;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
+      stop(e);
+    }, true);
+  });
+  document.addEventListener("keydown", function (e) {
+    var k = (e.key || "").toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && (k === "s" || k === "u" || k === "p" || (e.shiftKey && (k === "i" || k === "j" || k === "c")))) stop(e);
+    if (k === "f12") stop(e);
+  }, true);
+  var guard = function () {
+    document.querySelectorAll("video").forEach(function (v) {
+      v.setAttribute("controlsList", "nodownload noremoteplayback");
+      v.disablePictureInPicture = true;
+      v.setAttribute("disablepictureinpicture", "");
+      v.setAttribute("oncontextmenu", "return false");
+    });
+    document.querySelectorAll("img").forEach(function (i) { i.setAttribute("draggable", "false"); });
+  };
+  var legal = function () {
+    if (document.querySelector(".kampo-legal")) return;
+    var f = document.createElement("footer");
+    f.className = "kampo-legal";
+    f.innerHTML = "<b>&copy; 2026 東北大学病院 漢方内科（高山 真）</b><br>本教材（文章・設問・図・動画・音声）の著作権は作成者に帰属します。教育目的での閲覧に限り利用できます。無断での複製・保存・転載・改変・再配布・二次利用を禁じます。";
+    document.body.appendChild(f);
+  };
+  var run = function () { guard(); legal(); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
+  new MutationObserver(function () { guard(); }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
 </body>
 </html>
