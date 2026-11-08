@@ -30,6 +30,15 @@ img{display:block}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
 .brand{font-size:13px;letter-spacing:.2em;font-weight:700;color:#2f3a35}
 .lvpill{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 14px 7px 10px;font-size:14px;font-weight:900;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.topr{display:flex;align-items:center;gap:8px}
+.upd{display:flex;align-items:center;gap:5px;background:#fff;border:0;border-radius:999px;padding:7px 12px;font-family:inherit;font-size:12.5px;font-weight:900;color:#2f3a35;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.upd svg{width:14px;height:14px}
+.upd.spin svg{animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:#262626;color:#fff;font-size:13px;font-weight:700;padding:12px 18px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;gap:12px;align-items:center;z-index:50;transition:transform .35s;max-width:90vw}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast button{background:var(--c1);color:#fff;border:0;border-radius:10px;padding:7px 12px;font-family:inherit;font-weight:900;font-size:13px;cursor:pointer}
+.ver{font-size:10px;color:#9a978f;margin-top:4px}
 .lvpill .ring{width:18px;height:18px;border-radius:50%;background:conic-gradient(var(--c1) var(--pct,25%),#dfe5e2 0)}
 .hero-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 h1{font-size:44px;line-height:1.18;letter-spacing:.02em;font-weight:900}
@@ -127,7 +136,10 @@ footer{text-align:center;font-size:11px;font-weight:700;color:var(--sub);padding
 <section class="hero">
   <div class="topbar">
     <span class="brand">KAMPO LEARNING TOOLS</span>
-    <span class="lvpill"><span class="ring" id="ring"></span><span id="lvtext">Lv.1</span></span>
+    <span class="topr">
+      <button class="upd" id="upd" type="button" aria-label="最新版に更新"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>更新</button>
+      <span class="lvpill"><span class="ring" id="ring"></span><span id="lvtext">Lv.1</span></span>
+    </span>
   </div>
   <div class="hero-row">
     <h1>レベルで選ぶ<br>漢方学習</h1>
@@ -223,7 +235,8 @@ footer{text-align:center;font-size:11px;font-weight:700;color:var(--sub);padding
   </div>
 </section>
 
-<footer>© 東北大学病院 漢方内科　高山 真<br>本サイトの教材・画像・動画の無断転載・複製を禁じます。</footer>
+<footer>© 東北大学病院 漢方内科　高山 真<br>本サイトの教材・画像・動画の無断転載・複製を禁じます。<div class="ver">version <span id="vernow">—</span></div></footer>
+<div class="toast" id="toast" role="status">新しい版があります<button type="button" id="toastbtn">更新する</button></div>
 </div>
 
 <script>
@@ -245,6 +258,25 @@ footer{text-align:center;font-size:11px;font-weight:700;color:var(--sub);padding
   chips.forEach(function(b){b.addEventListener('click',function(){apply(+b.dataset.lv,true);});});
   nodes.forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();apply(+a.dataset.lv,true);});});
   apply(lv,false);
+
+  /* ===== 最新版に更新 ===== */
+  var VKEY='kampoPortalVer', updBtn=document.getElementById('upd'), toast=document.getElementById('toast'), vernow=document.getElementById('vernow');
+  var localVer=null; try{localVer=localStorage.getItem(VKEY);}catch(e){}
+  vernow.textContent=localVer||'—';
+  function hardReload(){
+    updBtn.classList.add('spin');
+    var done=function(){ var u=location.pathname+'?r='+Date.now()+location.hash; location.replace(u); };
+    if(window.caches&&caches.keys){ caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).then(done,done); }
+    else done();
+  }
+  updBtn.addEventListener('click',hardReload);
+  document.getElementById('toastbtn').addEventListener('click',hardReload);
+  fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+    var v=j&&j.v; if(!v) return;
+    if(localVer && localVer!==v){ toast.classList.add('show'); }
+    try{localStorage.setItem(VKEY,v);}catch(e){}
+    vernow.textContent=v;
+  }).catch(function(){});
 })();
 </script>
 </body>
