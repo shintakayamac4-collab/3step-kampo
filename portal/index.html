@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#d6efe3">
+<title>レベルで選ぶ 漢方学習 | KAMPO LEARNING TOOLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mint:#d6efe3; --cream:#f7f5ef; --ink:#262626; --sub:#6b6a66; --card:#fff;
+  --c1:#4fb58e; --c1-soft:#d9f1e6; --c1-deep:#2e8a66;
+  --c2:#3aa0c2; --c2-soft:#cfe6f5; --c2-deep:#1f7593;
+  --c3:#5d5fcf; --c3-soft:#dcd3f3; --c3-deep:#4446a8;
+  --c4:#c0394f; --c4-soft:#f6dde1; --c4-deep:#8e2538;
+  --teal:#3bb3a8; --magenta:#c0407a; --orange:#f9c88f; --gold:#c8a04e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Zen Maru Gothic","M PLUS Rounded 1c",system-ui,sans-serif;font-weight:700;background:#e9e5db;color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+.app{max-width:480px;margin:0 auto;background:var(--cream);min-height:100vh;position:relative;overflow:hidden}
+@media(min-width:520px){.app{margin:24px auto;border-radius:40px;min-height:auto;box-shadow:0 24px 60px rgba(0,0,0,.14)}}
+img{display:block}
+
+/* ===== ヘッダー ===== */
+.hero{background:var(--mint);padding:22px 24px 150px;position:relative}
+.hero::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-70px;height:140px;background:var(--cream);border-radius:50% 50% 0 0 / 100% 100% 0 0}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.brand{font-size:13px;letter-spacing:.2em;font-weight:700;color:#2f3a35}
+.lvpill{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 14px 7px 10px;font-size:14px;font-weight:900;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.lvpill .ring{width:18px;height:18px;border-radius:50%;background:conic-gradient(var(--c1) var(--pct,25%),#dfe5e2 0)}
+.hero-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+h1{font-size:44px;line-height:1.18;letter-spacing:.02em;font-weight:900}
+.hero-art{width:164px;flex:none;margin:-14px -10px 0 0}
+.lead{font-size:15.5px;font-weight:700;color:#2f3a35;margin-top:14px;line-height:1.65}
+
+/* ===== レベル診断 ===== */
+.diag{position:relative;z-index:2;background:#fff;border-radius:24px;padding:22px 18px 18px;margin:-128px 18px 0;box-shadow:0 10px 30px rgba(60,90,80,.12)}
+.diag h2{text-align:center;font-size:21px;font-weight:900;margin-bottom:14px;letter-spacing:.02em}
+.qrow{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}
+.qrow p{font-size:15.5px;font-weight:900}
+.bub{position:relative;color:#fff;font-size:14px;font-weight:900;padding:7px 16px;border-radius:12px;letter-spacing:.06em}
+.bub::after{content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);border:7px solid transparent;border-bottom:0}
+.bub.q{background:var(--teal)}.bub.q::after{border-top-color:var(--teal)}
+.bub.n{background:var(--magenta)}.bub.n::after{border-top-color:var(--magenta)}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chip{border:0;border-radius:16px;padding:16px 10px;font-family:inherit;font-size:16px;font-weight:900;line-height:1.3;color:var(--ink);cursor:pointer;min-height:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s}
+.chip:active{transform:scale(.97)}
+.chip small{font-size:11.5px;font-weight:700;color:#4a4a48;margin-top:3px}
+.chip[data-lv="1"]{background:#cfeee0}
+.chip[data-lv="2"]{background:#c6e3f5}
+.chip[data-lv="3"]{background:#d9cdf2}
+.chip[data-lv="4"]{background:#f9c98f}
+.chip.sel{box-shadow:0 0 0 3px var(--ink) inset}
+
+/* ===== 道のり ===== */
+.path{padding:34px 20px 4px;position:relative}
+.track{position:relative;height:12px;background:#dcd8cf;border-radius:6px;margin:70px 36px 0}
+.track .fill{position:absolute;left:0;top:0;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c4));width:0;transition:width .5s ease}
+.nodes{display:flex;justify-content:space-between;margin-top:-44px}
+.node{position:relative;width:78px;text-align:center;text-decoration:none;color:var(--ink)}
+.node .dot{width:76px;height:76px;border-radius:50%;background:var(--nc-soft);border:4px solid var(--nc);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--nc-deep);line-height:1.2;margin:0 auto;transition:all .3s}
+.node .dot b{font-size:14px;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800}
+.node.on .dot{background:var(--nc);color:#fff;border-color:var(--nc-deep)}
+.node .lbl{font-size:13px;font-weight:900;margin-top:8px;color:var(--ink)}
+.node:nth-child(1){--nc:var(--c1);--nc-soft:var(--c1-soft);--nc-deep:var(--c1-deep)}
+.node:nth-child(2){--nc:var(--c2);--nc-soft:var(--c2-soft);--nc-deep:var(--c2-deep)}
+.node:nth-child(3){--nc:var(--c3);--nc-soft:var(--c3-soft);--nc-deep:var(--c3-deep)}
+.node:nth-child(4){--nc:var(--c4);--nc-soft:var(--c4-soft);--nc-deep:var(--c4-deep)}
+.here{position:absolute;top:-56px;left:50%;transform:translateX(-50%);display:none}
+.node.on .here{display:block}
+.here span{display:block;background:var(--gold);color:#fff;font-size:13px;font-weight:900;padding:6px 12px;border-radius:12px;white-space:nowrap;position:relative}
+.here span::after{content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);border:7px solid transparent;border-top-color:var(--gold);border-bottom:0}
+.node:nth-child(2) .here span{background:var(--c2-deep)}.node:nth-child(2) .here span::after{border-top-color:var(--c2-deep)}
+.node:nth-child(3) .here span{background:var(--c3)}.node:nth-child(3) .here span::after{border-top-color:var(--c3)}
+.node:nth-child(4) .here span{background:var(--c4)}.node:nth-child(4) .here span::after{border-top-color:var(--c4)}
+.walker{position:absolute;top:-62px;left:100%;width:72px;margin-left:-14px;display:none;pointer-events:none}
+.node.on .walker{display:block;animation:bob 1.8s ease-in-out infinite}
+.node:nth-child(4).on .walker{left:auto;right:100%;margin-right:-14px;transform:scaleX(-1)}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -4px}}
+
+/* ===== カード ===== */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:28px 18px 10px}
+.card{position:relative;background:var(--card);border-radius:24px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.07);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;scroll-margin-top:16px}
+.card::before{content:"";height:12px;background:var(--lv)}
+.card.hi{box-shadow:0 0 0 3px var(--lv),0 14px 30px rgba(0,0,0,.12);transform:translateY(-3px)}
+.cb{padding:16px 14px 16px;display:flex;flex-direction:column;flex:1}
+.num{position:absolute;top:14px;right:14px;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;font-size:40px;color:var(--lv);opacity:.3;line-height:1}
+.badge{align-self:flex-start;background:var(--lv-soft);color:var(--lv-deep);border-radius:999px;padding:5px 14px;font-size:14px;font-weight:900}
+.tag{align-self:flex-start;margin-top:10px;background:var(--orange);border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:900}
+.card.lv2 .tag{background:#f5c9a7}.card.lv3 .tag{background:#d9cdf2}.card.lv4 .tag{background:#f6c3cc}
+.ttl-row{display:flex;align-items:flex-end;justify-content:space-between;gap:2px;margin-top:8px;min-height:84px}
+.card h3{font-size:18px;line-height:1.3;font-weight:900;letter-spacing:0;word-break:keep-all}
+.card h3 .nw{white-space:nowrap}
+.icon{width:60px;height:60px;flex:none;object-fit:contain}
+svg.icon{width:56px;height:56px}
+.who{font-size:12px;font-weight:700;color:var(--sub);margin-top:8px;line-height:1.5}
+.who b{color:var(--lv-deep)}
+.gauge{display:flex;align-items:center;gap:8px;margin-top:12px}
+.seg{flex:1;display:flex;gap:6px;align-items:center}
+.seg i{height:10px;border-radius:5px;background:#dedad1;flex:1}
+.seg i.on{background:var(--lv);flex:3}
+.seg i.dot{flex:0 0 10px;width:10px}
+.gauge span{font-size:13px;font-weight:900;color:var(--sub)}
+.go{margin-top:14px;display:block;text-align:center;background:var(--lv);color:#fff;text-decoration:none;font-weight:900;border-radius:14px;padding:12px;font-size:15px}
+.go.soon{background:#d6d2c8;pointer-events:none}
+.ribbon{position:absolute;top:16px;right:-32px;transform:rotate(45deg);background:#f1b94a;color:#fff;font-size:11px;font-weight:900;padding:3px 38px;letter-spacing:.1em}
+.lv1{--lv:var(--c1);--lv-soft:var(--c1-soft);--lv-deep:var(--c1-deep)}
+.lv2{--lv:var(--c2);--lv-soft:var(--c2-soft);--lv-deep:var(--c2-deep)}
+.lv3{--lv:var(--c3);--lv-soft:var(--c3-soft);--lv-deep:var(--c3-deep)}
+.lv4{--lv:var(--c4);--lv-soft:var(--c4-soft);--lv-deep:var(--c4-deep)}
+@media(max-width:400px){.cards{grid-template-columns:1fr}h1{font-size:38px}.hero-art{width:124px}}
+
+/* ===== その他 ===== */
+.others{padding:14px 18px 0}
+.others h2{font-size:12px;letter-spacing:.2em;color:var(--sub);margin-bottom:8px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{font-size:13px;text-decoration:none;color:var(--ink);background:#fff;border:1.5px solid #e4dfd3;border-radius:999px;padding:7px 14px}
+footer{text-align:center;font-size:11px;font-weight:700;color:var(--sub);padding:24px 18px 32px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section class="hero">
+  <div class="topbar">
+    <span class="brand">KAMPO LEARNING TOOLS</span>
+    <span class="lvpill"><span class="ring" id="ring"></span><span id="lvtext">Lv.1</span></span>
+  </div>
+  <div class="hero-row">
+    <h1>レベルで選ぶ<br>漢方学習</h1>
+    <img class="hero-art" src="img/herbs.png" alt="">
+  </div>
+  <p class="lead">スキマ時間5分から、<br>今の自分にぴったりのレベルでスタート！</p>
+</section>
+
+<section class="diag">
+  <h2>3秒でわかる！レベル診断</h2>
+  <div class="qrow"><span class="bub q">Q</span><p>今の知識レベルは？</p><span class="bub n">TAP</span></div>
+  <div class="chips">
+    <button class="chip" data-lv="1">漢方薬の名前を<br>少し知ってる<small>→ ビギナー</small></button>
+    <button class="chip" data-lv="2">基本の講義は<br>受けた<small>→ ビギナー〜ミドル</small></button>
+    <button class="chip" data-lv="3">四診から「証」を<br>考えたい<small>→ ミドル</small></button>
+    <button class="chip" data-lv="4">専門医レベルを<br>めざす<small>→ エキスパート</small></button>
+  </div>
+</section>
+
+<section class="path">
+  <div class="track"><div class="fill" id="fill"></div></div>
+  <div class="nodes">
+    <a class="node" href="#lv1" data-lv="1"><span class="here"><span>現在地！</span></span><img class="walker" src="img/walker.png" alt=""><span class="dot"><b>Lv.01</b>ビギナー</span><span class="lbl">ビギナー</span></a>
+    <a class="node" href="#lv2" data-lv="2"><span class="here"><span>現在地！</span></span><img class="walker" src="img/walker.png" alt=""><span class="dot"><b>Lv.02</b>ビギナー〜</span><span class="lbl">〜ミドル</span></a>
+    <a class="node" href="#lv3" data-lv="3"><span class="here"><span>現在地！</span></span><img class="walker" src="img/walker.png" alt=""><span class="dot"><b>Lv.03</b>ミドル</span><span class="lbl">ミドル</span></a>
+    <a class="node" href="#lv4" data-lv="4"><span class="here"><span>現在地！</span></span><img class="walker" src="img/walker.png" alt=""><span class="dot"><b>Lv.04</b>エキスパート</span><span class="lbl">エキスパート</span></a>
+  </div>
+</section>
+
+<section class="cards">
+
+  <article class="card lv1" id="lv1">
+    <span class="num">01</span>
+    <div class="cb">
+      <span class="badge">ビギナー</span>
+      <span class="tag">5分でOK!</span>
+      <div class="ttl-row"><h3><span class="nw">3-Step 漢方</span><br>ビギナー</h3><img class="icon" src="img/icon1.png" alt=""></div>
+      <p class="who"><b>こんな人に</b><br>漢方にはじめて触れる医学生・初期研修医</p>
+      <div class="gauge"><div class="seg"><i class="on"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></div><span>25%</span></div>
+      <a class="go" href="https://shintakayamac4-collab.github.io/3step-kampo/new/">はじめる</a>
+    </div>
+  </article>
+
+  <article class="card lv2" id="lv2">
+    <span class="num">02</span>
+    <div class="cb">
+      <span class="badge">ビギナー〜ミドル</span>
+      <span class="tag">みんなと学ぶ</span>
+      <div class="ttl-row"><h3><span class="nw">6-Step 漢方</span><br>みんなで<br><span class="nw">漢方カンファ</span></h3><img class="icon" src="img/icon2.png" alt=""></div>
+      <p class="who"><b>こんな人に</b><br>「基本がわかる漢方医学講義」を学修した学生・研修医</p>
+      <div class="gauge"><div class="seg"><i class="on"></i><i class="on"></i><i class="dot"></i><i class="dot"></i></div><span>50%</span></div>
+      <a class="go" href="https://shintakayamac4-collab.github.io/3step-kampo/cases/">カンファに参加</a>
+    </div>
+  </article>
+
+  <article class="card lv3" id="lv3">
+    <span class="num">03</span>
+    <span class="ribbon">改訂中</span>
+    <div class="cb">
+      <span class="badge">ミドル</span>
+      <span class="tag">証を立てる</span>
+      <div class="ttl-row"><h3>漢方診断<br>学習ツール</h3>
+        <svg class="icon" viewBox="0 0 54 54" aria-hidden="true"><circle cx="22" cy="22" r="15" fill="#dcd3f3" stroke="#5d5fcf" stroke-width="3"/><path d="M33 33 l14 14" stroke="#5d5fcf" stroke-width="5" stroke-linecap="round"/><path d="M11 23 h6 l3 -7 l4 13 l3 -6 h6" stroke="#c0394f" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <p class="who"><b>こんな人に</b><br>所見から自分で「証」を立てたい医師・研修医</p>
+      <div class="gauge"><div class="seg"><i class="on"></i><i class="on"></i><i class="on"></i><i class="dot"></i></div><span>75%</span></div>
+      <!-- TODO: 漢方診断学習ツールのURLに差し替え -->
+      <a class="go" href="#lv3">診断に挑む</a>
+    </div>
+  </article>
+
+  <article class="card lv4" id="lv4">
+    <span class="num">04</span>
+    <div class="cb">
+      <span class="badge">エキスパート</span>
+      <span class="tag">専門医レベル</span>
+      <div class="ttl-row"><h3>漢方<br>エキスパート</h3>
+        <svg class="icon" viewBox="0 0 54 54" aria-hidden="true"><rect x="10" y="18" width="34" height="30" rx="4" fill="#fff6e6" stroke="#c8a04e" stroke-width="2.5"/><path d="M17 28 h20 M17 35 h20 M17 42 h12" stroke="#c8a04e" stroke-width="2" stroke-linecap="round"/><path d="M14 16 l6 -8 l7 6 l7 -6 l6 8z" fill="#f1c84b" stroke="#c8a04e" stroke-width="2" stroke-linejoin="round"/></svg></div>
+      <p class="who"><b>こんな人に</b><br>漢方専門医・専門医をめざす医師・指導医</p>
+      <div class="gauge"><div class="seg"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><span>100%</span></div>
+      <!-- TODO: エキスパート用ツールのURLが決まったら class="go" にしてhrefを設定 -->
+      <a class="go soon" href="#lv4">準備中</a>
+    </div>
+  </article>
+
+</section>
+
+<section class="others">
+  <h2>関連ツール</h2>
+  <div class="links">
+    <a href="https://shintakayamac4-collab.github.io/3step-kampo/">3-Step 漢方（もと版）</a>
+    <a href="https://shintakayamac4-collab.github.io/3step-kampo/cases/">6-Step 漢方</a>
+  </div>
+</section>
+
+<footer>© 東北大学病院 漢方内科　高山 真<br>本サイトの教材・画像・動画の無断転載・複製を禁じます。</footer>
+</div>
+
+<script>
+(function(){
+  var KEY='kampoPortalLv', lv=1; try{lv=parseInt(localStorage.getItem(KEY))||1;}catch(e){}
+  var nodes=document.querySelectorAll('.node'), chips=document.querySelectorAll('.chip'),
+      cards=document.querySelectorAll('.card'), fill=document.getElementById('fill'),
+      ring=document.getElementById('ring'), lvtext=document.getElementById('lvtext');
+  function apply(n,scroll){
+    lv=n; try{localStorage.setItem(KEY,n);}catch(e){}
+    nodes.forEach(function(el){el.classList.toggle('on',+el.dataset.lv===n);});
+    chips.forEach(function(el){el.classList.toggle('sel',+el.dataset.lv===n);});
+    cards.forEach(function(el){el.classList.toggle('hi',el.classList.contains('lv'+n));});
+    fill.style.width=((n-1)/3*100)+'%';
+    ring.style.setProperty('--pct',(n*25)+'%');
+    lvtext.textContent='Lv.'+n;
+    if(scroll){var c=document.getElementById('lv'+n); c&&c.scrollIntoView({behavior:'smooth',block:'center'});}
+  }
+  chips.forEach(function(b){b.addEventListener('click',function(){apply(+b.dataset.lv,true);});});
+  nodes.forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();apply(+a.dataset.lv,true);});});
+  apply(lv,false);
+})();
+</script>
+</body>
+</html>
