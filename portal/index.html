@@ -280,5 +280,14 @@ footer{text-align:center;font-size:11px;font-weight:700;color:var(--sub);padding
   }).catch(function(){});
 })();
 </script>
+<script>
+/* 各教材へのリンクはキャッシュ回避のため、クリック時に ?v=時刻 を付ける */
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[href*="shintakayamac4-collab.github.io/3step-kampo/"]');
+  if(!a||a.target==='_blank') return;
+  var u=new URL(a.href); if(u.pathname.indexOf('/portal/')>=0) return;
+  u.searchParams.set('v',Date.now()); e.preventDefault(); location.href=u.toString();
+},true);
+</script>
 </body>
 </html>

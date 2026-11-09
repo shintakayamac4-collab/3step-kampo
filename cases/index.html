@@ -2694,6 +2694,19 @@ main.addEventListener("change", (e) => {
   speak("この声で読み上げます。");
 });
 // 最新版に更新：公開版はURLに時刻を付けてキャッシュを避けて読み直す。進み具合と記録は残る
+// 公開版（github.io）では version.json を確認し、古いキャッシュなら自動で再読み込み
+const BUILD = "2026.11.09-1749";
+if (/github\.io$/.test(location.hostname) && BUILD !== "__BUILD__") {
+  fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()).then((j) => {
+    if (!j || !j.v || j.v === BUILD) return;
+    let tried = null; try { tried = sessionStorage.getItem("kampo-upd"); } catch (er) {}
+    if (tried === j.v) return;
+    try { sessionStorage.setItem("kampo-upd", j.v); } catch (er) {}
+    try { stopAll(); } catch (er) {}
+    save();
+    location.replace(location.pathname + "?v=" + Date.now() + location.hash);
+  }).catch(() => {});
+}
 $("#reload").addEventListener("click", (e) => {
   e.currentTarget.classList.add("spin");
   try { stopAll(); } catch (er) {}
