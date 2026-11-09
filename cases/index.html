@@ -308,9 +308,16 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .screen, .fb { animation: none; } .opt, .herb, .btn, .seg button, .role { transition: none; } }
 </style>
 
+<style>
+.to-portal{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 12px 2px;padding:8px 14px;border-radius:999px;background:#d6efe3;color:#1f5e45;font-size:12.5px;font-weight:700;text-decoration:none;line-height:1.2}
+.to-portal:hover{background:#c3e6d6}
+.to-portal svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.kampo-legal a.back-portal{display:inline-block;margin-top:8px;color:#1f5e45;font-weight:700;text-decoration:underline}
+</style>
 </head>
 <body>
 <div class="app">
+<a class="to-portal" href="https://shintakayamac4-collab.github.io/3step-kampo/portal/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/></svg>レベルで選ぶ 漢方学習（トップ）へ戻る</a>
   <header class="top">
     <div class="top-row">
       <span class="brand">6-Step 漢方</span>
@@ -2758,7 +2765,7 @@ img, video { -webkit-user-drag: none; user-drag: none; pointer-events: auto; }
     if (document.querySelector(".kampo-legal")) return;
     var f = document.createElement("footer");
     f.className = "kampo-legal";
-    f.innerHTML = "<b>&copy; 2026 東北大学病院 漢方内科（高山 真）</b><br>本教材（文章・設問・図・動画・音声）の著作権は作成者に帰属します。教育目的での閲覧に限り利用できます。無断での複製・保存・転載・改変・再配布・二次利用を禁じます。";
+    f.innerHTML = "<b>&copy; 2026 東北大学病院 漢方内科（高山 真）</b><br>本教材（文章・設問・図・動画・音声）の著作権は作成者に帰属します。教育目的での閲覧に限り利用できます。無断での複製・保存・転載・改変・再配布・二次利用を禁じます。<br><a class=\"back-portal\" href=\"https://shintakayamac4-collab.github.io/3step-kampo/portal/\">← レベルで選ぶ 漢方学習（トップ）へ</a>";
     document.body.appendChild(f);
   };
   var run = function () { guard(); legal(); };
