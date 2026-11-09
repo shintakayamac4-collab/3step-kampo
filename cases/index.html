@@ -7,6 +7,8 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
 <title>6-Step 漢方 みんなで漢方カンファ</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -269,7 +271,7 @@ p { margin: 0; }
 .case.sel { border-color: var(--pop); background: var(--pop-soft); box-shadow: 0 4px 0 var(--pop); }
 .case:focus-visible { outline: 3px solid var(--pop); outline-offset: 3px; }
 .herb.wide { grid-column: 1 / -1; }
-.hero-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .hero-grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block; box-shadow: 0 4px 0 var(--line); }
 .hero-grid img:nth-child(odd) { transform: rotate(-2deg); }
 .hero-grid img:nth-child(even) { transform: rotate(2deg) translateY(6px); }
@@ -318,6 +320,7 @@ p { margin: 0; }
 <body>
 <div class="app">
 <a class="to-portal" href="https://shintakayamac4-collab.github.io/3step-kampo/portal/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/></svg>レベルで選ぶ 漢方学習（トップ）へ戻る</a>
+
   <header class="top">
     <div class="top-row">
       <span class="brand">6-Step 漢方</span>
@@ -2210,24 +2213,24 @@ CASES.c6 = {
 // ---------- screens ----------
 const BASE = [
   { step: 0, start: true, html: () => `
-    <div class="hero-grid">${Object.values(CASES).map((c) => `<img src="${c.img}" alt="${c.imgAlt}">`).join("")}</div>
+    <div class="hero-grid">${Object.values(CASES).slice(-4).map((c) => `<img src="${c.img}" alt="${c.imgAlt}">`).join("")}</div>
     <div class="eyebrow">症例チュートリアル　全${Object.keys(CASES).length}症例</div>
     <h1>6-Step 漢方<br><em>みんなで漢方カンファ</em></h1>
     <p class="lead">症例を選んで、四診の所見から証を立て、処方を選ぶ。立場に合わせた問いに答えながら6ステップで進みます（1症例約10分）。</p>
-    <div class="aim">
-      <div class="aim-row"><span class="aim-k">対象</span><p>「基本がわかる漢方医学講義」で、漢方医学の基本（八綱・気血水・四診・代表的な処方）を学修した医学生・薬学生・看護学生・研修医</p></div>
-      <div class="aim-row"><span class="aim-k">目的</span><p>学んだ基本を、症例を通して「診療の流れ」として使えるようにする、<b>漢方診療スキル向上アプリ</b>です。除外診断 → 四診 → 証 → 処方選択 → 安全確認の判断を、立場ごとの問いで練習します。</p></div>
-      <div class="aim-row"><span class="aim-k">注意</span><p>基本用語の解説はしません。点線の用語はタップで意味が出ますが、分からない項目は講座で復習してから取り組んでください。症例は教育用の模擬症例で、処方は教育上の第一候補です。</p></div>
-    </div>
-    <div class="panel" style="display:grid;gap:10px">
-      <p style="font-weight:700">症例を選んでください</p>
-      <div class="cases">${Object.entries(CASES).map(([k, c]) => `<button type="button" class="case${(state.case || "c1") === k ? " sel" : ""}" data-case="${k}"><img src="${c.img}" alt=""><span><b>${c.label}</b>${c.short}<small>${c.who}</small>${caseBadge(k, c)}</span></button>`).join("")}</div>
-    </div>
     <div class="panel" style="display:grid;gap:10px">
       <p style="font-weight:700">あなたの立場を選んでください</p>
       <div class="roles">${Object.entries(ROLES).map(([k, r]) => `<button type="button" class="role${state.role === k ? " sel" : ""}" data-role="${k}">${r.name}<small>${r.sub}</small></button>`).join("")}</div>
       <p class="unk">立場によって、問いの内容が変わります。</p>
       ${state.role ? charCard(state.role, totalXP(state.role)) : ""}
+    <div class="panel" style="display:grid;gap:10px">
+      <p style="font-weight:700">症例を選んでください</p>
+      <div class="cases">${Object.entries(CASES).map(([k, c]) => `<button type="button" class="case${(state.case || "c1") === k ? " sel" : ""}" data-case="${k}"><img src="${c.img}" alt=""><span><b>${c.label}</b>${c.short}<small>${c.who}</small>${caseBadge(k, c)}</span></button>`).join("")}</div>
+    </div>
+    <div class="aim">
+      <div class="aim-row"><span class="aim-k">対象</span><p>「基本がわかる漢方医学講義」で、漢方医学の基本（八綱・気血水・四診・代表的な処方）を学修した医学生・薬学生・看護学生・研修医</p></div>
+      <div class="aim-row"><span class="aim-k">目的</span><p>学んだ基本を、症例を通して「診療の流れ」として使えるようにする、<b>漢方診療スキル向上アプリ</b>です。除外診断 → 四診 → 証 → 処方選択 → 安全確認の判断を、立場ごとの問いで練習します。</p></div>
+      <div class="aim-row"><span class="aim-k">注意</span><p>基本用語の解説はしません。点線の用語はタップで意味が出ますが、分からない項目は講座で復習してから取り組んでください。症例は教育用の模擬症例で、処方は教育上の第一候補です。</p></div>
+    </div>
     </div>` },
   { step: 1, html: () => state.case === "c6" ? `
     <div class="eyebrow">STEP 1　症例</div>
