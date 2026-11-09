@@ -1439,7 +1439,7 @@ function hubHTML(){
   const total=CASES.length;
   return `<section class="hub">
    ${surveyHTML()}
-   <p class="q hub-q" id="hub-q" title="タップで読み上げ">3-Step 漢方 ビギナー。症候から学ぶ・解く、漢方薬を学ぶ。好きなところをタップ<small class="hubhint">（音が出ないときはここをタップ）</small></p>
+   <p class="q hub-q" id="hub-q" title="タップで読み上げ">3-Step 漢方 ビギナー。症候から学ぶ・解く、漢方薬を学ぶ。好きなところをタップ</p>
    <button class="tile tile-learn" id="t-learn"><span class="tileic">📖</span><span class="tilebody"><span class="tilekind">STEP 1 ・ まず読む</span><b>症候から学ぶ</b><small>症候ごとに「まず思い浮かべたい3処方」と漢方的な特徴を読むだけ。問題はありません。</small></span><span class="chev">›</span></button>
    <div class="tile-arrow" aria-hidden="true">▼ 読んでから解くのがおすすめ</div>
    <button class="tile tile-solve" id="t-pick"><span class="tileic">🎯</span><span class="tilebody"><span class="tilekind">STEP 2 ・ 挑戦する</span><b>症候から解く</b><small>レクチャー → 3つ想起 → 2つ → 1つ → 確認。おまかせ${MIX}症例も</small><small>経験したい症状・症候 ${n} / ${total} ゲット${n>=total?'・コンプリート！':nx&&nx[0]<=total?`・あと${nx[0]-n}つで${nx[1]}`:''}</small><span class="tbar"><i style="width:${Math.round(n/total*100)}%"></i></span></span><span class="chev">›</span></button>
@@ -1816,7 +1816,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.09-beginner-25';
+const APP_VER='2026.11.09-beginner-26';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
