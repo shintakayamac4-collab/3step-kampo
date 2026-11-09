@@ -4,7 +4,7 @@
 .tile-solve{border-color:#e65100;background:linear-gradient(135deg,#fff3e0,#ffffff)}.tile-solve .tileic{background:#ef6c00;color:#fff}.tile-solve .tilekind{color:#e65100}
 .tile-met .tileic{background:#5e35b1;color:#fff}
 .tile-arrow{text-align:center;font-size:12px;font-weight:700;color:#555;margin:-4px 0 -2px}
-.hub-q{margin:4px 0 6px;font-size:14px;color:#334;cursor:pointer}.hubhint{display:block;font-size:11px;color:#777;font-weight:400}.learn-q{margin:6px 0 4px;font-size:16px}.lec-title.q{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.lec-pts{margin:8px 0;padding:10px 12px;border-radius:12px;background:#fff8e1;border:1px solid #f0c36d}.lec-pts .q{margin:0 0 6px;font-size:15px}.lec-pts small{display:block;font-weight:400;font-size:12px;opacity:.8}.lec-pts ol{margin:0;padding-left:1.4em;line-height:1.7}.lec-pts li{margin:6px 0}.lec-pts li>b{display:block;margin-bottom:2px}.lec-pts .wd{display:flex;flex-wrap:wrap;gap:4px}.lec-pts small .wd,.lec-pts small{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.lec-video video{width:100%;max-width:640px;border-radius:12px;background:#000}.lec-novideo{padding:8px 12px;border-radius:10px;background:#fff8e1;border:1px dashed #f0c36d}.beginner-tag{display:inline-block;font-size:12px;white-space:nowrap;vertical-align:middle;color:#2e7d32;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:999px;padding:.1em .6em;margin-left:.3em;-webkit-text-stroke:0}.to-portal{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 12px 2px;padding:8px 14px;border-radius:999px;background:#d6efe3;color:#1f5e45;font-size:12.5px;font-weight:700;text-decoration:none;line-height:1.2}
+.hub-q{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0;padding:0;border:0}.hubhint{display:block;font-size:11px;color:#777;font-weight:400}.learn-q{margin:6px 0 4px;font-size:16px}.lec-title.q{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.lec-pts{margin:8px 0;padding:10px 12px;border-radius:12px;background:#fff8e1;border:1px solid #f0c36d}.lec-pts .q{margin:0 0 6px;font-size:15px}.lec-pts small{display:block;font-weight:400;font-size:12px;opacity:.8}.lec-pts ol{margin:0;padding-left:1.4em;line-height:1.7}.lec-pts li{margin:6px 0}.lec-pts li>b{display:block;margin-bottom:2px}.lec-pts .wd{display:flex;flex-wrap:wrap;gap:4px}.lec-pts small .wd,.lec-pts small{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.lec-video video{width:100%;max-width:640px;border-radius:12px;background:#000}.lec-novideo{padding:8px 12px;border-radius:10px;background:#fff8e1;border:1px dashed #f0c36d}.beginner-tag{display:inline-block;font-size:12px;white-space:nowrap;vertical-align:middle;color:#2e7d32;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:999px;padding:.1em .6em;margin-left:.3em;-webkit-text-stroke:0}.to-portal{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 12px 2px;padding:8px 14px;border-radius:999px;background:#d6efe3;color:#1f5e45;font-size:12.5px;font-weight:700;text-decoration:none;line-height:1.2}
 .to-portal:hover{background:#c3e6d6}
 .to-portal svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .kampo-legal a.back-portal{display:inline-block;margin-top:8px;color:#1f5e45;font-weight:700;text-decoration:underline}
@@ -1439,7 +1439,7 @@ function hubHTML(){
   const total=CASES.length;
   return `<section class="hub">
    ${surveyHTML()}
-   <p class="q hub-q" id="hub-q" title="タップで読み上げ">3-Step 漢方 ビギナー。症候から学ぶ・解く、漢方薬を学ぶ。好きなところをタップ</p>
+   <p class="q hub-q" id="hub-q" aria-hidden="true">3-Step 漢方 ビギナー。症候から学ぶ・解く、漢方薬を学ぶ。好きなところをタップ</p>
    <button class="tile tile-learn" id="t-learn"><span class="tileic">📖</span><span class="tilebody"><span class="tilekind">STEP 1 ・ まず読む</span><b>症候から学ぶ</b><small>症候ごとに「まず思い浮かべたい3処方」と漢方的な特徴を読むだけ。問題はありません。</small></span><span class="chev">›</span></button>
    <div class="tile-arrow" aria-hidden="true">▼ 読んでから解くのがおすすめ</div>
    <button class="tile tile-solve" id="t-pick"><span class="tileic">🎯</span><span class="tilebody"><span class="tilekind">STEP 2 ・ 挑戦する</span><b>症候から解く</b><small>レクチャー → 3つ想起 → 2つ → 1つ → 確認。おまかせ${MIX}症例も</small><small>経験したい症状・症候 ${n} / ${total} ゲット${n>=total?'・コンプリート！':nx&&nx[0]<=total?`・あと${nx[0]-n}つで${nx[1]}`:''}</small><span class="tbar"><i style="width:${Math.round(n/total*100)}%"></i></span></span><span class="chev">›</span></button>
@@ -1816,7 +1816,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.09-beginner-26';
+const APP_VER='2026.11.09-beginner-27';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
