@@ -216,6 +216,8 @@ p { margin: 0; }
 :root:not([data-theme="light"]) .voice { color: var(--brand); }
 .voice[aria-pressed="false"] { background: var(--line); color: var(--muted); }
 .voice:focus-visible, .say:focus-visible { outline: 3px solid var(--pop); outline-offset: 2px; }
+.intro-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.intro-row .say { margin-left: 0; }
 .say { flex: none; margin-left: auto; font: inherit; font-size: 12px; font-weight: 800; border: 2px solid var(--line); background: var(--surface); color: var(--pop); border-radius: 12px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 2px; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
 .say.speaking { background: var(--pop); color: var(--on); border-color: var(--pop); box-shadow: 0 3px 0 var(--pop-deep); }
 .say:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
@@ -2225,6 +2227,7 @@ const BASE = [
     <div class="eyebrow">症例チュートリアル　全${Object.keys(CASES).length}症例</div>
     <h1>6-Step 漢方<br><em>みんなで漢方カンファ</em></h1>
     <p class="lead">症例を選んで、四診の所見から証を立て、処方を選ぶ。立場に合わせた問いに答えながら6ステップで進みます（1症例約10分）。</p>
+    <div class="intro-row"><button type="button" class="say" id="say" aria-label="使い方の説明を聞く"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>使い方を聞く</button><span class="unk">① 立場を選ぶ → ② 症例を選ぶ → ③「始める」</span></div>
     <div class="panel" style="display:grid;gap:10px">
       <p style="font-weight:700">あなたの立場を選んでください</p>
       <div class="roles">${Object.entries(ROLES).map(([k, r]) => `<button type="button" class="role${state.role === k ? " sel" : ""}" data-role="${k}">${r.name}<small>${r.sub}</small></button>`).join("")}</div>
@@ -2600,7 +2603,7 @@ main.addEventListener("click", (e) => {
   if (e.target.closest("#home")) {
     stopAll();
     state = { i: 0, role: state.role, case: state.case, ans: {}, firstTry: {}, voice: state.voice };
-    S = buildScreens(state.role); render(); window.scrollTo(0, 0); return;
+    S = buildScreens(state.role); render(); window.scrollTo(0, 0); speakCurrent(); return;
   }
   const cs = e.target.closest(".case");
   if (cs) { state.case = cs.dataset.case; state.ans = {}; state.firstTry = {}; S = buildScreens(state.role); render(); window.scrollTo(0, 0); return; }
@@ -2617,7 +2620,7 @@ main.addEventListener("click", (e) => {
   }
   const h = e.target.closest(".herb");
   if (h) { const d = h.querySelector(".hd"); d.hidden = !d.hidden; h.classList.toggle("open", !d.hidden); h.setAttribute("aria-expanded", String(!d.hidden)); return; }
-  if (e.target.closest("#say")) { playClip(sc.q, questionSpeech(sc.q)); return; }
+  if (e.target.closest("#say")) { if (state.i === 0) playClip("intro", INTRO_TEXT); else playClip(sc.q, questionSpeech(sc.q)); return; }
   if (e.target.id === "hintBtn") { const p = $("#hint"); p.hidden = !p.hidden; e.target.setAttribute("aria-expanded", String(!p.hidden)); return; }
   if (!sc.q) return;
   const q = Q[sc.q];
@@ -2726,10 +2729,13 @@ function playClip(key, fallback) {
     a.onerror = () => { if (clip === a && fallback) speak(fallback); };
   } catch (e) { if (fallback) speak(fallback); }
 }
+const INTRO_TEXT = "6-Step漢方、みんなで漢方カンファへようこそ。まず、あなたの立場を選んでください。つぎに、症例を選択します。「始める」を押すと、動画と問いが始まります。";
 function speakCurrent() {
   const sc = S[state.i];
   stopAll();
-  if (state.voice === false || !sc.q || (state.ans[sc.q] && state.ans[sc.q].checked)) return;
+  if (state.voice === false) return;
+  if (state.i === 0) { playClip("intro", INTRO_TEXT); return; }
+  if (!sc.q || (state.ans[sc.q] && state.ans[sc.q].checked)) return;
   playClip(sc.q, questionSpeech(sc.q));
 }
 function renderVoice() {
@@ -2744,7 +2750,7 @@ main.addEventListener("change", (e) => {
 });
 // 最新版に更新：公開版はURLに時刻を付けてキャッシュを避けて読み直す。進み具合と記録は残る
 // 公開版（github.io）では version.json を確認し、古いキャッシュなら自動で再読み込み
-const BUILD = "2026.11.09-2125";
+const BUILD = "2026.11.09-2133";
 if (/github\.io$/.test(location.hostname) && BUILD !== "__BUILD__") {
   fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()).then((j) => {
     if (!j || !j.v || j.v === BUILD) return;
@@ -2787,7 +2793,7 @@ function burst(ox = 0.5, oy = 0.75, count = 36) {
     ], { duration: 1200 + Math.random() * 500, easing: "cubic-bezier(.2,.7,.4,1)" }).onfinish = () => d.remove();
   }
 }
-function start(data) { if (data && typeof data.i === "number") state = data; else load(); S = buildScreens(state.role); if (state.i >= S.length) state.i = 0; render(); }
+function start(data) { if (data && typeof data.i === "number") state = data; else load(); S = buildScreens(state.role); if (state.i >= S.length) state.i = 0; render(); if (state.i === 0) { speakCurrent(); const once = () => { document.removeEventListener("pointerdown", once, true); if (state.i === 0 && !clip && state.voice !== false) speakCurrent(); }; setTimeout(() => { if (!clip) document.addEventListener("pointerdown", once, true); }, 1200); } }
 window.claude?.hot?.snapshot?.(() => state);
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? null);
 </script>
