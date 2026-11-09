@@ -2219,16 +2219,16 @@ const BASE = [
       <p style="font-weight:700">あなたの立場を選んでください</p>
       <div class="roles">${Object.entries(ROLES).map(([k, r]) => `<button type="button" class="role${state.role === k ? " sel" : ""}" data-role="${k}">${r.name}<small>${r.sub}</small></button>`).join("")}</div>
       <p class="unk">立場によって、問いの内容が変わります。</p>
-      ${state.role ? charCard(state.role, totalXP(state.role)) : ""}
+    </div>
     <div class="panel" style="display:grid;gap:10px">
       <p style="font-weight:700">症例を選んでください</p>
       <div class="cases">${Object.entries(CASES).map(([k, c]) => `<button type="button" class="case${(state.case || "c1") === k ? " sel" : ""}" data-case="${k}"><img src="${c.img}" alt=""><span><b>${c.label}</b>${c.short}<small>${c.who}</small>${caseBadge(k, c)}</span></button>`).join("")}</div>
     </div>
+    ${state.role ? charCard(state.role, totalXP(state.role)) : ""}
     <div class="aim">
       <div class="aim-row"><span class="aim-k">対象</span><p>「基本がわかる漢方医学講義」で、漢方医学の基本（八綱・気血水・四診・代表的な処方）を学修した医学生・薬学生・看護学生・研修医</p></div>
       <div class="aim-row"><span class="aim-k">目的</span><p>学んだ基本を、症例を通して「診療の流れ」として使えるようにする、<b>漢方診療スキル向上アプリ</b>です。除外診断 → 四診 → 証 → 処方選択 → 安全確認の判断を、立場ごとの問いで練習します。</p></div>
       <div class="aim-row"><span class="aim-k">注意</span><p>基本用語の解説はしません。点線の用語はタップで意味が出ますが、分からない項目は講座で復習してから取り組んでください。症例は教育用の模擬症例で、処方は教育上の第一候補です。</p></div>
-    </div>
     </div>` },
   { step: 1, html: () => state.case === "c6" ? `
     <div class="eyebrow">STEP 1　症例</div>
