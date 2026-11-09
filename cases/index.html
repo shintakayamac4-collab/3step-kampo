@@ -493,7 +493,7 @@ Object.assign(Q, {
     bad: "答えは真武湯。全身の冷えと水滞の所見があれば検討する。",
   },
   resWorkup: {
-    kind: "single", prompt: "80歳で新たに始まった食欲不振。警告徴候の「高齢での新規発症」に当てはまる。次の一手として適切なのは？",
+    kind: "single", prompt: "80歳で数か月前から新たに始まった食欲不振（本教材の設定）。警告徴候の「高齢での新規発症」に当てはまる。次の一手として適切なのは？",
     options: [
       { t: "上部内視鏡・血液検査を検討し、器質的疾患を評価する", ok: true, why: "器質的疾患の評価と並行して、漢方的な評価を進める" },
       { t: "まず漢方薬で様子をみてから考える", ok: false, why: "器質的疾患の評価を後回しにしない" },
@@ -643,8 +643,8 @@ const QS = {
 const FLOWS = {
   med: ["redflag", "tongue", "pulse", "abdomen", "sublingual", "sho", "formula", "HERBS", "diff", "potassium"],
   res: ["resWorkup", "tongue", "pulse", "abdomen", "sublingual", "sho", "formula", "potassium", "resFollow"],
-  pharm: ["pharmMeds", "tongue", "pulse", "sho", "formula", "HERBS", "pharmHerb", "pharmKanzo", "potassium", "pharmCounsel"],
-  nurse: ["nurseReport", "nurseObserve", "tongue", "abdomen", "sho", "nurseFormulaWhy", "nurseSide", "nurseCare"],
+  pharm: ["pharmMeds", "tongue", "pulse", "abdomen", "sho", "formula", "HERBS", "pharmHerb", "pharmKanzo", "potassium", "pharmCounsel"],
+  nurse: ["nurseReport", "nurseObserve", "tongue", "pulse", "abdomen", "sho", "nurseFormulaWhy", "nurseSide", "nurseCare"],
 };
 const graded = () => { const f = (CASES[state.case] || CASES.c1).flows; return (f[state.role] || f.med).filter((k) => k !== "HERBS"); };
 const TAKE = {
@@ -662,7 +662,7 @@ const SKILLS = {
 
 // ===== CASE 02：動悸・不安 =====
 Object.assign(GLOSS, {
-  "臍上悸": "せいじょうき。へその上で触れる拍動。気逆のサインとされる。",
+  "臍上悸": "さいじょうき。へその上で触れる拍動。気逆・不安のサインとされる。",
   "気逆": "きぎゃく。気が上につき上げる状態。発作性の動悸・のぼせなど。",
   "気虚": "ききょ。気（エネルギー）が不足した状態。",
   "気血水": "きけつすい。気・血・水の3つの要素の過不足や滞りで病態をみる考え方。",
@@ -933,8 +933,8 @@ const CASES = {
     flows: {
       med: ["c2_tests", "c2_pulse", "c2_tongue", "c2_abd", "c2_sho", "c2_qi", "c2_formula", "HERBS", "c2_diff", "c2_safety"],
       res: ["c2_resPlan", "c2_pulse", "c2_tongue", "c2_abd", "c2_sho", "c2_qi", "c2_formula", "c2_safety", "c2_resFollow"],
-      pharm: ["c2_pharmMeds", "c2_pulse", "c2_tongue", "c2_sho", "c2_qi", "c2_formula", "HERBS", "c2_pharmHerb", "c2_pharmKanzo", "c2_pharmCounsel"],
-      nurse: ["c2_nurseReport", "c2_nurseObs", "c2_pulse", "c2_tongue", "c2_sho", "c2_nurseWhy", "c2_safety", "c2_nurseCare"],
+      pharm: ["c2_pharmMeds", "c2_pulse", "c2_tongue", "c2_abd", "c2_sho", "c2_qi", "c2_formula", "HERBS", "c2_pharmHerb", "c2_pharmKanzo", "c2_pharmCounsel"],
+      nurse: ["c2_nurseReport", "c2_nurseObs", "c2_pulse", "c2_tongue", "c2_abd", "c2_sho", "c2_nurseWhy", "c2_safety", "c2_nurseCare"],
     },
     take: {
       med: ["<b>まず除外。</b>動悸は心電図・心エコー・採血などで器質的疾患を除外してから評価する。", "<b>所見をそろえる。</b>脈（弱）・舌（淡）・腹（軟・臍上悸）がそろえば「虚証・気逆」。", "<b>鑑別して選ぶ。</b>竜骨・牡蛎の2処方は虚実で分ける。虚証なら桂枝加竜骨牡蛎湯。"],
@@ -1028,6 +1028,7 @@ Object.assign(Q, {
     ],
     good: "舌は「まだ裏に入っていない」ことの確認に役立つ。",
     bad: "答えは「病邪はまだ表にあり、裏の熱はない」。",
+    after: `<div class="media"><img src="c3/sublingual.jpg" alt="舌の裏"></div><p class="cap">動画 0:35〜0:40　舌の裏：静脈の怒張は目立たない。急性のかぜでは瘀血の所見はふつう伴わない。</p>`,
   },
   c3_sho: {
     kind: "seg", prompt: "八綱で整理しよう。この症例はどちら？",
@@ -1343,6 +1344,7 @@ Object.assign(Q, {
     ],
     good: "舌は「裏に入っていない」ことの確認に使う。",
     bad: "答えは「病邪はまだ表にあり、裏の熱はない」。",
+    after: `<div class="media"><img src="c4/sublingual.jpg" alt="舌の裏"></div><p class="cap">動画 0:40〜0:44　舌の裏：静脈の怒張は目立たない。急性の表証では瘀血の所見はふつう伴わない。</p>`,
   },
   c4_sho: {
     kind: "seg", prompt: "八綱で整理しよう。この症例はどちら？",
@@ -1460,7 +1462,7 @@ Object.assign(Q, {
       { t: "心疾患・前立腺肥大を持つ高齢者が多い", ok: true },
       { t: "桂枝湯は甘草を含まないから", ok: false, why: "桂枝湯も甘草を含む。甘草の注意は必要" },
     ],
-    good: "高齢者のかぜでは、麻黄剤より桂枝湯・麻黄附子細辛湯・香蘇散などを検討する。",
+    good: "高齢者のかぜでは、麻黄湯・葛根湯のような発汗の強い麻黄剤を避け、桂枝湯・香蘇散など麻黄を含まない処方を基本に考える。",
     bad: "桂枝湯も甘草を含む。他の3つが麻黄を避ける理由。",
   },
   c4_pharmCounsel: {
@@ -1648,6 +1650,7 @@ Object.assign(Q, {
     ],
     good: "高熱でも舌が淡紅・薄白苔なら、表証の段階。黄苔になれば裏熱への移行を考える。",
     bad: "答えは「病邪はまだ表にあり、裏の熱はない」。",
+    after: `<div class="media"><img src="c5/sublingual.jpg" alt="舌の裏"></div><p class="cap">動画 0:40〜0:43　舌の裏：静脈の怒張は目立たない。急性の表証では瘀血の所見はふつう伴わない。</p>`,
   },
   c5_sho: {
     kind: "seg", prompt: "八綱で整理しよう。この症例はどちら？",
@@ -1888,7 +1891,6 @@ Object.assign(GLOSS, {
   "肝の高ぶり": "かんのたかぶり。ストレスや血の不足で「肝」の働きが抑えられなくなった状態。イライラ・易怒・不眠・筋のピクつき・ふるえ。抑肝散の目標。",
   "弦脈": "げんみゃく。弓の弦のように張った脈。緊張・ストレス・「肝」の高ぶりでみられる。",
   "腹直筋攣急": "ふくちょくきんれんきゅう。腹直筋が棒のように張っている所見。抑肝散では左側に出やすいとされる。",
-  "臍上悸": "さいじょうき。へその上で大動脈の拍動が強く触れる所見。気の高ぶり・不安の目安。",
   "釣藤鈎": "ちょうとうこう。カギカズラのとげ。肝の高ぶりを鎮め、筋のけいれん・ふるえを抑える。抑肝散の主薬。",
   "BPSD": "認知症の行動・心理症状。興奮・易怒・妄想・徘徊・不眠など。抑肝散が用いられることがあるが、添付文書上の効能は神経症・不眠症など。",
   "低カリウム血症": "ていカリウムけっしょう。甘草の副作用（偽アルドステロン症）で起こる。脱力・筋肉痛・むくみ・血圧上昇。高齢者・利尿薬併用で起こりやすい。",
@@ -1957,7 +1959,7 @@ Object.assign(Q, {
       { t: "強い虚寒", ok: false, why: "虚寒なら淡白・腫大・歯痕" },
       { t: "裏の実熱（便秘・口渇）", ok: false, why: "実熱なら紅舌に黄苔・乾燥" },
     ],
-    good: "やや紅い舌は「肝」の高ぶりと合う。当帰・川芎（血をめぐらせる）を含む処方が適する。",
+    good: "やや紅い舌は「肝」の高ぶりと合う。舌下静脈は血のめぐりの滞り（瘀血傾向）を示し、脈の細さが示す血の不足とあわせて、当帰・川芎（血を補い、めぐらせる）の目標になる。",
     bad: "答えは「軽い熱と血のめぐりの滞り」。",
   },
   c6_abd: {
@@ -2050,7 +2052,7 @@ Object.assign(Q, {
       { t: "開始時と2〜4週後に血清カリウム・血圧を確認する", ok: true },
       { t: "むくみ・脱力・筋肉痛・咳や息切れが出たら中止して評価", ok: true },
       { t: "落ち着いたら減量・中止を検討し、漫然と続けない", ok: true },
-      { t: "効果がなくても半年は同じ処方を続ける", ok: false, why: "4週で改善がなければ証を見直す" },
+      { t: "効果がなくても半年は同じ処方を続ける", ok: false, why: "2〜4週で改善がなければ証を見直す" },
     ],
     good: "効果判定は2〜4週。Kと血圧をみながら、落ち着いたら減量を考える。",
     bad: "効果がなければ見直す。他の4つはすべてフォローの要点。",
@@ -2190,7 +2192,7 @@ CASES.c6 = {
     med: ["c6_redflag", "c6_irrit", "c6_pulse", "c6_tongue", "c6_abd", "c6_sho", "c6_organ", "c6_formula", "HERBS", "c6_diff", "c6_safety"],
     res: ["c6_resPlan", "c6_irrit", "c6_pulse", "c6_tongue", "c6_abd", "c6_sho", "c6_formula", "c6_diff", "c6_safety", "c6_resFollow"],
     pharm: ["c6_pharmMeds", "c6_pulse", "c6_tongue", "c6_abd", "c6_sho", "c6_formula", "HERBS", "c6_pharmHerb", "c6_pharmCompare", "c6_pharmCounsel"],
-    nurse: ["c6_nurseReport", "c6_nurseObs", "c6_irrit", "c6_tongue", "c6_sho", "c6_nurseWhy", "c6_nurseSide", "c6_nurseCare"],
+    nurse: ["c6_nurseReport", "c6_nurseObs", "c6_irrit", "c6_pulse", "c6_tongue", "c6_abd", "c6_sho", "c6_nurseWhy", "c6_nurseSide", "c6_nurseCare"],
   },
   take: {
     med: ["<b>まず原因評価。</b>高齢者の易怒・不眠は、認知症・うつ・せん妄・甲状腺疾患・薬剤を先に評価する。", "<b>「肝の高ぶり」を読む。</b>イライラ・不眠に筋のピクつき・ふるえ、弦脈、腹直筋の緊張がそろえば抑肝散。", "<b>甘草に注意。</b>高齢者・利尿薬併用は偽アルドステロン症の危険。Kと血圧をみて、2〜4週で効果判定。"],
@@ -2208,6 +2210,14 @@ CASES.c6 = {
   reflectA: "甘草による偽アルドステロン症（低カリウム血症）を疑う。すぐに血清カリウム・血圧を確認し、抑肝散を中止または減量して評価する。利尿薬や他の甘草含有製剤の併用がないかも確認。効果が出ていても、副作用が出れば処方を見直すのが原則。",
 };
 
+const REFS = {
+  c1: "【CASE 01】提供された症例動画（教育用の模擬症例）に基づく。発症時期・経過は本教材の設定。人参湯の効能・効果（胃腸虚弱、下痢、嘔吐、胃痛、胃アトニー、急性・慢性胃腸カタル）はPMDA添付文書による。",
+  c2: "【CASE 02】提供された症例動画（教育用の模擬症例）に基づく。動悸を起こす薬・危険なサイン・安全確認は一般的事項として補足。桂枝加竜骨牡蛎湯の効能・効果（小児夜尿症、神経衰弱、性的神経衰弱、遺精、陰萎）はPMDA添付文書による。",
+  c3: "【CASE 03】提供された症例動画（教育用の模擬症例）に基づく。危険なサインの除外・安全確認は一般的事項として補足。葛根湯の効能・効果（感冒、鼻かぜ、頭痛、肩こり、筋肉痛、手や肩の痛み）はPMDA添付文書による。",
+  c4: "【CASE 04】提供された症例動画（教育用の模擬症例）に基づく。高齢者の危険なサイン・安全確認は一般的事項として補足。桂枝湯の効能・効果（体力が衰えたときの風邪の初期）はPMDA添付文書による。",
+  c5: "【CASE 05】提供された症例動画（教育用の模擬症例）に基づく。危険なサインの除外・安全確認は一般的事項として補足。麻黄湯の効能・効果（感冒、インフルエンザ（初期のもの）、関節リウマチ、喘息、乳児の鼻閉塞、哺乳困難）はPMDA添付文書による。",
+  c6: "【CASE 06】提供された症例動画（教育用の模擬症例）に基づく。問診内容・腹部所見は典型例として設定。原因評価・安全確認は一般的事項として補足。抑肝散の効能・効果（神経症、不眠症、小児夜なき、小児疳症）はPMDA添付文書による。",
+};
 // ---------- screens ----------
 const BASE = [
   { step: 0, start: true, html: () => `
@@ -2227,7 +2237,7 @@ const BASE = [
     <div class="aim">
       <div class="aim-row"><span class="aim-k">対象</span><p>「基本がわかる漢方医学講義」で、漢方医学の基本（八綱・気血水・四診・代表的な処方）を学修した医学生・薬学生・看護学生・研修医</p></div>
       <div class="aim-row"><span class="aim-k">目的</span><p>学んだ基本を、症例を通して「診療の流れ」として使えるようにする、<b>漢方診療スキル向上アプリ</b>です。除外診断 → 四診 → 証 → 処方選択 → 安全確認の判断を、立場ごとの問いで練習します。</p></div>
-      <div class="aim-row"><span class="aim-k">注意</span><p>基本用語の解説はしません。点線の用語はタップで意味が出ますが、分からない項目は講座で復習してから取り組んでください。症例は教育用の模擬症例で、処方は教育上の第一候補です。</p></div>
+      <div class="aim-row"><span class="aim-k">注意</span><p>基本用語の解説はしません。点線の用語はタップで意味が出ますが、分からない項目は講義で復習してから取り組んでください。症例は教育用の模擬症例で、処方は教育上の第一候補です。</p></div>
     </div>
     ${state.role ? charCard(state.role, totalXP(state.role)) : ""}` },
   { step: 1, html: () => state.case === "c6" ? `
@@ -2296,11 +2306,13 @@ const BASE = [
     <h2>まず動画を観よう（約60秒）</h2>
     <div class="media"><video src="case.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video></div>
     <p class="cap">観察ポイント：訴え 0:00–0:16 ／ 舌（舌の裏を含む） 0:19–0:32 ／ 脈 0:32–0:40 ／ 腹 0:40–0:59</p>
+    <p class="cap">教育用の模擬症例（AI生成動画）</p>
     <div class="panel"><dl class="kv">
       <dt>患者</dt><dd>80歳　女性　やせ型</dd>
       <dt>主訴</dt><dd>食欲がない／疲れやすい</dd>
       <dt>随伴症状</dt><dd>手足が冷える／便が柔らかい</dd>
-      <dt>未提示</dt><dd class="unk">既往歴・家族歴、発症時期と経過、体重変化、服薬歴、バイタル</dd>
+      <dt>経過</dt><dd>発症時期は動画では明示されない。本教材では「数か月前から新たに始まった」症状として進める</dd>
+      <dt>未提示</dt><dd class="unk">既往歴・家族歴、体重変化、服薬歴、バイタル</dd>
     </dl></div>
     <p class="unk">動画で提示されていない情報は、「ない」ではなく「まだ確認していない」と考えます。</p>` },
   { step: 5, herbs: true, key: "HERBS", html: () => state.case === "c6" ? `
@@ -2350,7 +2362,9 @@ function buildScreens(role) {
   return [...start, ...flow.map((k) => {
     if (k === "HERBS") return herbs;
     const [step, label, title, img, cap] = QS[k];
-    return { step, q: k, head: `STEP ${step}　${label}`, title, img, cap };
+    const rl = STEP_LABELS[role || "med"][step - 1];
+    const head = `STEP ${step}　${label === rl || label.startsWith(rl) ? label : rl + "：" + label}`;
+    return { step, q: k, head, title, img, cap };
   }), end];
 }
 let S = buildScreens(null);
@@ -2510,12 +2524,15 @@ function endHTML() {
     ${state.role ? `<div class="tip"><strong>${ROLES[state.role].name}のポイント（まとめ）</strong>${TIPS[CS().safetyTip][state.role]}</div>` : ""}
     <p class="unk">本教材の症例は動画の画像・音声に基づく教育用設定です。処方は教育上の第一候補であり、実患者への確定処方ではありません。適応・用量は製品ごとの添付文書を確認してください。</p>
     <details class="refs"><summary>参考資料</summary>
-      <p>${state.case === "c6" ? "【CASE 06】提供された症例動画（教育用の模擬症例）に基づく。原因評価・安全確認は一般的事項として補足。抑肝散の効能・効果（神経症、不眠症、小児夜なき、小児疳症）はPMDA添付文書による。<br>" : ""}${state.case === "c5" ? "【CASE 05】提供された症例動画（教育用の模擬症例）に基づく。危険なサイン・安全確認は一般的事項として補足。<br>" : ""}${state.case === "c4" ? "【CASE 04】提供された症例動画（教育用の模擬症例）に基づく。危険なサイン・安全確認は一般的事項として補足。<br>" : ""}${state.case === "c3" ? "【CASE 03】提供された症例動画（教育用の模擬症例）に基づく。危険なサイン・安全確認は一般的事項として補足。<br>" : ""}${state.case === "c2" ? "【CASE 02】提供された症例スライド（教育用の模擬症例）に基づく。動悸を起こす薬・危険なサイン・安全確認は一般的事項として補足。<br>" : ""}日本東洋医学会「四診」「切診」 <a href="https://www.jsom.or.jp/kampo/consultation/sessin.html" target="_blank" rel="noopener">jsom.or.jp</a><br>
-      富山大学 伝統医薬データベース「人参湯」 <a href="https://dentomed.toyama-wakan.net/ja/漢方方剤/人参湯/SCP000030?w=1" target="_blank" rel="noopener">dentomed.toyama-wakan.net</a><br>
+      <p>${REFS[state.case || "c1"]}<br>
+      日本東洋医学会「四診」 <a href="https://www.jsom.or.jp/kampo/consultation/sessin.html" target="_blank" rel="noopener">jsom.or.jp</a><br>
+      富山大学 伝統医薬データベース <a href="https://dentomed.toyama-wakan.net/" target="_blank" rel="noopener">dentomed.toyama-wakan.net</a>（各方剤の構成・効能）<br>
+      PMDA 医療用医薬品 添付文書検索 <a href="https://www.pmda.go.jp/PmdaSearch/iyakuSearch/" target="_blank" rel="noopener">pmda.go.jp</a>（各方剤の効能・効果、使用上の注意）<br>
+      ${state.case === "c1" ? `富山大学 伝統医薬データベース「人参湯」 <a href="https://dentomed.toyama-wakan.net/ja/漢方方剤/人参湯/SCP000030?w=1" target="_blank" rel="noopener">dentomed.toyama-wakan.net</a><br>
       PMDA 人参湯 添付文書 <a href="https://www.pmda.go.jp/PmdaSearch/iyakuDetail/460026_5200116D1060_1_09" target="_blank" rel="noopener">pmda.go.jp</a><br>
       日本薬学会「人参湯類」 <a href="https://www.pharm.or.jp/words/post-73.html" target="_blank" rel="noopener">pharm.or.jp</a><br>
-      日本消化器病学会 FD診療ガイドライン2021 <a href="https://www.jsge.or.jp/committees/guideline/guideline/pdf/fd2021r_.pdf" target="_blank" rel="noopener">jsge.or.jp</a><br>
-      参照日：2026年11月1日。本資料は富山大学和漢医薬学総合研究所の伝統医薬データベースの情報を利用した。</p>
+      日本消化器病学会 FD診療ガイドライン2021 <a href="https://www.jsge.or.jp/committees/guideline/guideline/pdf/fd2021r_.pdf" target="_blank" rel="noopener">jsge.or.jp</a><br>` : ""}
+      参照日：2026年11月。本資料は富山大学和漢医薬学総合研究所の伝統医薬データベースの情報を利用した。</p>
     </details>`;
 }
 
@@ -2526,6 +2543,37 @@ function canCheck(key) {
   return a.sel.length > 0;
 }
 
+
+// 用語集の語を本文中で自動的に点線リンクにする（画面ごとに各語1回、見出し・ボタン・既存リンクは除外）
+const GLOSS_KEYS = () => Object.keys(GLOSS).sort((a, b) => b.length - a.length);
+function autoTerm(root) {
+  if (!root) return;
+  const done = new Set([...root.querySelectorAll(".term")].map((b) => b.dataset.g));
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(n) {
+      if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      const el = n.parentElement;
+      if (!el || el.closest("button, h1, h2, h3, .eyebrow, .term, .gloss, .cap, .kv dt, .big-sho .n, .steps, .seg, .opt, .herb, .cert, .refs, .kampo-legal, .hero-grid, .case, .role")) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+  const nodes = []; let n; while ((n = walker.nextNode())) nodes.push(n);
+  const keys = GLOSS_KEYS();
+  for (const node of nodes) {
+    let text = node.nodeValue, frag = null, cursor = 0;
+    for (const k of keys) {
+      if (done.has(k)) continue;
+      const idx = text.indexOf(k, cursor);
+      if (idx < 0) continue;
+      done.add(k);
+      frag = frag || document.createDocumentFragment();
+      frag.appendChild(document.createTextNode(text.slice(cursor, idx)));
+      const b = document.createElement("button"); b.type = "button"; b.className = "term"; b.dataset.g = k; b.textContent = k;
+      frag.appendChild(b); cursor = idx + k.length;
+    }
+    if (frag) { frag.appendChild(document.createTextNode(text.slice(cursor))); node.parentNode.replaceChild(frag, node); }
+  }
+}
 function render() {
   const sc = S[state.i];
   renderSteps(sc.step);
@@ -2534,6 +2582,7 @@ function render() {
   else if (sc.end) html = endHTML();
   else html = sc.html();
   main.innerHTML = `<section class="screen">${html}</section>` + (state.i > 0 ? `<button type="button" class="home" id="home"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V20h-5.5v-5h-5v5H4z" fill="currentColor"/></svg>スタートに戻る</button>` : "");
+  autoTerm(main.querySelector(".screen"));
   const back = $("#back"), next = $("#next");
   back.hidden = state.i === 0;
   next.className = "btn primary"; next.disabled = false;
@@ -2695,7 +2744,7 @@ main.addEventListener("change", (e) => {
 });
 // 最新版に更新：公開版はURLに時刻を付けてキャッシュを避けて読み直す。進み具合と記録は残る
 // 公開版（github.io）では version.json を確認し、古いキャッシュなら自動で再読み込み
-const BUILD = "2026.11.09-1954";
+const BUILD = "2026.11.09-2125";
 if (/github\.io$/.test(location.hostname) && BUILD !== "__BUILD__") {
   fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()).then((j) => {
     if (!j || !j.v || j.v === BUILD) return;
@@ -2747,7 +2796,7 @@ window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude
 body, .app, main { -webkit-user-select: none; -moz-user-select: none; user-select: none; -webkit-touch-callout: none; }
 input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
 img, video { -webkit-user-drag: none; user-drag: none; pointer-events: auto; }
-.kampo-legal { font-size: 11px; line-height: 1.6; color: #6b6f7a; text-align: center; padding: 18px 16px calc(24px + env(safe-area-inset-bottom, 0px)); }
+.kampo-legal { font-size: 11px; line-height: 1.6; color: #6b6f7a; text-align: center; padding: 18px 16px calc(118px + env(safe-area-inset-bottom, 0px)); }
 .kampo-legal b { font-weight: 600; }
 @media print { body { display: none !important; } }
 </style>
