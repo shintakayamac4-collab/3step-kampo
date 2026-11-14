@@ -1816,7 +1816,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.14-beginner-28';
+const APP_VER='2026.11.14-beginner-29';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
@@ -2018,4 +2018,93 @@ img, video { -webkit-user-drag: none; user-drag: none; pointer-events: auto; }
 <!--kampo-hits-->
 <style>.kampo-hits{margin:18px 16px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:#6b6f7a}.kampo-hits img{height:20px}</style>
 <script>(function(){if(!/github\.io$/.test(location.hostname))return;var page=location.hostname+location.pathname.replace(/index\.html$/,"");var d=document.createElement("div");d.className="kampo-hits";d.innerHTML='<span>このページのアクセス数（今日 / 累計。2026年11月14日以前は推定30回を加算）</span><img src="https://hits.sh/'+page+'.svg?view=today-total&extraCount=30&style=flat&label=views&color=6d5bd0&labelColor=4b4b63" alt="アクセス数" height="20">';document.body.appendChild(d);})();</script>
+<!--kampo-backup-->
+<style>
+.kampo-bk-open{display:block;margin:22px auto 6px;padding:10px 16px;border:2px solid #cfd2dc;border-radius:999px;background:#fff;color:#33364a;font:700 13px/1.2 system-ui,sans-serif;cursor:pointer}
+.kampo-bk-ov{position:fixed;inset:0;z-index:99999;background:rgba(20,22,40,.55);display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:16px}
+.kampo-bk{background:#fff;color:#22243a;border-radius:18px;max-width:440px;width:100%;padding:18px;font:14px/1.7 system-ui,sans-serif;display:grid;gap:10px;margin:auto}
+.kampo-bk h2{font-size:17px;margin:0}
+.kampo-bk h3{font-size:14px;margin:6px 0 0}
+.kampo-bk p{margin:0}
+.kampo-bk textarea{width:100%;box-sizing:border-box;min-height:84px;border:2px solid #cfd2dc;border-radius:12px;padding:8px;font:12px/1.4 ui-monospace,monospace;word-break:break-all;-webkit-user-select:text;user-select:text}
+.kampo-bk button{padding:10px 14px;border-radius:12px;border:2px solid #5b4bd0;background:#5b4bd0;color:#fff;font:700 14px/1.2 system-ui,sans-serif;cursor:pointer}
+.kampo-bk button.sub{background:#fff;color:#33364a;border-color:#cfd2dc}
+.kampo-bk .bk-msg{font-weight:700;min-height:1.4em}
+.kampo-bk .bk-note{font-size:12px;color:#6b6f7a}
+</style>
+<script>
+/* 記録の引き継ぎ：記録はこのブラウザの中だけにあるため、別の端末・別のブラウザへ移すためのコードを書き出す／読み込む。
+   あわせて、ブラウザが空き容量の都合で記録を消さないよう、保存の保護を申請する。 */
+(function () {
+  var APP = "3stepB", PREFIX = ["kampo3step.beginner."], MAXKEY = "", NAME = "3-Step 漢方 ビギナー";
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) {}
+  var mine = function (k) { return PREFIX.some(function (p) { return k.indexOf(p) === 0; }); };
+  var collect = function () {
+    var o = {};
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (mine(k)) o[k] = localStorage.getItem(k); } } catch (e) {}
+    return o;
+  };
+  var encode = function (o) { return "KAMPO-" + APP + "-" + btoa(unescape(encodeURIComponent(JSON.stringify(o)))); };
+  var decode = function (code) {
+    var m = /^KAMPO-([A-Za-z0-9]+)-([A-Za-z0-9+\/=]+)$/.exec(String(code).replace(/\s+/g, ""));
+    if (!m) throw new Error("コードの形が正しくありません。最初から最後までコピーできているか確認してください。");
+    if (m[1] !== APP) throw new Error("これは別のアプリの引き継ぎコードです。「" + NAME + "」で書き出したコードを使ってください。");
+    var o; try { o = JSON.parse(decodeURIComponent(escape(atob(m[2])))); } catch (e) { throw new Error("コードを読み取れませんでした。途中が欠けていないか確認してください。"); }
+    if (!o || typeof o !== "object" || Array.isArray(o)) throw new Error("コードを読み取れませんでした。");
+    Object.keys(o).forEach(function (k) { if (!mine(k) || typeof o[k] !== "string") throw new Error("コードを読み取れませんでした。"); });
+    return o;
+  };
+  var apply = function (o) {
+    Object.keys(o).forEach(function (k) {
+      var v = o[k];
+      if (MAXKEY && k.indexOf(MAXKEY) === 0) { var cur = +(localStorage.getItem(k) || 0); if (cur > +v) v = String(cur); }
+      localStorage.setItem(k, v);
+    });
+  };
+  var open = function () {
+    if (document.querySelector(".kampo-bk-ov")) return;
+    var data = collect(), n = Object.keys(data).length;
+    var ov = document.createElement("div"); ov.className = "kampo-bk-ov";
+    ov.innerHTML = '<div class="kampo-bk" role="dialog" aria-modal="true" aria-label="記録の引き継ぎ">' +
+      '<h2>記録の引き継ぎ</h2>' +
+      '<p>レベルや合格の記録は、いま開いているブラウザの中だけに保存されています。別の端末や別のブラウザで続きから使うときは、下のコードで記録を移せます。</p>' +
+      '<h3>1. この端末の記録を書き出す</h3>' +
+      (n ? '<textarea readonly class="bk-out"></textarea><button type="button" class="bk-copy">コードをコピー</button>' : '<p class="bk-note">この端末には、まだ記録がありません。</p>') +
+      '<h3>2. 別の端末のコードを読み込む</h3>' +
+      '<textarea class="bk-in" placeholder="ここにコードを貼り付ける"></textarea><button type="button" class="bk-load">このコードを読み込む</button>' +
+      '<p class="bk-msg" aria-live="polite"></p>' +
+      '<p class="bk-note">読み込むと、この端末の記録はコードの記録に置き換わります。コードに個人を特定する情報は入っていません。</p>' +
+      '<button type="button" class="sub bk-close">閉じる</button></div>';
+    document.body.appendChild(ov);
+    var q = function (s) { return ov.querySelector(s); }, msg = q(".bk-msg");
+    if (n) {
+      q(".bk-out").value = encode(data);
+      q(".bk-copy").onclick = function () {
+        var t = q(".bk-out"); t.focus(); t.select();
+        var done = function () { msg.textContent = "コピーしました。別の端末でこの画面を開き、貼り付けてください。"; };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(done, function () { msg.textContent = "コピーできませんでした。コードを長押しして全体を選び、コピーしてください。"; });
+        else { try { document.execCommand("copy"); done(); } catch (e) { msg.textContent = "コードを長押しして全体を選び、コピーしてください。"; } }
+      };
+    }
+    q(".bk-load").onclick = function () {
+      try {
+        var o = decode(q(".bk-in").value); apply(o);
+        msg.textContent = "読み込みました。画面を開き直します。";
+        setTimeout(function () { location.reload(); }, 700);
+      } catch (e) { msg.textContent = e.message || "読み込めませんでした。"; }
+    };
+    q(".bk-close").onclick = function () { ov.remove(); };
+    ov.addEventListener("click", function (e) { if (e.target === ov) ov.remove(); });
+  };
+  var mount = function () {
+    if (document.querySelector(".kampo-bk-open")) return;
+    var b = document.createElement("button"); b.type = "button"; b.className = "kampo-bk-open";
+    b.textContent = "記録の引き継ぎ（別の端末・ブラウザで続ける）"; b.onclick = open;
+    var f = document.querySelector(".kampo-legal");
+    if (f) f.parentNode.insertBefore(b, f); else document.body.appendChild(b);
+  };
+  var later = function () { setTimeout(mount, 0); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", later); else later();
+})();
+</script>
 </body></html>
