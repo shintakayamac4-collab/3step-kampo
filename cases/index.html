@@ -2750,7 +2750,7 @@ main.addEventListener("change", (e) => {
 });
 // 最新版に更新：公開版はURLに時刻を付けてキャッシュを避けて読み直す。進み具合と記録は残る
 // 公開版（github.io）では version.json を確認し、古いキャッシュなら自動で再読み込み
-const BUILD = "2026.11.09-2133";
+const BUILD = "2026.11.14-2201";
 if (/github\.io$/.test(location.hostname) && BUILD !== "__BUILD__") {
   fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()).then((j) => {
     if (!j || !j.v || j.v === BUILD) return;
@@ -2804,6 +2804,8 @@ input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-sele
 img, video { -webkit-user-drag: none; user-drag: none; pointer-events: auto; }
 .kampo-legal { font-size: 11px; line-height: 1.6; color: #6b6f7a; text-align: center; padding: 18px 16px calc(118px + env(safe-area-inset-bottom, 0px)); }
 .kampo-legal b { font-weight: 600; }
+.kampo-hits { margin-top: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.kampo-hits img { height: 20px; }
 @media print { body { display: none !important; } }
 </style>
 <script>
@@ -2836,6 +2838,14 @@ img, video { -webkit-user-drag: none; user-drag: none; pointer-events: auto; }
     f.className = "kampo-legal";
     f.innerHTML = "<b>&copy; 2026 東北大学病院 漢方内科（高山 真）</b><br>本教材（文章・設問・図・動画・音声）の著作権は作成者に帰属します。教育目的での閲覧に限り利用できます。無断での複製・保存・転載・改変・再配布・二次利用を禁じます。<br><a class=\"back-portal\" href=\"https://shintakayamac4-collab.github.io/3step-kampo/portal/\">← レベルで選ぶ 漢方学習（トップ）へ</a>";
     document.body.appendChild(f);
+    hits(f);
+  };
+  var hits = function (f) {
+    if (!/github\.io$/.test(location.hostname) || document.querySelector(".kampo-hits")) return;
+    var page = location.hostname + location.pathname.replace(/index\.html$/, "");
+    var d = document.createElement("div"); d.className = "kampo-hits";
+    d.innerHTML = '<span>このページのアクセス数（今日 / 累計）</span><img src="https://hits.sh/' + page + '.svg?view=today-total&style=flat&label=views&color=6d5bd0&labelColor=4b4b63" alt="アクセス数" height="20">';
+    f.appendChild(d);
   };
   var run = function () { guard(); legal(); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
