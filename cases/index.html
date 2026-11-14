@@ -2750,7 +2750,7 @@ main.addEventListener("change", (e) => {
 });
 // 最新版に更新：公開版はURLに時刻を付けてキャッシュを避けて読み直す。進み具合と記録は残る
 // 公開版（github.io）では version.json を確認し、古いキャッシュなら自動で再読み込み
-const BUILD = "2026.11.14-2209";
+const BUILD = "2026.11.14-2211";
 if (/github\.io$/.test(location.hostname) && BUILD !== "__BUILD__") {
   fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()).then((j) => {
     if (!j || !j.v || j.v === BUILD) return;
@@ -2844,7 +2844,7 @@ img, video { -webkit-user-drag: none; user-drag: none; pointer-events: auto; }
     if (!/github\.io$/.test(location.hostname) || document.querySelector(".kampo-hits")) return;
     var page = location.hostname + location.pathname.replace(/index\.html$/, "");
     var d = document.createElement("div"); d.className = "kampo-hits";
-    d.innerHTML = '<span>このページのアクセス数（今日 / 累計）</span><img src="https://hits.sh/' + page + '.svg?view=today-total&style=flat&label=views&color=6d5bd0&labelColor=4b4b63" alt="アクセス数" height="20">';
+    d.innerHTML = '<span>このページのアクセス数（今日 / 累計。2026年11月14日以前は推定30回を加算）</span><img src="https://hits.sh/' + page + '.svg?view=today-total&extraCount=30&style=flat&label=views&color=6d5bd0&labelColor=4b4b63" alt="アクセス数" height="20">';
     f.appendChild(d);
   };
   var run = function () { guard(); legal(); };

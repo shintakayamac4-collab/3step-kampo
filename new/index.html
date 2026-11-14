@@ -1883,7 +1883,7 @@ img, video { -webkit-user-drag: none; user-drag: none; pointer-events: auto; }
     if (!/github\.io$/.test(location.hostname) || document.querySelector(".kampo-hits")) return;
     var page = location.hostname + location.pathname.replace(/index\.html$/, "");
     var d = document.createElement("div"); d.className = "kampo-hits";
-    d.innerHTML = '<span>このページのアクセス数（今日 / 累計）</span><img src="https://hits.sh/' + page + '.svg?view=today-total&style=flat&label=views&color=6d5bd0&labelColor=4b4b63" alt="アクセス数" height="20">';
+    d.innerHTML = '<span>このページのアクセス数（今日 / 累計。2026年11月14日以前は推定30回を加算）</span><img src="https://hits.sh/' + page + '.svg?view=today-total&extraCount=30&style=flat&label=views&color=6d5bd0&labelColor=4b4b63" alt="アクセス数" height="20">';
     f.appendChild(d);
   };
   var run = function () { guard(); legal(); };
