@@ -113,6 +113,11 @@ p { margin: 0; }
 .aim b { color: var(--brand-deep); }
 :root:not([data-theme="light"]) .aim b { color: var(--brand); }
 .panel { background: var(--surface); border: 2px solid var(--line); border-radius: 20px; padding: 16px; }
+.gate { border-color: var(--pop); display: grid; gap: 10px; }
+.gate ol { margin: 0; padding-left: 1.4em; font-size: 14px; }
+.gate .sv-b { display: flex; flex-wrap: wrap; gap: 10px; }
+.gate a.btn { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+.gate .sv-n { font-size: 12px; color: var(--muted); margin: 0; }
 .kv { display: grid; grid-template-columns: 5.5em 1fr; gap: 8px 12px; font-size: 15px; }
 .kv dt { color: var(--muted); font-size: 12px; font-weight: 800; padding-top: 3px; }
 .kv dd { margin: 0; min-width: 0; font-weight: 700; }
@@ -2223,6 +2228,7 @@ const REFS = {
 // ---------- screens ----------
 const BASE = [
   { step: 0, start: true, html: () => `
+    ${surveyHTML()}
     <div class="hero-grid">${Object.values(CASES).slice(-4).map((c) => `<img src="${c.img}" alt="${c.imgAlt}">`).join("")}</div>
     <div class="eyebrow">症例チュートリアル　全${Object.keys(CASES).length}症例</div>
     <h1>6-Step 漢方<br><em>みんなで漢方カンファ</em></h1>
@@ -2491,7 +2497,25 @@ function charCard(role, xp, opts = {}) {
     </div>
   </div>`;
 }
+// 利用後アンケート：1症例を終えた修了画面で案内し、回答するまで「もう一度」「次の症例を始める」に進めない
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfiSTdaDBIshmg2eRSsoCd91iXfn3eNVRqcqx_JooM1utIGfA/viewform";
+const SV_KEY = "kampo6step.survey.v1", SV_CLEARED = "kampo6step.cleared.v1";
+const svGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const svSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+let svOpened = false;
+const surveyDue = () => svGet(SV_CLEARED) === "1" && svGet(SV_KEY) !== "answered";
+function surveyHTML() {
+  if (!surveyDue()) return "";
+  return `<div class="panel gate" id="gate">
+      <p style="font-weight:800">1症例おつかれさまでした！</p>
+      <p>続きに進む前に、2分・匿名のアンケートにご協力ください。ご意見は教材の改善に使います。</p>
+      <ol><li>「アンケートに答える」を押して回答する（別タブが開きます）</li><li>戻ってきたら「回答しました」を押す</li></ol>
+      <div class="sv-b"><a class="btn primary" href="${FORM_URL}" target="_blank" rel="noopener" id="sv-go">アンケートに答える</a><button type="button" class="btn" id="sv-ok"${svOpened ? "" : " disabled"}>回答しました → 続ける</button></div>
+      <p class="sv-n">「回答しました」は、アンケートを開いたあとに押せるようになります。</p>
+    </div>`;
+}
 function endHTML() {
+  svSet(SV_CLEARED, "1");
   const score = graded().filter((k) => state.firstTry[k]).length;
   const r = rankOf(score);
   const prev = getBest(), best = Math.max(score, prev);
@@ -2508,6 +2532,7 @@ function endHTML() {
       <div class="best">${score > prev ? "自己ベスト更新！" : `自己ベスト ${best} / ${graded().length}`}</div>
     </div>
     ${charCard(state.role, xpAfter, { up: leveled })}
+    ${surveyHTML()}
     <div class="stamps">${stepLabels().map((st, i) => `<div class="stamp" style="animation-delay:${0.5 + i * 0.12}s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${st}</span></div>`).join("")}</div>
     <div class="cert">
       <div class="cert-k">修了カード</div>
@@ -2593,6 +2618,7 @@ function render() {
   else if (sc.end) { next.textContent = graded().filter((k) => state.firstTry[k]).length === graded().length ? "もう一度遊ぶ" : "パーフェクトを目指す"; }
   else if (sc.q && !(state.ans[sc.q] && state.ans[sc.q].checked)) { next.textContent = "答え合わせ"; next.className = "btn ask"; next.disabled = !canCheck(sc.q); }
   else next.textContent = "次へ";
+  if ((sc.start || sc.end) && surveyDue()) next.disabled = true;
   renderVoice();
   $(".bar-in").style.gridTemplateColumns = back.hidden ? "1fr" : "auto 1fr";
   save();
@@ -2600,6 +2626,14 @@ function render() {
 
 main.addEventListener("click", (e) => {
   const sc = S[state.i];
+  if (e.target.closest("#sv-go")) { svOpened = true; const ok = $("#sv-ok"); if (ok) ok.disabled = false; return; }
+  if (e.target.closest("#sv-ok")) {
+    if (!svOpened) return;
+    svSet(SV_KEY, "answered");
+    if (sc.end) { const g = $("#gate"); if (g) g.remove(); $("#next").disabled = false; }
+    else render();
+    return;
+  }
   if (e.target.closest("#home")) {
     stopAll();
     state = { i: 0, role: state.role, case: state.case, ans: {}, firstTry: {}, voice: state.voice };
@@ -2750,7 +2784,7 @@ main.addEventListener("change", (e) => {
 });
 // 最新版に更新：公開版はURLに時刻を付けてキャッシュを避けて読み直す。進み具合と記録は残る
 // 公開版（github.io）では version.json を確認し、古いキャッシュなら自動で再読み込み
-const BUILD = "2026.11.14-2211";
+const BUILD = "2026.11.14-2235";
 if (/github\.io$/.test(location.hostname) && BUILD !== "__BUILD__") {
   fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()).then((j) => {
     if (!j || !j.v || j.v === BUILD) return;

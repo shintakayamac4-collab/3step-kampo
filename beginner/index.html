@@ -793,7 +793,7 @@ header{padding-top:16px}
   </div>
   <div class="legend" hidden>手がかりの根拠：<span class="chip label">添付文書</span><span class="chip general">一般的な使用目標</span><span class="chip report">臨床報告</span></div>
   <main id="app"></main>
-  <footer>医学生・研修医向けの学習用教材です。手がかりと解説には根拠の種類を付けています。「添付文書」は医療用漢方製剤の添付文書「効能又は効果」で、各処方の解説から日本東洋医学会「漢方148処方（＋製品名）と病名マスター」（PDF）にリンクしています（効能の文言は製品により異なります。本文に示す文は一例で、病名の列挙は一部省略）、「一般的な使用目標」は腹証や古典に基づく慣用的な使い分け（一部はTraditional &amp; Kampo Medicine誌の総説シリーズ「A review of frequently used Kampo prescriptions」を参照）、「臨床報告」はPubMed、Traditional &amp; Kampo Medicine誌、J-STAGEに掲載された臨床研究・症例報告です。実際の処方は四診と全体像から判断してください。採点：一段目 正解1つにつき1点（誤選択は減点なし）、二段目 1つにつき1点、三段目 正解で2点。1症例8点満点（確認の問い 正解で1点）。最後まで「×」がなければ合格で、その症例は「経験したい症状・症候」に記録され、合格した数でランク（ビギナー・ルーキー・エース・エキスパート・レジェンド）が上がります。記録はこのブラウザにだけ保存されます。症候を選ぶとその症候の全症例、「おまかせ」では全症例から5症例を出題します。29症候は厚生労働省「臨床研修の到達目標、方略及び評価」の「経験すべき症候」によります。<br><a href="https://forms.gle/hCkafTpvLXkA5kV46" target="_blank" rel="noopener">ご意見・アンケート（1分・匿名）</a></footer>
+  <footer>医学生・研修医向けの学習用教材です。手がかりと解説には根拠の種類を付けています。「添付文書」は医療用漢方製剤の添付文書「効能又は効果」で、各処方の解説から日本東洋医学会「漢方148処方（＋製品名）と病名マスター」（PDF）にリンクしています（効能の文言は製品により異なります。本文に示す文は一例で、病名の列挙は一部省略）、「一般的な使用目標」は腹証や古典に基づく慣用的な使い分け（一部はTraditional &amp; Kampo Medicine誌の総説シリーズ「A review of frequently used Kampo prescriptions」を参照）、「臨床報告」はPubMed、Traditional &amp; Kampo Medicine誌、J-STAGEに掲載された臨床研究・症例報告です。実際の処方は四診と全体像から判断してください。採点：一段目 正解1つにつき1点（誤選択は減点なし）、二段目 1つにつき1点、三段目 正解で2点。1症例8点満点（確認の問い 正解で1点）。最後まで「×」がなければ合格で、その症例は「経験したい症状・症候」に記録され、合格した数でランク（ビギナー・ルーキー・エース・エキスパート・レジェンド）が上がります。記録はこのブラウザにだけ保存されます。症候を選ぶとその症候の全症例、「おまかせ」では全症例から5症例を出題します。29症候は厚生労働省「臨床研修の到達目標、方略及び評価」の「経験すべき症候」によります。<br><a href="https://docs.google.com/forms/d/e/1FAIpQLSfzDH0i3hHCU4Sc1gZvqmKaKM2bHrRT3EEgf0cIuXBnr2WTng/viewform" target="_blank" rel="noopener">ご意見・アンケート（2分・匿名）</a></footer>
 </div>
 
 <script>
@@ -1405,7 +1405,7 @@ function tansuHTML(){
    <p class="note2">最後まで「×」がなければ合格で、ゲットできます（△と次点は×ではないので合格に数えます）。記録はこのブラウザにだけ保存されます。</p>${resetHTML()}
   </section>`;
 }
-const FORM_URL='https://forms.gle/hCkafTpvLXkA5kV46';
+const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSfzDH0i3hHCU4Sc1gZvqmKaKM2bHrRT3EEgf0cIuXBnr2WTng/viewform';
 const SKEY='kampo3step.beginner.survey.v1';
 const SURVEY_AFTER=3;
 const playedCount=()=>Object.values(PROG).reduce((a,p)=>a+(p.tries||0),0);
@@ -1414,7 +1414,7 @@ const surveyAnswered=()=>{try{return localStorage.getItem(SKEY)==='answered'}cat
 const surveyLocked=()=>playedCount()>=SURVEY_AFTER&&!surveyAnswered();
 function surveyHTML(){
   if(!surveyLocked()) return '';
-  return `<aside class="survey gate" id="gate"><p><b>${SURVEY_AFTER}症例おつかれさまでした！</b><br>続きに進む前に、1分・匿名のアンケートにご協力ください。ご意見は教材の改善に使います。</p>
+  return `<aside class="survey gate" id="gate"><p><b>${SURVEY_AFTER}症例おつかれさまでした！</b><br>続きに進む前に、2分・匿名のアンケートにご協力ください。ご意見は教材の改善に使います。</p>
    <ol class="gate-steps"><li>「アンケートに答える」を押して回答する（別タブが開きます）</li><li>戻ってきたら「回答しました」を押す</li></ol>
    <div class="sv-b"><a class="btn" href="${FORM_URL}" target="_blank" rel="noopener" id="sv-go">アンケートに答える</a><button class="btn ghost" id="sv-ok" disabled>回答しました → 続ける</button></div>
    <p class="note2">「回答しました」は、アンケートを開いたあとに押せるようになります。</p></aside>`;
@@ -1816,7 +1816,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.09-beginner-27';
+const APP_VER='2026.11.14-beginner-28';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
