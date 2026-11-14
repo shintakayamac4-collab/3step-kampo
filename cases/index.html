@@ -2654,9 +2654,7 @@ $("#next").addEventListener("click", () => {
     const fb = main.querySelector(".fb"); if (fb) fb.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
     return;
   }
-  const wasStart = state.i === 0;
-  state.i = Math.min(S.length - 1, state.i + 1); render(); window.scrollTo(0, 0); speakCurrent();
-  if (wasStart) track("start"); if (S[state.i].end) { celebrate(); track("finish"); }
+  state.i = Math.min(S.length - 1, state.i + 1); render(); window.scrollTo(0, 0); speakCurrent(); if (S[state.i].end) celebrate();
 });
 $("#back").addEventListener("click", () => { state.i = Math.max(0, state.i - 1); render(); window.scrollTo(0, 0); speakCurrent(); });
 
@@ -2752,7 +2750,7 @@ main.addEventListener("change", (e) => {
 });
 // 最新版に更新：公開版はURLに時刻を付けてキャッシュを避けて読み直す。進み具合と記録は残る
 // 公開版（github.io）では version.json を確認し、古いキャッシュなら自動で再読み込み
-const BUILD = "2026.11.14-2206";
+const BUILD = "2026.11.14-2209";
 if (/github\.io$/.test(location.hostname) && BUILD !== "__BUILD__") {
   fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()).then((j) => {
     if (!j || !j.v || j.v === BUILD) return;
@@ -2794,21 +2792,6 @@ function burst(ox = 0.5, oy = 0.75, count = 36) {
       { transform: `translate(${x0 + dx * 1.3}px, ${y0 + dy + 420}px) rotate(${rot}deg)`, opacity: 0 },
     ], { duration: 1200 + Math.random() * 500, easing: "cubic-bezier(.2,.7,.4,1)" }).onfinish = () => d.remove();
   }
-}
-// アクセス解析（GoatCounter）：公開サイトでのみ読み込む。GOAT_CODE が空なら何もしない
-const GOAT_CODE = "";
-(function () {
-  if (!GOAT_CODE || !/github\.io$/.test(location.hostname)) return;
-  const sc = document.createElement("script"); sc.async = true; sc.src = "https://gc.zgo.at/count.js";
-  sc.setAttribute("data-goatcounter", "https://" + GOAT_CODE + ".goatcounter.com/count");
-  document.head.appendChild(sc);
-})();
-function track(kind) {
-  try {
-    if (!window.goatcounter || !window.goatcounter.count) return;
-    const c = state.case || "c1", r = state.role || "none";
-    window.goatcounter.count({ path: `6step-${kind}/${c}/${r}`, title: `6-Step ${kind} ${CASES[c] ? CASES[c].label : c} ${ROLES[r] ? ROLES[r].name : r}`, event: true });
-  } catch (e) {}
 }
 function start(data) { if (data && typeof data.i === "number") state = data; else load(); S = buildScreens(state.role); if (state.i >= S.length) state.i = 0; render(); if (state.i === 0) { speakCurrent(); const once = () => { document.removeEventListener("pointerdown", once, true); if (state.i === 0 && !clip && state.voice !== false) speakCurrent(); }; setTimeout(() => { if (!clip) document.addEventListener("pointerdown", once, true); }, 1200); } }
 window.claude?.hot?.snapshot?.(() => state);
