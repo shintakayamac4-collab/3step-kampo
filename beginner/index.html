@@ -1407,14 +1407,14 @@ function tansuHTML(){
 }
 const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSfzDH0i3hHCU4Sc1gZvqmKaKM2bHrRT3EEgf0cIuXBnr2WTng/viewform';
 const SKEY='kampo3step.beginner.survey.v1';
-const SURVEY_AFTER=3;
+const SURVEY_AFTER=1;
 const playedCount=()=>Object.values(PROG).reduce((a,p)=>a+(p.tries||0),0);
 const playedDistinct=()=>CASES.filter(c=>PROG[c.t]&&PROG[c.t].tries>0).length;
 const surveyAnswered=()=>{try{return localStorage.getItem(SKEY)==='answered'}catch(_){return false}};
 const surveyLocked=()=>playedCount()>=SURVEY_AFTER&&!surveyAnswered();
 function surveyHTML(){
   if(!surveyLocked()) return '';
-  return `<aside class="survey gate" id="gate"><p><b>${SURVEY_AFTER}症例おつかれさまでした！</b><br>続きに進む前に、2分・匿名のアンケートにご協力ください。ご意見は教材の改善に使います。</p>
+  return `<aside class="survey gate" id="gate"><p><b>1症例おつかれさまでした！</b><br>続きに進む前に、2分・匿名のアンケートにご協力ください。ご意見は教材の改善に使います。</p>
    <ol class="gate-steps"><li>「アンケートに答える」を押して回答する（別タブが開きます）</li><li>戻ってきたら「回答しました」を押す</li></ol>
    <div class="sv-b"><a class="btn" href="${FORM_URL}" target="_blank" rel="noopener" id="sv-go">アンケートに答える</a><button class="btn ghost" id="sv-ok" disabled>回答しました → 続ける</button></div>
    <p class="note2">「回答しました」は、アンケートを開いたあとに押せるようになります。</p></aside>`;
@@ -1816,7 +1816,7 @@ render();
 </script>
 <script>
 /* 版の管理：公開のたびに APP_VER を更新し、version.json と比べて新しい版があれば知らせる */
-const APP_VER='2026.11.14-beginner-29';
+const APP_VER='2026.11.19-beginner-30';
 (()=>{
   const hardReload=()=>{try{if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}const u=new URL(location.href);u.searchParams.set('r',Date.now());location.replace(u.toString())};
   window.__hardReload=hardReload;
