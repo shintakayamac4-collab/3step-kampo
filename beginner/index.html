@@ -1414,7 +1414,7 @@ const surveyAnswered=()=>{try{return localStorage.getItem(SKEY)==='answered'}cat
 const surveyLocked=()=>playedCount()>=SURVEY_AFTER&&!surveyAnswered();
 function surveyHTML(){
   if(!surveyLocked()) return '';
-  return `<aside class="survey gate" id="gate"><p><b>1症例おつかれさまでした！</b><br>続きに進む前に、2分・匿名のアンケートにご協力ください。ご意見は教材の改善に使います。</p>
+  return `<aside class="survey gate" id="gate"><p><b>1症例おつかれさまでした！</b><br>続きに進む前に、1分・匿名のアンケートにご協力ください。ご意見は教材の改善に使います。</p>
    <ol class="gate-steps"><li>「アンケートに答える」を押して回答する（別タブが開きます）</li><li>戻ってきたら「回答しました」を押す</li></ol>
    <div class="sv-b"><a class="btn" href="${FORM_URL}" target="_blank" rel="noopener" id="sv-go">アンケートに答える</a><button class="btn ghost" id="sv-ok" disabled>回答しました → 続ける</button></div>
    <p class="note2">「回答しました」は、アンケートを開いたあとに押せるようになります。</p></aside>`;
